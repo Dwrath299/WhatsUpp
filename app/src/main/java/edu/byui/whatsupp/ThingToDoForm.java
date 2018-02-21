@@ -14,7 +14,11 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -25,6 +29,7 @@ import java.lang.ref.WeakReference;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
+    private DatabaseReference mDatabase;
 
     private int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -68,6 +73,12 @@ public class ThingToDoForm extends AppCompatActivity {
     }
 
     public void submit (View view) {
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("thingsToDo");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
         String title = editText.getText().toString();
@@ -98,8 +109,11 @@ public class ThingToDoForm extends AppCompatActivity {
                         // ...
                     }
                 });
+        mDatabase.child("thingsToDo");
+
 
     }
+
 
 
 
