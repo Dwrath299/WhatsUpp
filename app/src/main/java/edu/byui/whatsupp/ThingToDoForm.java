@@ -109,7 +109,7 @@ public class ThingToDoForm extends AppCompatActivity {
                         // ...
                     }
                 });
-        mDatabase.child("thingsToDo");
+        mDatabase.child("thingsToDo").setValue(thing);
 
 
     }
