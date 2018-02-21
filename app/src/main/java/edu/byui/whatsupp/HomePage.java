@@ -34,7 +34,7 @@ public class HomePage extends AppCompatActivity {
                 TextView tv = (TextView) activity.findViewById(R.id.textView);
                 tv.setText(result);
             }
-            activity.findViewById(R.id.progressBar).setVisibility(TextView.INVISIBLE);
+            //activity.findViewById(R.id.progressBar).setVisibility(TextView.INVISIBLE);
             activity.findViewById(R.id.gridView).setVisibility(TextView.VISIBLE);
         }
 
@@ -50,10 +50,10 @@ public class HomePage extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            String result = "";
+            //String result = "";
             int progress = 0;
             for (String string : strings) {
-               result += string + "\n";
+               //result += string + "\n";
                progress++;
                publishProgress(progress);
                try {
@@ -62,6 +62,7 @@ public class HomePage extends AppCompatActivity {
                    e.printStackTrace();
                }
             }
+
             return result;
         }
     }
