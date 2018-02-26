@@ -5,7 +5,7 @@ package edu.byui.whatsupp;
  */
 
 public class EventPresenter {
-    EventData eventData;
+    Event eventData;
     EventActivity eventActivity;
 
     public EventPresenter() {

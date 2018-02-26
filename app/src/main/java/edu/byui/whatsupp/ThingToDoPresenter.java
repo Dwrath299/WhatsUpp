@@ -6,7 +6,7 @@ package edu.byui.whatsupp;
 
 public class ThingToDoPresenter {
     ThingToDoActivity thingToDoActivity;
-    ThingToDoData thingToDoData;
+    ThingToDo thingToDoData;
 
     public ThingToDoPresenter() {
 
