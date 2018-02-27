@@ -36,7 +36,7 @@ public class ThingToDoPresenter {
 
     }
 
-    private static class LoadThings extends AsyncTask<String, Integer, String> {
+    private static class LoadThings extends AsyncTask<String, Integer, List<ThingToDo>> {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         private WeakReference<Activity> activityRef;
 
@@ -48,7 +48,7 @@ public class ThingToDoPresenter {
 
         }
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(List<ThingToDo> things) {
             Activity activity = activityRef.get();
             if (activity != null) {
 
@@ -68,7 +68,7 @@ public class ThingToDoPresenter {
 
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected List<ThingToDo> doInBackground(String... strings) {
             List<ThingToDo> things = new ArrayList<ThingToDo>();
 
             String result = "";
@@ -84,15 +84,17 @@ public class ThingToDoPresenter {
                                 if (task.isSuccessful()) {
                                     for (DocumentSnapshot document : task.getResult()) {
                                         Log.d(TAG, document.getId() + " => " + document.getData());
-                                        things.add(document.toObject(ThingToDo.class));
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
                                 }
                             }
                         });
-                for (int i = 0; i < 
-                result += string + "\n";
+                List<DocumentSnapshot> documents = db.collection("thingsToDo").get().getResult().getDocuments();
+                for (int i = 0; i < documents.size(); i++) {
+                    things.add(documents.get(i).toObject(ThingToDo.class))
+                }
+                result = things;
                 progress++;
                 publishProgress(progress);
                 try {
