@@ -19,8 +19,8 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<ThingToDo> things;
 
-    public ImageAdapter() {
-
+    public ImageAdapter(Context c) {
+        mContext = c;
         things = new ArrayList<ThingToDo>();
     }
 

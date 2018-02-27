@@ -31,9 +31,19 @@ import static android.net.wifi.WifiConfiguration.Status.strings;
 
 public class ThingToDoPresenter {
     ThingToDoActivity thingToDoActivity;
+    static List<ThingToDo> things = new ArrayList<ThingToDo>();
 
     public ThingToDoPresenter() {
 
+    }
+
+    public List<ThingToDo> getListThings(Activity activity){
+        new LoadThings(activity).execute("");
+        return(things);
+    }
+
+    public static void setListThings(List<ThingToDo> t) {
+        things = t;
     }
 
     private static class LoadThings extends AsyncTask<String, Integer, List<ThingToDo>> {
@@ -51,7 +61,7 @@ public class ThingToDoPresenter {
         protected void onPostExecute(List<ThingToDo> things) {
             Activity activity = activityRef.get();
             if (activity != null) {
-
+                ThingToDoPresenter.setListThings(things);
             }
             activity.findViewById(R.id.progressBar).setVisibility(TextView.INVISIBLE);
             activity.findViewById(R.id.gridview).setVisibility(TextView.VISIBLE);
