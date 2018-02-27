@@ -10,4 +10,12 @@ public class ThingToDoActivity {
     public ThingToDoActivity() {
 
     }
+
+    public void displayThingsToDo() {
+
+    }
+
+    public void displayThingToDo() {
+
+    }
 }

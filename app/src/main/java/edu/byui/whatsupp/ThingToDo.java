@@ -15,6 +15,7 @@ public class ThingToDo {
     private String city;
     private int zipCode;
     private String description;
+    private User creator;
     public boolean approved;
 
     public ThingToDo(StorageReference ref, String t, String a, String c, int z, String d) {

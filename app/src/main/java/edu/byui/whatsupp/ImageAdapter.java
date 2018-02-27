@@ -8,19 +8,24 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Dallin's PC on 2/15/2018.
  */
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    private List<ThingToDo> things;
 
-    public ImageAdapter(Context c) {
-        mContext = c;
+    public ImageAdapter() {
+
+        things = new ArrayList<ThingToDo>();
     }
 
     public int getCount() {
-        return /**mThumbIds.length*/ 1;
+        return things.size();
     }
 
     public Object getItem(int position) {
@@ -49,18 +54,7 @@ public class ImageAdapter extends BaseAdapter {
         return imageButton;
     }
 
-    /** references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    }; */
+    public void addThing(ThingToDo thing) {
+        things.add(thing);
+    }
 }

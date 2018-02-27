@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,10 +17,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,7 +34,7 @@ import java.util.Map;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
-    private DatabaseReference mDatabase;
+
 
     private int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -76,12 +78,7 @@ public class ThingToDoForm extends AppCompatActivity {
     }
 
     public void submit (View view) {
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("thingsToDo").push();
-        String key = mDatabase.child("thingsToDo").push().getKey();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
@@ -96,14 +93,27 @@ public class ThingToDoForm extends AppCompatActivity {
         String description = editText.getText().toString();
         ThingToDo thing = new ThingToDo(storageRef, title, address, city, zip, description);
         Uri file = Uri.fromFile(new File(storageRef.getBucket()));
-        StorageReference riversRef = storageRef.child("images/rivers.jpg");
+
+        db.collection("thingsToDo")
+                .add(thing)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
         // Upload
         storageRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -114,13 +124,7 @@ public class ThingToDoForm extends AppCompatActivity {
                     }
                 });
 
-        Map<String, Object> thingMap = thing.toMap();
 
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/thingsToDo/" + key, thingMap);
-        childUpdates.put(key, thingMap);
-
-        mDatabase.updateChildren(childUpdates);
         Toast.makeText(ThingToDoForm.this, "Success",
                 Toast.LENGTH_SHORT).show();
 
