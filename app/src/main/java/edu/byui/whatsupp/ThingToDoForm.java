@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
@@ -112,7 +113,8 @@ public class ThingToDoForm extends AppCompatActivity {
                     }
                 });
 
-        Map<String, Object> thingMap = thing.toMap();
+        //toMap needs to be implemented in ThingToDo
+        Map<String, Object> thingMap = new TreeMap<String, Object>(); //thing.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/thingsToDo/" + key, thingMap);
