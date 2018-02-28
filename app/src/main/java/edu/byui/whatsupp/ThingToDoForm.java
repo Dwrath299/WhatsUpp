@@ -48,8 +48,6 @@ public class ThingToDoForm extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Choose Picture"), PICK_IMAGE_REQUEST);
 
-
-
     }
 
     @Override
@@ -113,8 +111,4 @@ public class ThingToDoForm extends AppCompatActivity {
 
 
     }
-
-
-
-
 }
