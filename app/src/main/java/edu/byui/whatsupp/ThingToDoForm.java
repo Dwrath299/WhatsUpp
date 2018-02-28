@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,6 +27,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
@@ -73,7 +76,8 @@ public class ThingToDoForm extends AppCompatActivity {
     public void submit (View view) {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("thingsToDo");
+        DatabaseReference myRef = database.getReference("thingsToDo").push();
+        String key = mDatabase.child("thingsToDo").push().getKey();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
@@ -107,7 +111,16 @@ public class ThingToDoForm extends AppCompatActivity {
                         // ...
                     }
                 });
-        mDatabase.child("thingsToDo").setValue(thing);
+
+        Map<String, Object> thingMap = thing.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/thingsToDo/" + key, thingMap);
+        childUpdates.put(key, thingMap);
+
+        mDatabase.updateChildren(childUpdates);
+        Toast.makeText(ThingToDoForm.this, "Success",
+                Toast.LENGTH_SHORT).show();
 
 
     }

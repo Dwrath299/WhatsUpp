@@ -2,6 +2,8 @@ package edu.byui.whatsupp;
 
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Map;
+
 /**
  * Created by Dallin's PC on 2/16/2018.
  */
@@ -24,4 +26,7 @@ public class ThingToDo {
         description = d;
         approved = true;
     }
+    /*public Map<String, Object> toMap() {
+        return new ThingToDo.FirebaseValue(this).toMap();
+    }*/
 }
