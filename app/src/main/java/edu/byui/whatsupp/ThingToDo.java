@@ -13,12 +13,12 @@ public class ThingToDo {
     private String title;
     private String address;
     private String city;
-    private int zipCode;
+    private long zipCode;
     private String description;
     //private User creator;
     public boolean approved;
 
-    public ThingToDo(String u, String t, String a, String c, int z, String d) {
+    public ThingToDo(String u, String t, String a, String c, long z, String d) {
         url = u;
         title = t;
         address = a;
@@ -47,6 +47,8 @@ public class ThingToDo {
     public String getDescription() {
         return description;
     }
+
+    public long getZipCode() {return zipCode;}
     /*public Map<String, Object> toMap() {
         return new ThingToDo.FirebaseValue(this).toMap();
     }*/

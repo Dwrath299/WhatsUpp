@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
-
+    String url;
 
     private int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -89,7 +89,7 @@ public class ThingToDoForm extends AppCompatActivity {
         editText = findViewById(R.id.editCity);
         String city = editText.getText().toString();
         editText = findViewById(R.id.editZip);
-        int zip = Integer.parseInt(editText.getText().toString());
+        long zip = Integer.parseInt(editText.getText().toString());
         editText = findViewById(R.id.editDescription);
         String description = editText.getText().toString();
         String url;
@@ -116,9 +116,11 @@ public class ThingToDoForm extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
             }
         });
-        url = uploadTask.getResult().getDownloadUrl().toString();
+        // Get URL
+        url = "NotWorking";
         ThingToDo thing = new ThingToDo(url, title, address, city, zip, description);
 
         db.collection("thingsToDo")
@@ -127,12 +129,15 @@ public class ThingToDoForm extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         //Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         //Log.w(TAG, "Error adding document", e);
+                        Toast.makeText(ThingToDoForm.this, "Failure",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -144,6 +149,8 @@ public class ThingToDoForm extends AppCompatActivity {
 
 
     }
+
+
 
 
 

@@ -28,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -39,13 +40,18 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         thingToDoActivity = new ThingToDoActivity(this);
+        thingToDoActivity.displayThingsToDo(this);
 
 
 
-        //new Load(this).execute();
+
+
+    }
+
+    public void setGridView(List<ThingToDo> things) {
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
-        thingToDoActivity.displayThingsToDo( (ImageAdapter) gridview.getAdapter());
+        ImageAdapter imageAdapter = new ImageAdapter(this, things);
+        gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {

@@ -25,9 +25,9 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<ThingToDo> things;
 
-    public ImageAdapter(Context c) {
+    public ImageAdapter(Context c, List<ThingToDo> t) {
         mContext = c;
-        things = new ArrayList<ThingToDo>();
+        things = t;
     }
 
     public int getCount() {
@@ -52,7 +52,7 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageButton = new ImageButton(mContext);
-            imageButton.setLayoutParams(new GridView.LayoutParams(85, 85));
+            imageButton.setLayoutParams(new GridView.LayoutParams(170, 170));
             imageButton.setScaleType(ImageButton.ScaleType.CENTER_CROP);
             imageButton.setPadding(8, 8, 8, 8);
         } else {

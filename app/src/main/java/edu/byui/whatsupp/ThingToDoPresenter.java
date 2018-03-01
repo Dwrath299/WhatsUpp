@@ -1,9 +1,12 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,13 +35,15 @@ import static android.net.wifi.WifiConfiguration.Status.strings;
 
 public class ThingToDoPresenter {
     ThingToDoActivity thingToDoActivity;
+    edu.byui.whatsupp.HomePage activity;
     static List<ThingToDo> things = new ArrayList<ThingToDo>();
 
     public ThingToDoPresenter() {
 
     }
 
-    public List<ThingToDo> getListThings(Activity activity){
+    public void getListThings(Activity a){
+        activity = (edu.byui.whatsupp.HomePage) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("thingsToDo")
                 .get()
@@ -48,17 +53,28 @@ public class ThingToDoPresenter {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                //ThingToDo tempThing = new ThingToDo((StorageReference) document.get("storageRef"), (String)document.get("title"), (String)document.get("address"), (String)document.get("city"), (int) document.get("zipCode"), (String)document.get("description"));
-                                //things.add(tempThing);
+                                ThingToDo tempThing = new ThingToDo((String) document.get("url"),
+                                        (String)document.get("title"),
+                                        (String)document.get("address"),
+                                        (String)document.get("city"),
+                                        (long) document.get("zipCode"),
+                                        (String)document.get("description"));
+                                things.add(tempThing);
+
                             }
+                            activity.setGridView(things);
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
+
                 });
 
 
-        return(things);
+
+
+
     }
 
 
