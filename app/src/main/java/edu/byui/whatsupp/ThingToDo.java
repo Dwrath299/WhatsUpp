@@ -29,4 +29,8 @@ public class ThingToDo {
     /*public Map<String, Object> toMap() {
         return new ThingToDo.FirebaseValue(this).toMap();
     }*/
+
+    public static boolean yoWaddup() {
+        return true;
+    }
 }

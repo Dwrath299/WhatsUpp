@@ -9,14 +9,14 @@ public class UserPresenter {
     UserActivity userActivity;
 
     public UserPresenter() {
-
+        return;
     }
 
     public requestUserData() {
-
+        return;
     }
 
     public changeGroupData() {
-
+        return;
     }
 }
