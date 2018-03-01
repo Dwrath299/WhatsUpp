@@ -33,17 +33,19 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
+    public ThingToDoActivity thingToDoActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        thingToDoActivity = new ThingToDoActivity(this);
 
 
 
         //new Load(this).execute();
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ImageAdapter(this));
-
+        thingToDoActivity.displayThingsToDo( (ImageAdapter) gridview.getAdapter());
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -54,7 +56,13 @@ public class HomePage extends AppCompatActivity {
     }
 
 
+    public void goToLogin (View view) {
+        Intent intent = new Intent(this, LoginPage.class);
+        intent.putExtra(EXTRA_MESSAGE, "work");
+        Log.i("Intent", "Send User to Login");
+        startActivity(intent);
 
+    }
     public void addThingToDo (View view) {
         Intent intent = new Intent(this, ThingToDoForm.class);
         intent.putExtra(EXTRA_MESSAGE, "work");

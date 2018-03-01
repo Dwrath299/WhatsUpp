@@ -17,6 +17,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageReference;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -38,84 +39,32 @@ public class ThingToDoPresenter {
     }
 
     public List<ThingToDo> getListThings(Activity activity){
-        new LoadThings(activity).execute("");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("thingsToDo")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                //ThingToDo tempThing = new ThingToDo((StorageReference) document.get("storageRef"), (String)document.get("title"), (String)document.get("address"), (String)document.get("city"), (int) document.get("zipCode"), (String)document.get("description"));
+                                //things.add(tempThing);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
         return(things);
     }
 
-    public static void setListThings(List<ThingToDo> t) {
-        things = t;
-    }
-
-    private static class LoadThings extends AsyncTask<String, Integer, List<ThingToDo>> {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        private WeakReference<Activity> activityRef;
 
 
-        LoadThings(Activity activity) {
-            activityRef = new WeakReference<Activity>(activity);
-            activity.findViewById(R.id.progressBar).setVisibility(TextView.VISIBLE);
-            activity.findViewById(R.id.gridview).setVisibility(TextView.INVISIBLE);
-
-        }
-        @Override
-        protected void onPostExecute(List<ThingToDo> things) {
-            Activity activity = activityRef.get();
-            if (activity != null) {
-                ThingToDoPresenter.setListThings(things);
-            }
-            activity.findViewById(R.id.progressBar).setVisibility(TextView.INVISIBLE);
-            activity.findViewById(R.id.gridview).setVisibility(TextView.VISIBLE);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            Activity activity = activityRef.get();
-            if (activity != null) {
-                ProgressBar pb = (ProgressBar) activity.findViewById(R.id.progressBar);
-                pb.setProgress(values[0]);
-            }
-        }
 
 
-        @Override
-        protected List<ThingToDo> doInBackground(String... strings) {
-            List<ThingToDo> things = new ArrayList<ThingToDo>();
-
-            String result = "";
-            int progress = 0;
-            for (String string : strings) {
-
-
-                db.collection("thingsToDo")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (DocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-                List<DocumentSnapshot> documents = db.collection("thingsToDo").get().getResult().getDocuments();
-                for (int i = 0; i < documents.size(); i++) {
-                    things.add(documents.get(i).toObject(ThingToDo.class))
-                }
-                result = things;
-                progress++;
-                publishProgress(progress);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return result;
-        }
-    }
 }
 
 

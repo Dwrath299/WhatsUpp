@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -79,7 +80,7 @@ public class ThingToDoForm extends AppCompatActivity {
 
     public void submit (View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
         String title = editText.getText().toString();
@@ -91,38 +92,51 @@ public class ThingToDoForm extends AppCompatActivity {
         int zip = Integer.parseInt(editText.getText().toString());
         editText = findViewById(R.id.editDescription);
         String description = editText.getText().toString();
-        ThingToDo thing = new ThingToDo(storageRef, title, address, city, zip, description);
-        Uri file = Uri.fromFile(new File(storageRef.getBucket()));
+        String url;
+        //Create ref NEED TO MAKE SURE THERE
+        StorageReference thingToDoRef = storageRef.child("ThingsToDoImages/" +title + ".jpg");
+
+        // Get the data from an ImageView as bytes
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        // Upload
+        UploadTask uploadTask = thingToDoRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });
+        url = uploadTask.getResult().getDownloadUrl().toString();
+        ThingToDo thing = new ThingToDo(url, title, address, city, zip, description);
 
         db.collection("thingsToDo")
                 .add(thing)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        //Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        //Log.w(TAG, "Error adding document", e);
                     }
                 });
-        // Upload
-        storageRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
-                    }
-                });
+
 
 
         Toast.makeText(ThingToDoForm.this, "Success",

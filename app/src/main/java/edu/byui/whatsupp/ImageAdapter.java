@@ -1,12 +1,18 @@
 package edu.byui.whatsupp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +32,10 @@ public class ImageAdapter extends BaseAdapter {
 
     public int getCount() {
         return things.size();
+    }
+
+    public void setList(List<ThingToDo> t) {
+        things = t;
     }
 
     public Object getItem(int position) {
@@ -48,13 +58,15 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageButton = (ImageButton) convertView;
         }
+        ThingToDo tempThing = things.get(position);
+        String imageUrl = tempThing.getUrl();
 
 
-        //imageButton.setImageResource(mThumbIds[position]);
+        Picasso.with(mContext).load(imageUrl).into(imageButton);
+
+
         return imageButton;
     }
 
-    public void addThing(ThingToDo thing) {
-        things.add(thing);
-    }
+
 }
