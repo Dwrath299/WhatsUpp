@@ -8,18 +8,8 @@ public class UserPresenter {
     User userData;
     UserActivity userActivity;
 
-<<<<<<< HEAD
-    public UserPresenter() {
-        return;
-    }
 
-    public requestUserData() {
-        return;
-    }
 
-    public changeGroupData() {
-        return;
-=======
     public void UserPresenter() {
 
     }
@@ -30,6 +20,5 @@ public class UserPresenter {
 
     public void changeGroupData() {
 
->>>>>>> master
     }
 }

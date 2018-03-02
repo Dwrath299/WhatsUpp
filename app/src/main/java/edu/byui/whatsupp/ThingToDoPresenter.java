@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static android.net.wifi.WifiConfiguration.Status.strings;
+import static java.util.function.Predicate.isEqual;
 
 /**
  * Created by Dallin's PC on 2/26/2018.
@@ -85,9 +87,10 @@ public class ThingToDoPresenter {
 
     }
 
-    public void getThing(Activity a){
+    public void getThing(Activity a, String string){
         viewThingToDoActivity = (edu.byui.whatsupp.ViewThingToDo) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final String title = string;
         db.collection("thingsToDo")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -97,6 +100,7 @@ public class ThingToDoPresenter {
                             List<ThingToDo> things = new ArrayList<ThingToDo>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("title").toString().equals(title)) {
                                 ThingToDo tempThing = new ThingToDo((String) document.get("url"),
                                         (String)document.get("title"),
                                         (String)document.get("address"),
@@ -106,10 +110,12 @@ public class ThingToDoPresenter {
                                 if(document.get("creator") != null) {
                                     tempThing.setCreator((String) document.get("creator"));
                                 }
-                                things.add(tempThing);
+                                    viewThingToDoActivity.displayThingToDo(tempThing);
+                                }
+
 
                             }
-                            //viewThingToDoActivity.setListView(things);
+
 
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
