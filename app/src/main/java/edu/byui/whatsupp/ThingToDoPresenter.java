@@ -36,7 +36,6 @@ import static android.net.wifi.WifiConfiguration.Status.strings;
 public class ThingToDoPresenter {
     ThingToDoActivity thingToDoActivity;
     edu.byui.whatsupp.HomePage activity;
-    static List<ThingToDo> things = new ArrayList<ThingToDo>();
 
     public ThingToDoPresenter() {
 
@@ -51,6 +50,7 @@ public class ThingToDoPresenter {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            List<ThingToDo> things = new ArrayList<ThingToDo>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 ThingToDo tempThing = new ThingToDo((String) document.get("url"),

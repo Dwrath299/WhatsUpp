@@ -1,10 +1,17 @@
 package edu.byui.whatsupp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,9 +20,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static edu.byui.whatsupp.ThingToDoForm.EXTRA_MESSAGE;
 
 /**
  * Created by Dallin's PC on 2/15/2018.
@@ -24,10 +34,12 @@ import java.util.List;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<ThingToDo> things;
+    edu.byui.whatsupp.HomePage activity;
 
-    public ImageAdapter(Context c, List<ThingToDo> t) {
+    public ImageAdapter(Context c, List<ThingToDo> t, Activity a) {
         mContext = c;
         things = t;
+        activity = (edu.byui.whatsupp.HomePage) a;
     }
 
     public int getCount() {
@@ -52,20 +64,29 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageButton = new ImageButton(mContext);
-            imageButton.setLayoutParams(new GridView.LayoutParams(170, 170));
+            imageButton.setLayoutParams(new GridView.LayoutParams(230, 230));
             imageButton.setScaleType(ImageButton.ScaleType.CENTER_CROP);
-            imageButton.setPadding(8, 8, 8, 8);
+            imageButton.setPadding(8, 8, 8, 0);
         } else {
             imageButton = (ImageButton) convertView;
         }
         ThingToDo tempThing = things.get(position);
+
+
+        imageButton.setOnClickListener(new View.OnClickListener()   {
+            public void onClick(View v)  {
+                activity.thingClick();
+            }
+
+        });
         String imageUrl = tempThing.getUrl();
-
-
         Picasso.with(mContext).load(imageUrl).into(imageButton);
 
-
         return imageButton;
+    }
+
+    public void displayThingToDo() {
+
     }
 
 

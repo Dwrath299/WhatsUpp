@@ -27,7 +27,5 @@ public class ThingToDoActivity {
 
     }
 
-    public void displayThingToDo() {
 
-    }
 }

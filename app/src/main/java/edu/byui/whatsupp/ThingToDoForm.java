@@ -35,7 +35,9 @@ import java.util.Map;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
-    String url;
+    public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
+    ThingToDo thing;
+    String message;
 
     private int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -43,7 +45,7 @@ public class ThingToDoForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
-        String message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
 
     }
 
@@ -79,7 +81,7 @@ public class ThingToDoForm extends AppCompatActivity {
     }
 
     public void submit (View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
@@ -116,20 +118,30 @@ public class ThingToDoForm extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                addToDB(downloadUrl.toString());
 
             }
         });
         // Get URL
-        url = "NotWorking";
-        ThingToDo thing = new ThingToDo(url, title, address, city, zip, description);
+        url = "Will get replaced";
+        thing = new ThingToDo(url, title, address, city, zip, description);
 
+        // Returns back to the previous page
+        finish();
+
+    }
+    //This will get run when the past process is completed
+    public void addToDB(String url) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        thing.setUrl(url);
         db.collection("thingsToDo")
                 .add(thing)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         //Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-
+                        Toast.makeText(ThingToDoForm.this, "Successfully Added " + thing.getTitle(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -140,14 +152,6 @@ public class ThingToDoForm extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
-
-        Toast.makeText(ThingToDoForm.this, "Success",
-                Toast.LENGTH_SHORT).show();
-
-
     }
 
 
