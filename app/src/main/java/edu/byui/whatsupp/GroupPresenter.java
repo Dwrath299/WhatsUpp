@@ -6,7 +6,7 @@ package edu.byui.whatsupp;
 
 public class GroupPresenter {
     GroupActivity groupActivity;
-    GroupData groupData;
+    Group group;
 
     public GroupPresenter() {
 

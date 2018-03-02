@@ -38,6 +38,7 @@ public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     public ThingToDoActivity thingToDoActivity;
     private FirebaseAuth mAuth;
+    List<ThingToDo> things;
     FirebaseUser currentUser;
     ProgressBar spinner;
     @Override
@@ -58,7 +59,8 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-    public void setGridView(List<ThingToDo> things) {
+    public void setGridView(List<ThingToDo> t) {
+        things = t;
         spinner.setVisibility(View.GONE);
         GridView gridview = (GridView) findViewById(R.id.gridview);
         ImageAdapter imageAdapter = new ImageAdapter(this, things, this);
@@ -92,9 +94,11 @@ public class HomePage extends AppCompatActivity {
             startActivity(intent);
         }
     }
-    public void thingClick() {
-        Intent intent = new Intent(this, LoginPage.class);
-        intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "HomePage");
+    public void thingClick(String title) {
+
+
+        Intent intent = new Intent(this, ViewThingToDo.class);
+        intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
         Log.i("Intent", "Send User to ThingToDoView");
         startActivity(intent);
     }
