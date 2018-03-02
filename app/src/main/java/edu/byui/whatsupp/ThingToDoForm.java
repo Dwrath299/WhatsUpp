@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,24 +17,27 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
-    private DatabaseReference mDatabase;
+    public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
+    ThingToDo thing;
+    String message;
 
     private int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -41,7 +45,7 @@ public class ThingToDoForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
-        String message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
 
     }
 
@@ -51,6 +55,8 @@ public class ThingToDoForm extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Choose Picture"), PICK_IMAGE_REQUEST);
+
+
 
     }
 
@@ -75,13 +81,8 @@ public class ThingToDoForm extends AppCompatActivity {
     }
 
     public void submit (View view) {
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("thingsToDo").push();
-        String key = mDatabase.child("thingsToDo").push().getKey();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
+        // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
         String title = editText.getText().toString();
@@ -90,40 +91,72 @@ public class ThingToDoForm extends AppCompatActivity {
         editText = findViewById(R.id.editCity);
         String city = editText.getText().toString();
         editText = findViewById(R.id.editZip);
-        int zip = Integer.parseInt(editText.getText().toString());
+        long zip = Integer.parseInt(editText.getText().toString());
         editText = findViewById(R.id.editDescription);
         String description = editText.getText().toString();
-        ThingToDo thing = new ThingToDo(storageRef, title, address, city, zip, description);
-        Uri file = Uri.fromFile(new File(storageRef.getBucket()));
-        StorageReference riversRef = storageRef.child("images/rivers.jpg");
+        String url;
+        //Create ref NEED TO MAKE SURE THERE
+        StorageReference thingToDoRef = storageRef.child("ThingsToDoImages/" +title + ".jpg");
+
+        // Get the data from an ImageView as bytes
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
         // Upload
-        storageRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        UploadTask uploadTask = thingToDoRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                addToDB(downloadUrl.toString());
+
+            }
+        });
+        // Get URL
+        url = "Will get replaced";
+        thing = new ThingToDo(url, title, address, city, zip, description);
+
+        // Returns back to the previous page
+        finish();
+
+    }
+    //This will get run when the past process is completed
+    public void addToDB(String url) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        thing.setUrl(url);
+        db.collection("thingsToDo")
+                .add(thing)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    public void onSuccess(DocumentReference documentReference) {
+                        //Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        Toast.makeText(ThingToDoForm.this, "Successfully Added " + thing.getTitle(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                        Toast.makeText(ThingToDoForm.this, "Failure",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
-
-        //toMap needs to be implemented in ThingToDo
-        Map<String, Object> thingMap = new TreeMap<String, Object>(); //thing.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/thingsToDo/" + key, thingMap);
-        childUpdates.put(key, thingMap);
-
-        mDatabase.updateChildren(childUpdates);
-        Toast.makeText(ThingToDoForm.this, "Success",
-                Toast.LENGTH_SHORT).show();
-
-
     }
+
+
+
+
+
+
 }
