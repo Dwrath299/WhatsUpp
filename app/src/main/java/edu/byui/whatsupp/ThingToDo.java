@@ -27,15 +27,6 @@ public class ThingToDo {
         description = d;
         approved = true;
     }
-<<<<<<< HEAD
-    /*public Map<String, Object> toMap() {
-        return new ThingToDo.FirebaseValue(this).toMap();
-    }*/
-
-    public static boolean yoWaddup() {
-        return true;
-    }
-=======
 
     public String getUrl() {
         return url;
@@ -64,5 +55,5 @@ public class ThingToDo {
     public String getCreator() {return creator;}
 
     public void setCreator(String string) {creator = string; }
->>>>>>> master
+
 }

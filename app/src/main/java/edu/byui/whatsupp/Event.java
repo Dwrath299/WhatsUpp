@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Event {
 
-    User creator;
-    List<User> attendees;
+    String creator;
+    List<String> attendees;
     ThingToDo thingToDo;
     String description;
     String date;

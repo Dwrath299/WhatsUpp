@@ -7,7 +7,7 @@
     tools:context="edu.byui.whatsupp.Profile">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/thingPicView"
         android:layout_width="161dp"
         android:layout_height="136dp"
         android:layout_marginStart="16dp"
@@ -17,7 +17,7 @@
         app:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/addressView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
