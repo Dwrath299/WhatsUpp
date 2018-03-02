@@ -15,7 +15,7 @@ public class ThingToDo {
     private String city;
     private long zipCode;
     private String description;
-    //private User creator;
+    private String creator;
     public boolean approved;
 
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
@@ -51,7 +51,8 @@ public class ThingToDo {
     }
 
     public long getZipCode() {return zipCode;}
-    /*public Map<String, Object> toMap() {
-        return new ThingToDo.FirebaseValue(this).toMap();
-    }*/
+
+    public String getCreator() {return creator;}
+
+    public void setCreator(String string) {creator = string; }
 }
