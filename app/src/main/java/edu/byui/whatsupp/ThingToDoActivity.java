@@ -1,6 +1,7 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -21,13 +22,10 @@ public class ThingToDoActivity {
         activity = a;
     }
 
-    public void displayThingsToDo(ImageAdapter imageAdapter) {
-        things = thingToDoPresenter.getListThings(activity);
-        imageAdapter.setList(things);
+    public void displayThingsToDo(Activity activity) {
+        thingToDoPresenter.getListThings(activity);
 
     }
 
-    public void displayThingToDo() {
 
-    }
 }
