@@ -9,16 +9,17 @@ import java.util.Map;
  */
 
 public class ThingToDo {
-    private StorageReference storageRef;
+    private String url;
     private String title;
     private String address;
     private String city;
-    private int zipCode;
+    private long zipCode;
     private String description;
+    private String creator;
     public boolean approved;
 
-    public ThingToDo(StorageReference ref, String t, String a, String c, int z, String d) {
-        storageRef = ref;
+    public ThingToDo(String u, String t, String a, String c, long z, String d) {
+        url = u;
         title = t;
         address = a;
         city = c;
@@ -26,6 +27,7 @@ public class ThingToDo {
         description = d;
         approved = true;
     }
+<<<<<<< HEAD
     /*public Map<String, Object> toMap() {
         return new ThingToDo.FirebaseValue(this).toMap();
     }*/
@@ -33,4 +35,34 @@ public class ThingToDo {
     public static boolean yoWaddup() {
         return true;
     }
+=======
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String u) {url = u;}
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getZipCode() {return zipCode;}
+
+    public String getCreator() {return creator;}
+
+    public void setCreator(String string) {creator = string; }
+>>>>>>> master
 }
