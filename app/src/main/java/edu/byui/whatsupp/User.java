@@ -7,7 +7,7 @@ package edu.byui.whatsupp;
 public class User {
     String firstName;
     String lastName;
-    storageref profilePic;
+    //storageref profilePic;
     boolean admin;
     String facebook;
 

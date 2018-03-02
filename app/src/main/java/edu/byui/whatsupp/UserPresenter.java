@@ -8,15 +8,15 @@ public class UserPresenter {
     User userData;
     UserActivity userActivity;
 
-    public UserPresenter() {
+    public void UserPresenter() {
 
     }
 
-    public requestUserData() {
+    public void requestUserData() {
 
     }
 
-    public changeGroupData() {
+    public void changeGroupData() {
 
     }
 }

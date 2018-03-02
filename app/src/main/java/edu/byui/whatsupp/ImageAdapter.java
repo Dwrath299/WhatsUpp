@@ -1,6 +1,7 @@
 package edu.byui.whatsupp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,19 +9,33 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Dallin's PC on 2/15/2018.
  */
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    private List<ThingToDo> things;
 
     public ImageAdapter(Context c) {
         mContext = c;
+        things = new ArrayList<ThingToDo>();
     }
 
     public int getCount() {
-        return /**mThumbIds.length*/ 1;
+        return things.size();
+    }
+
+    public void setList(List<ThingToDo> t) {
+        things = t;
     }
 
     public Object getItem(int position) {
@@ -43,24 +58,15 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageButton = (ImageButton) convertView;
         }
+        ThingToDo tempThing = things.get(position);
+        String imageUrl = tempThing.getUrl();
 
 
-        //imageButton.setImageResource(mThumbIds[position]);
+        Picasso.with(mContext).load(imageUrl).into(imageButton);
+
+
         return imageButton;
     }
 
-    /** references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    }; */
+
 }

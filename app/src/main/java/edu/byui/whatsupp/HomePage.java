@@ -33,17 +33,19 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
+    public ThingToDoActivity thingToDoActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        thingToDoActivity = new ThingToDoActivity(this);
 
 
 
         //new Load(this).execute();
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ImageAdapter(this));
-
+        thingToDoActivity.displayThingsToDo( (ImageAdapter) gridview.getAdapter());
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -53,76 +55,14 @@ public class HomePage extends AppCompatActivity {
         });
     }
 
-    private static class Load extends AsyncTask<String, Integer, String> {
 
-        private WeakReference<Activity> activityRef;
-        private DatabaseReference myRef;
+    public void goToLogin (View view) {
+        Intent intent = new Intent(this, LoginPage.class);
+        intent.putExtra(EXTRA_MESSAGE, "work");
+        Log.i("Intent", "Send User to Login");
+        startActivity(intent);
 
-        Load(Activity activity) {
-            activityRef = new WeakReference<Activity>(activity);
-            activity.findViewById(R.id.progressBar).setVisibility(TextView.VISIBLE);
-            activity.findViewById(R.id.gridview).setVisibility(TextView.INVISIBLE);
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            myRef = database.getReference("thingsToDo");
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            Activity activity = activityRef.get();
-            if (activity != null) {
-
-            }
-            activity.findViewById(R.id.progressBar).setVisibility(TextView.INVISIBLE);
-            activity.findViewById(R.id.gridview).setVisibility(TextView.VISIBLE);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            Activity activity = activityRef.get();
-            if (activity != null) {
-                ProgressBar pb = (ProgressBar) activity.findViewById(R.id.progressBar);
-                pb.setProgress(values[0]);
-            }
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = "";
-            int progress = 0;
-            for (String string : strings) {
-
-
-                 // Read from the database
-                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                // Failed to read value
-
-                }
-                });
-               result += string + "\n";
-               progress++;
-               publishProgress(progress);
-               try {
-                   Thread.sleep(2000);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-            }
-            return result;
-        }
     }
-
     public void addThingToDo (View view) {
         Intent intent = new Intent(this, ThingToDoForm.class);
         intent.putExtra(EXTRA_MESSAGE, "work");
