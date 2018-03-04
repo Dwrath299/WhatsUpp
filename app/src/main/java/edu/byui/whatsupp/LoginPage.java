@@ -93,6 +93,15 @@ public class LoginPage extends AppCompatActivity {
                         // ...
                     }
                 });
+        if (!isLoggedIn()) {
+            FirebaseAuth.getInstance().signOut();
+
+        }
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 }
 
