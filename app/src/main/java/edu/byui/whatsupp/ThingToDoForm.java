@@ -140,7 +140,7 @@ public class ThingToDoForm extends AppCompatActivity {
     //This will get run when the past process is completed
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        thing.setCreator(currentUser.toString());
+        thing.setCreator(currentUser.getUid());
         thing.setUrl(url);
         db.collection("thingsToDo")
                 .add(thing)

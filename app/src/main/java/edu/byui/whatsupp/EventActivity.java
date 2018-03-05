@@ -11,10 +11,10 @@ public class EventActivity {
 
 
     public EventActivity(Activity activity) {
-
+        eventPresenter = new EventPresenter();
     }
 
-    public void getEventsForThing(String title) {
-
+    public void displayEventsForThing(Activity activity, String title) {
+        eventPresenter.getEventsForThing(activity, title);
     }
 }
