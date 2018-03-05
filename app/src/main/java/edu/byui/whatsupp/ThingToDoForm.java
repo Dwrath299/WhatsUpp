@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
@@ -37,6 +39,8 @@ public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     ThingToDo thing;
+    private FirebaseAuth mAuth;
+    FirebaseUser currentUser;
     String message;
 
     private int PICK_IMAGE_REQUEST = 1;
@@ -46,6 +50,9 @@ public class ThingToDoForm extends AppCompatActivity {
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
 
     }
 
@@ -133,6 +140,7 @@ public class ThingToDoForm extends AppCompatActivity {
     //This will get run when the past process is completed
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        thing.setCreator(currentUser.toString());
         thing.setUrl(url);
         db.collection("thingsToDo")
                 .add(thing)

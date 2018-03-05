@@ -70,12 +70,12 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageButton = (ImageButton) convertView;
         }
-        ThingToDo tempThing = things.get(position);
+        final ThingToDo tempThing = things.get(position);
 
 
         imageButton.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
-                activity.thingClick();
+                activity.thingClick(tempThing.getTitle());
             }
 
         });

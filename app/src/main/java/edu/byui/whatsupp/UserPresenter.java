@@ -5,10 +5,20 @@ package edu.byui.whatsupp;
  */
 
 public class UserPresenter {
-    UserData userData;
+    User userData;
     UserActivity userActivity;
 
-    public UserPresenter() {
+
+
+    public void UserPresenter() {
+
+    }
+
+    public void requestUserData() {
+
+    }
+
+    public void changeGroupData() {
 
     }
 }

@@ -27,5 +27,10 @@ public class ThingToDoActivity {
 
     }
 
+    public void displayThingToDo(Activity activity, String title) {
+        thingToDoPresenter.getThing(activity, title);
+
+    }
+
 
 }

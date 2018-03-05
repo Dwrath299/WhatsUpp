@@ -2,5 +2,6 @@
     <string name="app_name">WhatsUpp</string>
     <string name="facebook_app_id">338907639929320</string>
     <string name="fb_login_protocol_scheme">fb338907639929320</string>
+    <string name="group_search">Search group...</string>
 
 </resources>
