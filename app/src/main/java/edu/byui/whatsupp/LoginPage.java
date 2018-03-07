@@ -1,6 +1,8 @@
 package edu.byui.whatsupp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -64,6 +66,24 @@ public class LoginPage extends AppCompatActivity {
 
 
     }
+
+    public void updateLogin(){
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if (!isLoggedIn()) {
+            FirebaseAuth.getInstance().signOut();
+
+            editor.putBoolean("LoggedIn", false);
+            editor.commit();
+
+        } else {
+            editor.putBoolean("LoggedIn", true);
+            editor.commit();
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -71,6 +91,7 @@ public class LoginPage extends AppCompatActivity {
     }
     private void handleFacebookAccessToken(AccessToken token) {
         //Log.d(TAG, "handleFacebookAccessToken:" + token);
+
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -93,10 +114,8 @@ public class LoginPage extends AppCompatActivity {
                         // ...
                     }
                 });
-        if (!isLoggedIn()) {
-            FirebaseAuth.getInstance().signOut();
+        updateLogin();
 
-        }
     }
 
     public boolean isLoggedIn() {
