@@ -25,6 +25,7 @@ public class ViewThingToDo extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     ListView listView;
+    ThingToDo thing;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +40,8 @@ public class ViewThingToDo extends AppCompatActivity {
         ea.displayEventsForThing((edu.byui.whatsupp.ViewThingToDo)this, message);
     }
 
-    public void displayThingToDo(ThingToDo thing) {
+    public void displayThingToDo(ThingToDo item) {
+        thing = item;
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar2);
         progressBar.setVisibility(View.GONE);
         ImageView imageView = (ImageView) findViewById(R.id.thingPicView);
@@ -86,5 +88,14 @@ public class ViewThingToDo extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void addEvent(View view) {
+        Intent intent = new Intent(this, EventForm.class);
+        Bundle extras = new Bundle();
+        extras.putString("EXTRA_THINGTITLE",thing.getTitle());
+        extras.putString("EXTRA_THINGURL",thing.getUrl());
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 }

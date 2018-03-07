@@ -45,21 +45,18 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-
         <activity android:name=".Groups" />
         <activity android:name=".GroupView" />
-        <activity android:name=".Profile"></activity>
-
-        <activity
-            android:name=".ViewThingToDo">
+        <activity android:name=".Profile" />
+        <activity android:name=".ViewThingToDo">
             android:parentActivityName=".HomePage">
 
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-
+        <activity android:name=".EventForm"></activity>
     </application>
 
 </manifest>

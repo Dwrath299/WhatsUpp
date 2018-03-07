@@ -19,10 +19,28 @@ public class Event {
     String url;
     boolean isPublic;
 
-
+    // Mainly for the filler event of "No events" event in the things view.
     public Event(String string, String url) {
         title = string;
         this.url = url;
+    }
+    // Public Event for a ThingToDo
+    public Event(String string, String description, String date, String time, String thingToDo) {
+        title = string;
+        this.description = description;
+        this.date = date;
+        this.time = time;
+        this.thingToDo = thingToDo;
+    }
+
+    // Private or Public Event for a group
+    public Event(String string, String description, String date, String time, String thingToDo, String group) {
+        title = string;
+        this.description = description;
+        this.date = date;
+        this.time = time;
+        this.thingToDo = thingToDo;
+        this.group = group;
     }
 
     public String getTitle() {
