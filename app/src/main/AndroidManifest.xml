@@ -56,7 +56,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-        <activity android:name=".EventForm"></activity>
+        <activity android:name=".EventForm" />
+        <activity android:name=".ViewEvent"></activity>
     </application>
 
 </manifest>
