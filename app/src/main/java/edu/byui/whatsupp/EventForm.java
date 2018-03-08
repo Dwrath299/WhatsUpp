@@ -70,8 +70,4 @@ public class EventForm extends AppCompatActivity {
     public void submit(View view) {
         //Event tempEvent = new Event()
     }
-
-    public void addPicture(View view) {
-
-    }
 }

@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/Settings"
+        android:id="@+id/drop_menu"
         android:enabled="true"
-        android:title="@string/action_settings"
+        android:title="menu_selection"
         android:visible="true"
+        android:icon="@drawable/messenger_bubble_large_blue"
         app:showAsAction="always" />
+
     <item
         android:id="@+id/Home"
         android:icon="@drawable/com_facebook_tooltip_black_topnub"
