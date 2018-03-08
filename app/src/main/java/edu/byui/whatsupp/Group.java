@@ -7,6 +7,9 @@ package edu.byui.whatsupp;
 public class Group {
     GroupPresenter groupPresenter;
 
+    int numMembers;
+    
+
     public Group() {
 
     }

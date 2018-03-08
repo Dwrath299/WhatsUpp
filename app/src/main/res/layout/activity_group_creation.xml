@@ -91,7 +91,7 @@
     <ListView
         android:id="@+id/listView3"
         android:layout_width="364dp"
-        android:layout_height="139dp"
+        android:layout_height="188dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -99,6 +99,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/editText5"
+        app:layout_constraintVertical_bias="0.492" />
 
 </android.support.constraint.ConstraintLayout>
