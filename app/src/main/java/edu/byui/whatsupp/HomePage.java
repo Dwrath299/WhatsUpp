@@ -1,7 +1,9 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,12 +49,15 @@ public class HomePage extends AppCompatActivity {
     List<ThingToDo> things;
     FirebaseUser currentUser;
     ProgressBar spinner;
+    boolean loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        //mAuth = FirebaseAuth.getInstance();
+        //currentUser = mAuth.getCurrentUser();
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         mAuth = FirebaseAuth.getInstance();
@@ -61,10 +67,17 @@ public class HomePage extends AppCompatActivity {
         thingToDoActivity = new ThingToDoActivity(this);
         thingToDoActivity.displayThingsToDo(this);
         Button loginButton = (Button) findViewById(R.id.button3);
-        if(currentUser != null){
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        loggedIn = AccessToken.getCurrentAccessToken() == null;
+        //loggedIn = false;
+        //loggedIn = sharedPref.getBoolean("LoggedIn", loggedIn);
+        if(!loggedIn){
             loginButton.setText("Logout");
+            loggedIn = true;
         } else {
             loginButton.setText("Login");
+            loggedIn = false;
         }
     }
 
@@ -75,15 +88,12 @@ public class HomePage extends AppCompatActivity {
     }
 
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_settings: //Your task
-                return true;
 
-            default:return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     public void setGridView(List<ThingToDo> t) {
@@ -95,7 +105,6 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-
     public void goToLogin (View view) {
         Intent intent = new Intent(this, LoginPage.class);
         intent.putExtra(EXTRA_MESSAGE, "HomePage");
@@ -104,7 +113,7 @@ public class HomePage extends AppCompatActivity {
 
     }
     public void addThingToDo (View view) {
-        if (currentUser == null) //Make sure they are logged in.
+        if (!loggedIn) //Make sure they are logged in.
         {
             Toast.makeText(HomePage.this, "You must log in to add",
                     Toast.LENGTH_LONG).show();
@@ -116,8 +125,6 @@ public class HomePage extends AppCompatActivity {
         }
     }
     public void thingClick(String title) {
-
-
         Intent intent = new Intent(this, ViewThingToDo.class);
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
         Log.i("Intent", "Send User to ThingToDoView");
