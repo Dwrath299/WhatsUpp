@@ -8,7 +8,11 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -45,14 +49,19 @@ public class HomePage extends AppCompatActivity {
     List<ThingToDo> things;
     FirebaseUser currentUser;
     ProgressBar spinner;
+
     boolean loggedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        //mAuth = FirebaseAuth.getInstance();
-        //currentUser = mAuth.getCurrentUser();
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
         thingToDoActivity = new ThingToDoActivity(this);
@@ -70,11 +79,20 @@ public class HomePage extends AppCompatActivity {
             loginButton.setText("Login");
             loggedIn = false;
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
     }
 
 
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+
+    }
 
 
     public void setGridView(List<ThingToDo> t) {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- "Mark Favorite", should appear as action button if possible -->
+    <item
+        android:id="@+id/drop_menu"
+        android:enabled="true"
+        android:title="menu_selection"
+        android:visible="true"
+        android:icon="@drawable/messenger_bubble_large_blue"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/Home"
+        android:icon="@drawable/com_facebook_tooltip_black_topnub"
+        android:title="@string/action_favorite"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <!-- Settings, should always be in the overflow -->
+
+</menu>
