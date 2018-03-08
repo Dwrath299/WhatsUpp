@@ -14,8 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 public class Unit4Test {
 
-    @Test
-    public void yo() {
-        assertThat(ThingToDo.yoWaddup(), is(true));
-    }
+//    @Test
+//    public void yo() {
+//        assertThat(ThingToDo.yoWaddup(), is(true));
+//    }
 }
