@@ -91,7 +91,7 @@ public class HomePage extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
+        return true;
     }
 
 

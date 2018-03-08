@@ -23,6 +23,7 @@ public class EventPresenter {
     Event eventData;
     EventActivity eventActivity;
     edu.byui.whatsupp.ViewThingToDo viewThingToDoActivity;
+    edu.byui.whatsupp.ViewEvent viewEventActivity;
 
     public EventPresenter() {
 
@@ -55,6 +56,48 @@ public class EventPresenter {
                                 }
                             }
                             viewThingToDoActivity.displayEventsForThing(events);
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
+
+
+
+
+
+    }
+
+    public void getEvent(Activity a, String string){
+        viewEventActivity = (edu.byui.whatsupp.ViewEvent) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final String event = string;
+        db.collection("events")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Event> events = new ArrayList<Event>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("title").toString().equals(event)) { // To get the events for the Thing
+                                    Event tempEvent = new Event((String)document.get("title"), (String) document.get("url"));
+                                    tempEvent.setDate((String) document.get("date"));
+                                    tempEvent.setTime((String) document.get("time"));
+                                    tempEvent.setDescription((String) document.get("description"));
+                                    tempEvent.setPublic((boolean) document.get("isPublic"));
+                                    tempEvent.setThingToDo((String) document.get("thingToDo"));
+                                    if(document.get("creator") != null) {
+                                        tempEvent.setCreator((String) document.get("creator"));
+                                    }
+                                    viewEventActivity.displayEvent(tempEvent);
+                                }
+                            }
+
 
 
                         } else {
