@@ -8,7 +8,6 @@ public class Group {
     GroupPresenter groupPresenter;
 
     int numMembers;
-    
 
     public Group() {
 

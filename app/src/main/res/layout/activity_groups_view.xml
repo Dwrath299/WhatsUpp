@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.byui.whatsupp.Groups">
+    tools:context="edu.byui.whatsupp.GroupsView">
 
     <Button
         android:id="@+id/button7"
@@ -46,8 +46,8 @@
         app:layout_constraintStart_toEndOf="@+id/editText" />
 
     <ListView
-        android:layout_width="302dp"
-        android:layout_height="363dp"
+        android:layout_width="319dp"
+        android:layout_height="437dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
