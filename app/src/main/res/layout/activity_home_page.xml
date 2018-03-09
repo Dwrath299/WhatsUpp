@@ -15,9 +15,6 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-
-
     </android.support.v7.widget.Toolbar>
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
