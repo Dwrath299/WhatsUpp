@@ -6,4 +6,9 @@
     <string name="action_settings">action_ettings</string>
     <string name="action_favorite">action_favorite</string>
 
+    <string-array name="menu_array">
+        <item>My Profile</item>
+        <item>View Groups</item>
+    </string-array>
+
 </resources>

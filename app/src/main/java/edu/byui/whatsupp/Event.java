@@ -25,21 +25,23 @@ public class Event {
         this.url = url;
     }
     // Public Event for a ThingToDo
-    public Event(String string, String description, String date, String time, String thingToDo) {
+    public Event(String string, String description, String date, String time, String thingToDo, String url) {
         title = string;
         this.description = description;
         this.date = date;
         this.time = time;
         this.thingToDo = thingToDo;
+        this.url = url;
     }
 
     // Private or Public Event for a group
-    public Event(String string, String description, String date, String time, String thingToDo, String group) {
+    public Event(String string, String description, String date, String time, String thingToDo, String url, String group) {
         title = string;
         this.description = description;
         this.date = date;
         this.time = time;
         this.thingToDo = thingToDo;
+        this.url = url;
         this.group = group;
     }
 
