@@ -12,7 +12,7 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
     }
 
-    public void sendMessage(View view) {
+    public void groupWith(View view) {
 
     }
 }
