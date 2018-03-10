@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.byui.whatsupp.GroupCreation">
+    tools:context="edu.byui.whatsupp.GroupForm">
 
     <ImageView
         android:id="@+id/imageView"
@@ -80,8 +80,8 @@
 
     <Button
         android:id="@+id/button6"
-        android:layout_width="75dp"
-        android:layout_height="35dp"
+        android:layout_width="91dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:text="Create"
@@ -91,12 +91,10 @@
     <ListView
         android:id="@+id/listView3"
         android:layout_width="364dp"
-        android:layout_height="139dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="191dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText5" />

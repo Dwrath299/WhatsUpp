@@ -30,11 +30,12 @@ import java.util.Arrays;
 public class LoginPage extends AppCompatActivity {
     CallbackManager callbackManager;
     private FirebaseAuth mAuth;
+    UserActivity ua;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-
+        ua = new UserActivity();
         Intent intent = getIntent();
         String message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
         mAuth = FirebaseAuth.getInstance();
@@ -102,6 +103,7 @@ public class LoginPage extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            ua.detectNewUser(token);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
