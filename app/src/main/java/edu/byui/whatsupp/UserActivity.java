@@ -1,6 +1,7 @@
 package edu.byui.whatsupp;
 
 import com.facebook.AccessToken;
+import com.facebook.login.LoginResult;
 
 /**
  * Created by Dallin's PC on 2/26/2018.
@@ -13,7 +14,7 @@ public class UserActivity {
 
     }
 
-    public void detectNewUser(AccessToken token) {
+    public void detectNewUser(AccessToken token, LoginResult loginResult) {
         token.getUserId();
 
     }
