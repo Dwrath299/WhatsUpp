@@ -3,6 +3,7 @@ package edu.byui.whatsupp;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -10,7 +11,10 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,22 +47,25 @@ public class UserPresenter {
         final String userID= token.getUserId();
         userToken = token;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("thingsToDo")
+        db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            List<ThingToDo> things = new ArrayList<ThingToDo>();
+                            boolean notThere = true;
+
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 if(document.get("uid").toString().equals(userID)) {
-                                    // IF it got here that means it is a new user.
-                                    setFacebookData(loginResult);
-
+                                    // IF it got here that means it isn't a new user.
+                                    notThere = false;
 
                                     }
                                 }
+                            if(notThere) {
+                                setFacebookData(loginResult);
+                            }
 
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -66,9 +73,6 @@ public class UserPresenter {
                     }
 
                 });
-
-    }
-    public void addNewUser(User user) {
 
     }
 
@@ -108,8 +112,58 @@ public class UserPresenter {
         request.setParameters(parameters);
         request.executeAsync();
     }
+    public void addNewUser(User user) {
 
-    public void requestUserData() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.i("User Writing","User added");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("User Writing","Failed to add user");
+
+                    }
+                });
+
+    }
+
+
+    public void requestUserData(final User user) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean notThere = true;
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("uid").toString().equals(user.getUid())) {
+
+                                    user.setLastName(document.get("lastName").toString());
+                                    user.setFirstName(document.get("firstName").toString());
+                                    user.setEmail(document.get("email").toString());
+                                    user.setGender(document.get("gender").toString());
+
+                                }
+                            }
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
 
     }
 

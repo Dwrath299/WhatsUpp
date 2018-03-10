@@ -16,7 +16,7 @@ public class GroupView extends AppCompatActivity {
     }
 
     public void createEvent(View view) {
-        Intent intent = new Intent(this, GroupCreation.class);
+        Intent intent = new Intent(this, EventForm.class);
         intent.putExtra(EXTRA_MESSAGE, "Create Group");
         Log.i("Intent", "Send User to Group Creation");
         startActivity(intent);

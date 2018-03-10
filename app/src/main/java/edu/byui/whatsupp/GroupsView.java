@@ -29,7 +29,7 @@ public class GroupsView extends AppCompatActivity {
     }
 
     public void createGroup(View view) {
-        Intent intent = new Intent(this, GroupCreation.class);
+        Intent intent = new Intent(this, GroupForm.class);
         intent.putExtra(EXTRA_MESSAGE, "Create Group");
         Log.i("Intent", "Send User to Group Creation");
         startActivity(intent);
@@ -40,7 +40,7 @@ public class GroupsView extends AppCompatActivity {
 
     }
 
-    public void displayGroups(List<Group> groups) {
+    /*public void displayGroups(List<Group> groups) {
         if (groups.size() < 1) {
             // If there are no groups, the image is a very large frowny face.
             Group group = new Group("Not currently part of any group. Please make some friends.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
@@ -61,5 +61,5 @@ public class GroupsView extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
 
             }
-        });
+        });*/
 }

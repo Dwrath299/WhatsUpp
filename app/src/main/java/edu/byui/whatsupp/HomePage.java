@@ -51,7 +51,7 @@ public class HomePage extends AppCompatActivity {
     public ThingToDoActivity thingToDoActivity;
     private FirebaseAuth mAuth;
     List<ThingToDo> things;
-    FirebaseUser currentUser;
+    User currentUser;
     ProgressBar spinner;
 
     boolean loggedIn;
@@ -63,8 +63,6 @@ public class HomePage extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
         setupActionBar();
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
         thingToDoActivity = new ThingToDoActivity(this);
@@ -78,6 +76,7 @@ public class HomePage extends AppCompatActivity {
         if(!loggedIn){
             loginButton.setText("Logout");
             loggedIn = true;
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
         } else {
             loginButton.setText("Login");
             loggedIn = false;
@@ -152,15 +151,15 @@ public class HomePage extends AppCompatActivity {
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle() == "My Profile") {
+                        if(item.getTitle().equals("My Profile")) {
 
                             Intent intent = new Intent(HomePage.this, Profile.class);
                             intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                             Log.i("Intent", "Send User to Profile");
                             startActivity(intent);
                         }
-                        else if(item.getTitle() =="View Groups") {
-                            Intent intent = new Intent(HomePage.this, Groups.class);
+                        else if(item.getTitle().equals("View Groups")) {
+                            Intent intent = new Intent(HomePage.this, GroupsView.class);
                             intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                             Log.i("Intent", "Send User to View Groups");
                             startActivity(intent);

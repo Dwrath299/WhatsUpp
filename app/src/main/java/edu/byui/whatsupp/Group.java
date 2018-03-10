@@ -12,6 +12,7 @@ public class Group {
     ArrayList<User> memberList;
     int numMembers;
     String title;
+    String url;
 
     public Group() {
 
@@ -21,4 +22,23 @@ public class Group {
         return title;
     }
 
+    public int getNumMembers() {
+        return numMembers;
+    }
+
+    public void setNumMembers(int numMembers) {
+        this.numMembers = numMembers;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

@@ -11,15 +11,16 @@ public class UserActivity {
     UserPresenter userPresenter;
 
     public UserActivity() {
-
+        userPresenter = new UserPresenter();
     }
 
     public void detectNewUser(AccessToken token, LoginResult loginResult) {
-        token.getUserId();
+        userPresenter.isNewUser(token, loginResult);
 
     }
 
-    public void addUser() {
+    public void getUserInfo(User user) {
+        userPresenter.requestUserData(user);
 
     }
 }
