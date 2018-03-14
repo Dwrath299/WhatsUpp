@@ -2,4 +2,5 @@
 <resources>
     <item name="action_settings" type="id" />
     <item name="action_favorite" type="id" />
+    <item name="profilePicture" type="id" />
 </resources>
