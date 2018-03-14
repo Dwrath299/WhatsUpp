@@ -3,6 +3,7 @@ package edu.byui.whatsupp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -17,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
 public class ViewThingToDo extends AppCompatActivity {
     private String message;
@@ -35,7 +38,7 @@ public class ViewThingToDo extends AppCompatActivity {
         Intent intent = getIntent();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        message = intent.getStringExtra(EXTRA_MESSAGE);
         ttda.displayThingToDo(this, message);
         ea.displayEventsForThing((edu.byui.whatsupp.ViewThingToDo)this, message);
     }
@@ -82,8 +85,10 @@ public class ViewThingToDo extends AppCompatActivity {
 
                 Object o = listView.getItemAtPosition(position);
                 Event event = (Event)o;
-                Toast.makeText(ViewThingToDo.this, "You selected " + event.getTitle() ,
-                        Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ViewThingToDo.this, ViewEvent.class);
+                intent.putExtra(EXTRA_MESSAGE, event.getTitle());
+                Log.i("Intent", "Send User to ViewEvent");
+                startActivity(intent);
 
             }
         });

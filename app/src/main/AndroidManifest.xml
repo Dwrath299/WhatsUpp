@@ -3,7 +3,7 @@
     package="edu.byui.whatsupp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-sdk android:minSdkVersion="11" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -50,7 +50,7 @@
         <activity android:name=".Groups" />
         <activity android:name=".GroupView" />
         <activity android:name=".Profile" />
-        <activity android:name=".ViewThingToDo">
+        <activity android:name=".ViewThingToDo"
             android:parentActivityName=".HomePage">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -59,7 +59,17 @@
                 android:value=".HomePage" />
         </activity>
         <activity android:name=".EventForm" />
+
         <activity android:name=".GroupCreation"></activity>
+        <activity android:name=".ViewEvent"
+            android:parentActivityName=".ViewThingToDo">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ViewThingToDo" />
+        </activity>
+
     </application>
 
 </manifest>

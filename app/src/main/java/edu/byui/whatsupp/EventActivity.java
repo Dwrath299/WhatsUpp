@@ -18,6 +18,10 @@ public class EventActivity {
         eventPresenter.getEventsForThing(activity, title);
     }
 
+    public void displayEvent(Activity activity, String title) {
+        eventPresenter.getEvent(activity, title);
+    }
+
     public void addEvent(Activity activity, Event event) {
 
     }
