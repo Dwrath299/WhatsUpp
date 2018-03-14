@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -40,7 +41,7 @@ public class ThingToDoForm extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     ThingToDo thing;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
+    User currentUser;
     String message;
 
     private int PICK_IMAGE_REQUEST = 1;
@@ -51,7 +52,7 @@ public class ThingToDoForm extends AppCompatActivity {
         Intent intent = getIntent();
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
 
 
     }

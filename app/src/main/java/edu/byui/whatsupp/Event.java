@@ -1,5 +1,6 @@
 package edu.byui.whatsupp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,10 +10,11 @@ import java.util.List;
 public class    Event {
 
     String creator;
-    List<String> attendees;
+    ArrayList<String> attendees;
     String thingToDo;
     String title;
     String description;
+    String refrence;
     String date;
     String time;
     String group;
@@ -32,6 +34,7 @@ public class    Event {
         this.time = time;
         this.thingToDo = thingToDo;
         this.url = url;
+        attendees = new ArrayList<String>();
     }
 
     // Private or Public Event for a group
@@ -43,6 +46,15 @@ public class    Event {
         this.thingToDo = thingToDo;
         this.url = url;
         this.group = group;
+        attendees = new ArrayList<String>();
+    }
+
+    public String getRefrence() {
+        return refrence;
+    }
+
+    public void setRefrence(String refrence) {
+        this.refrence = refrence;
     }
 
     public String getTitle() {
@@ -61,12 +73,16 @@ public class    Event {
         this.creator = creator;
     }
 
-    public List<String> getAttendees() {
+    public ArrayList<String> getAttendees() {
         return attendees;
     }
 
-    public void setAttendees(List<String> attendees) {
+    public void setAttendees(ArrayList<String> attendees) {
         this.attendees = attendees;
+    }
+
+    public void addAttendee(String uid) {
+        attendees.add(uid);
     }
 
     public String getThingToDo() {

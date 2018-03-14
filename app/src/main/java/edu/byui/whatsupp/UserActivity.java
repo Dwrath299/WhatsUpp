@@ -1,5 +1,7 @@
 package edu.byui.whatsupp;
 
+import android.app.Activity;
+
 import com.facebook.AccessToken;
 import com.facebook.login.LoginResult;
 
@@ -19,8 +21,13 @@ public class UserActivity {
 
     }
 
-    public void getUserInfo(User user) {
-        userPresenter.requestUserData(user);
+    // Need to know what activity it is coming from, so...
+    // page = 1 = profile
+    // page = 2 = event
+    public void getUserInfo(Activity activity, String uid) {
+        userPresenter.requestUserData(activity, uid);
 
     }
+
+
 }

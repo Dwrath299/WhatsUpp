@@ -1,5 +1,10 @@
 package edu.byui.whatsupp;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,6 +12,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -16,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,14 +35,15 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
+
+import static java.util.Calendar.*;
 
 public class EventForm extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
+    User currentUser;
     String message;
     EventActivity ea;
-    TimePicker timePicker;
-    DatePicker datePicker;
     private int PICK_IMAGE_REQUEST = 1;
     String thingUrl;
     String thingTitle;
@@ -58,13 +66,9 @@ public class EventForm extends AppCompatActivity {
         EditText eventTitle = (EditText) findViewById(R.id.editEventTitle);
         eventTitle.setHint(thingTitle + " event");
 
-        //Get user info
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
 
-        //Initialize the time and date pickers
-        timePicker = (TimePicker) findViewById(R.id.timePicker);
-        datePicker = (DatePicker) findViewById(R.id.datePicker);
+
 
         ea = new EventActivity(this);
 
@@ -81,30 +85,6 @@ public class EventForm extends AppCompatActivity {
         needToStoreImage = true;
     }
 
-    public void pickTime(View view) {
-        hideTimeOrDate();
-        timePicker.setVisibility(View.VISIBLE);
-    }
-
-    private void hideTimeOrDate(){
-        if(timePicker.getVisibility() == View.VISIBLE) {
-            if (getCurrentFocus() != null && getCurrentFocus() instanceof TimePicker) {
-
-                timePicker.setVisibility(View.INVISIBLE);
-            }
-        }
-        if(datePicker.getVisibility() == View.VISIBLE) {
-            if (getCurrentFocus() != null && getCurrentFocus() instanceof DatePicker) {
-
-                datePicker.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    public void pickDate(View view) {
-        hideTimeOrDate();
-        datePicker.setVisibility(View.VISIBLE);
-    }
 
     public void submit (View view) {
 
@@ -114,10 +94,10 @@ public class EventForm extends AppCompatActivity {
         String title = editText.getText().toString();
         editText = findViewById(R.id.editEventDescription);
         String description= editText.getText().toString();
-        editText = findViewById(R.id.editCity);
-        String time = editText.getText().toString();
-        editText = findViewById(R.id.editDescription);
-        String date = editText.getText().toString();
+        TextView textView = (TextView) findViewById(R.id.tv_time);
+        String time = textView.getText().toString();
+        textView = (TextView) findViewById(R.id.tv_date);
+        String date = textView.getText().toString();
         String url;
         if(needToStoreImage) {
             //Create ref
@@ -155,6 +135,9 @@ public class EventForm extends AppCompatActivity {
 
         event = new Event( title, description, date, time, thingTitle, url);
 
+        if(!needToStoreImage) {
+            addToDB(url);
+        }
         // Returns back to the previous page
         finish();
 
@@ -163,6 +146,7 @@ public class EventForm extends AppCompatActivity {
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         event.setCreator(currentUser.getUid());
+        event.addAttendee(currentUser.getUid());
         if(needToStoreImage) {
             event.setUrl(url);
         }
@@ -184,5 +168,75 @@ public class EventForm extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+
+    // For getting the time
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .show(newFragment)
+                .commit();
+        newFragment.show(fm, "timePicker");
+    }
+
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = getInstance();
+            int hour = c.get(HOUR_OF_DAY);
+            int minute = c.get(MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Do something with the time chosen by the user
+            ((TextView) getActivity().findViewById(R.id.tv_time)).setVisibility(View.VISIBLE);
+            ((TextView) getActivity().findViewById(R.id.tv_time)).setText(hourOfDay + ":" + minute);
+
+        }
+    }
+
+    // For getting the date
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .show(newFragment)
+                .commit();
+        newFragment.show(fm, "datePicker");
+
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = getInstance();
+            int year = c.get(YEAR);
+            int month = c.get(MONTH);
+            int day = c.get(DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            ((TextView) getActivity().findViewById(R.id.tv_date)).setVisibility(View.VISIBLE);
+            ((TextView) getActivity().findViewById(R.id.tv_date)).setText(month + "/" + day + "/" + year);
+        }
     }
 }

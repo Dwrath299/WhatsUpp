@@ -1,5 +1,6 @@
 package edu.byui.whatsupp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class UserPresenter {
     User userData;
     UserActivity userActivity;
     AccessToken userToken;
+    edu.byui.whatsupp.Profile profileActivity;
     boolean newUser;
 
 
@@ -135,7 +137,10 @@ public class UserPresenter {
     }
 
 
-    public void requestUserData(final User user) {
+    public void requestUserData(final Activity activity, final String uid) {
+
+        profileActivity = (edu.byui.whatsupp.Profile) activity;
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .get()
@@ -147,12 +152,14 @@ public class UserPresenter {
 
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                if(document.get("uid").toString().equals(user.getUid())) {
-
+                                if(document.get("uid").toString().equals(uid)) {
+                                    User user = new User(uid);
                                     user.setLastName(document.get("lastName").toString());
                                     user.setFirstName(document.get("firstName").toString());
                                     user.setEmail(document.get("email").toString());
                                     user.setGender(document.get("gender").toString());
+
+                                    profileActivity.displayUserInfo(user);
 
                                 }
                             }
@@ -166,6 +173,8 @@ public class UserPresenter {
                 });
 
     }
+
+
 
     public void changeGroupData() {
 

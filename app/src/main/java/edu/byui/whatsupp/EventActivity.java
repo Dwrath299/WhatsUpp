@@ -2,6 +2,8 @@ package edu.byui.whatsupp;
 
 import android.app.Activity;
 
+import java.util.List;
+
 /**
  * Created by Dallin's PC on 2/26/2018.
  */
@@ -22,7 +24,8 @@ public class EventActivity {
         eventPresenter.getEvent(activity, title);
     }
 
-    public void addEvent(Activity activity, Event event) {
+    public void addAttendee(String docRef, List<String> uids) {
+        eventPresenter.addAttendee(docRef, uids);
 
     }
 }

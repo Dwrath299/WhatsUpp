@@ -78,24 +78,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editDescription" />
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="249dp"
-        android:layout_height="375dp"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="@+id/datePicker"
-        tools:layout_editor_absoluteX="56dp" />
-
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
-
     <Button
         android:id="@+id/addTime"
         style="@style/Widget.AppCompat.Button.Colored"
@@ -104,11 +86,11 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:onClick="pickTime"
+        android:onClick="showTimePickerDialog"
         android:text="Add Time"
         app:layout_constraintBottom_toTopOf="@+id/eventSubmit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEventDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
 
     <Button
         android:id="@+id/addDate"
@@ -118,9 +100,35 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
-        android:onClick="pickDate"
+        android:onClick="showDatePickerDialog"
         android:text="Add Date"
         app:layout_constraintBottom_toTopOf="@+id/eventSubmit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/addTime"
+        app:layout_constraintStart_toStartOf="@+id/addTime"
+        app:layout_constraintTop_toBottomOf="@+id/editEventDescription" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/addDate"
+        app:layout_constraintStart_toStartOf="@+id/addDate"
         app:layout_constraintTop_toBottomOf="@+id/editEventDescription" />
 </android.support.constraint.ConstraintLayout>

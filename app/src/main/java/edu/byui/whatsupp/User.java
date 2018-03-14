@@ -22,6 +22,12 @@ public class User {
     profilePictureView = (ProfilePictureView) findViewById(R.id.profilePic);
 
     profilePictureView.setProfileId(userId);
+
+    Get relationship status
+    You just need to get an access token with user_relationships,
+    call https://graph.facebook.com/YOURFRIEND-ID and check "relationship_status" in the returned JSON string.
+    Just have in mind that if your friend didn't filled his relationship data into his profile,
+    there will be no "relationship_status" at the returned user info.
      */
 
     public User(String first, String last, String e, String gen, String uid) {
@@ -34,13 +40,11 @@ public class User {
 
     }
 
-    //Provide just the uid and it will fetch the rest of the data
     public User(String uid) {
         this.uid = uid;
-        userActivity = new UserActivity();
-        userActivity.getUserInfo(this);
-
     }
+
+
 
     public String getFirstName() {
         return firstName;
