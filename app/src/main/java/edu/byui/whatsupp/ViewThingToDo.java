@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -25,8 +26,7 @@ public class ViewThingToDo extends AppCompatActivity {
     private String message;
     private ThingToDoActivity ttda;
     private EventActivity ea;
-    private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
+    User currentUser;
     ListView listView;
     ThingToDo thing;
     @Override
@@ -36,8 +36,7 @@ public class ViewThingToDo extends AppCompatActivity {
         ttda = new ThingToDoActivity(this);
         ea = new EventActivity(this);
         Intent intent = getIntent();
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
         message = intent.getStringExtra(EXTRA_MESSAGE);
         ttda.displayThingToDo(this, message);
         ea.displayEventsForThing((edu.byui.whatsupp.ViewThingToDo)this, message);
