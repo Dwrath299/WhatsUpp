@@ -30,6 +30,8 @@ public class ViewEvent extends AppCompatActivity {
     User currentUser;
     ListView listView;
     Event event;
+    List<String> attendees;
+    Button joinButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +39,12 @@ public class ViewEvent extends AppCompatActivity {
         ea = new EventActivity(this);
         Intent intent = getIntent();
         mAuth = FirebaseAuth.getInstance();
+        joinButton = (Button) this.findViewById(R.id.attendee_btn);
         currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
         // Message is the event title
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
         ea.displayEvent((edu.byui.whatsupp.ViewEvent)this, message);
-
+        attendees = new ArrayList<String>();
     }
 
     public void displayEvent(Event item) {
@@ -59,13 +62,18 @@ public class ViewEvent extends AppCompatActivity {
         if(event.getCreator() != null) { //If the creator he can edit, need to make a way of seeing if the user is admin
             String uid = currentUser.getUid();
             if(event.getCreator().equals( uid)) {
-                Button editButton = (Button) findViewById(R.id.editButton);
+                Button editButton = (Button) findViewById(R.id.eventEditButton);
                 editButton.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void displayAttendees(List<User> users) {
+        //It is possible for the event to have no attendees if the creator leaves the event.
+        if(users.size() < 1) {
+            User filler = new User("No one going yet...", null, null, null, null);
+            users.add(filler);
+        }
         //Check to see if the current user has already said they are coming
         // If so, make the join button say leave event
         boolean joined = false;
@@ -73,14 +81,18 @@ public class ViewEvent extends AppCompatActivity {
             if (currentUser.getUid().equals(users.get(i).getUid())){
                 joined = true;
             }
+            //Give the list to the class so it can update it if needs be.
+            attendees.add(users.get(i).getUid());
         }
-        Button joinButton = (Button) this.findViewById(R.id.attendee_btn);
+
         if (joined == false) {
             joinButton.setText("Join Event");
         } else {
             joinButton.setText("Leave Event");
         }
         joinButton.setVisibility(View.VISIBLE);
+
+
 
         UserAdapter userAdapter = new UserAdapter(this, users, this);
         listView = (ListView) this.findViewById(R.id.attendees_list);
@@ -100,6 +112,19 @@ public class ViewEvent extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void updateAttendees(View view) {
+        if(joinButton.getText().equals("Join Event")) {
+            attendees.add(currentUser.getUid());
+        } else {
+            for(int i = 0; i < attendees.size(); i++){
+                if (currentUser.getUid().equals(attendees.get(i))){
+                    attendees.remove(i);
+                }
+            }
+        }
+        ea.addAttendee(event.getRefrence(), attendees);
     }
 
 
