@@ -12,6 +12,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+
 public class GroupForm extends AppCompatActivity {
 
     private int PICK_IMAGE_REQUEST = 1;
@@ -21,7 +23,10 @@ public class GroupForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_form);
-
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
         setupActionBar();
 
     }
@@ -76,6 +81,13 @@ public class GroupForm extends AppCompatActivity {
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(GroupForm.this, LoginPage.class);
+                            // No real reason for sending UID with it, just because
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -89,7 +101,11 @@ public class GroupForm extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GroupForm.this, HomePage.class);
+                // No real reason for sending UID with it, just because
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Home page");
+                startActivity(intent);
             }
         });
     }

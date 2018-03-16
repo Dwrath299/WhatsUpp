@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,7 +81,11 @@ public class HomePage extends AppCompatActivity {
         } else {
             loginButton.setText("Login");
             loggedIn = false;
+            currentUser = new User("123");
         }
+        int sdkVersion = Build.VERSION.SDK_INT;
+        String release = Build.VERSION.RELEASE;
+
     }
 
 
@@ -109,7 +114,7 @@ public class HomePage extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, ThingToDoForm.class);
-            intent.putExtra(EXTRA_MESSAGE, "HomePage");
+            intent.putExtra(EXTRA_MESSAGE, "Create");
             Log.i("Intent", "Send User to Form");
             startActivity(intent);
         }
@@ -165,6 +170,12 @@ public class HomePage extends AppCompatActivity {
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(HomePage.this, LoginPage.class);
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -178,7 +189,7 @@ public class HomePage extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sorry to disappoint, you are on the home page!", Toast.LENGTH_SHORT).show();
             }
         });
     }

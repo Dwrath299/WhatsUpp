@@ -7,18 +7,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.login.widget.ProfilePictureView;
+
+import java.util.List;
+
+import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
 public class Profile extends AppCompatActivity {
     String message;
     User profileUser;
     UserActivity ua;
+    EventActivity ea;
     User currentUser;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +36,18 @@ public class Profile extends AppCompatActivity {
         Intent intent = getIntent();
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
         ua = new UserActivity();
+        ea = new EventActivity(this);
         ua.getUserInfo(this, message);
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
+        ea.displayEventsForProfile(this, message);
+        //Check to see if current user, if so, let them edit it.
+        if(currentUser.getUid().equals(message)) {
 
-setupActionBar();
+        }
+        setupActionBar();
     }
 
     public void displayUserInfo(User user) {
@@ -88,6 +106,12 @@ setupActionBar();
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(Profile.this, LoginPage.class);
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -101,8 +125,39 @@ setupActionBar();
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Profile.this, HomePage.class);
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Home Page");
+                startActivity(intent);
             }
         });
+    }
+
+
+    public void displayEventsForProfile(List<Event> events) {
+        if (events.size() < 1) {
+            // If there are no events, the image is a frowny face.
+            Event event = new Event(profileUser.getFirstName() + " isn't attending any events", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
+            events.add(event);
+        }
+        EventAdapter eventAdapter = new EventAdapter(this, events, this, 2);
+        listView = (ListView) this.findViewById(R.id.profile_event_list);
+        listView.setAdapter(eventAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+
+                Object o = listView.getItemAtPosition(position);
+                Event event = (Event)o;
+                Intent intent = new Intent(Profile.this, ViewEvent.class);
+                intent.putExtra(EXTRA_MESSAGE, event.getTitle());
+                Log.i("Intent", "Send User to ViewEvent");
+                startActivity(intent);
+
+            }
+        });
+
     }
 }

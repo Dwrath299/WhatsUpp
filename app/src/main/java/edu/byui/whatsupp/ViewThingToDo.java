@@ -40,7 +40,10 @@ public class ViewThingToDo extends AppCompatActivity {
         ttda = new ThingToDoActivity(this);
         ea = new EventActivity(this);
         Intent intent = getIntent();
-        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
         message = intent.getStringExtra(EXTRA_MESSAGE);
         ttda.displayThingToDo(this, message);
         ea.displayEventsForThing((edu.byui.whatsupp.ViewThingToDo)this, message);
@@ -73,13 +76,20 @@ public class ViewThingToDo extends AppCompatActivity {
 
     }
 
+    public void updateThing(View view) {
+        Intent intent = new Intent(this, ThingToDoForm.class);
+        intent.putExtra(EXTRA_MESSAGE, thing.getTitle());
+        Log.i("Intent", "Send User to Form");
+        startActivity(intent);
+    }
+
     public void displayEventsForThing(List<Event> events) {
         if (events.size() < 1) {
             // If there are no events, the image is a frowny face.
             Event event = new Event("No events currently for this place.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
             events.add(event);
         }
-        EventAdapter eventAdapter = new EventAdapter(this, events, this);
+        EventAdapter eventAdapter = new EventAdapter(this, events, this, 1);
         listView = (ListView) this.findViewById(R.id.listView1);
         listView.setAdapter(eventAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -151,6 +161,12 @@ public class ViewThingToDo extends AppCompatActivity {
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(ViewThingToDo.this, LoginPage.class);
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "");
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -164,7 +180,10 @@ public class ViewThingToDo extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ViewThingToDo.this, HomePage.class);
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "");
+                Log.i("Intent", "Send User to Home Page");
+                startActivity(intent);
             }
         });
     }

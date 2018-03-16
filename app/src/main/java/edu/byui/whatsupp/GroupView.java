@@ -12,6 +12,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+
 public class GroupView extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     User currentUser;
@@ -20,7 +22,10 @@ public class GroupView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_view);
-
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
         setupActionBar();
     }
 
@@ -74,6 +79,13 @@ public class GroupView extends AppCompatActivity {
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(GroupView.this, LoginPage.class);
+                            // No real reason for sending UID with it, just because
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -87,7 +99,11 @@ public class GroupView extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GroupView.this, HomePage.class);
+                // No real reason for sending UID with it, just because
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Login page");
+                startActivity(intent);
             }
         });
     }

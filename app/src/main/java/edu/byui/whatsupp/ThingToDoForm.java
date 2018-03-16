@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,6 +47,7 @@ public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     ThingToDo thing;
+    ThingToDoActivity ttda;
     private FirebaseAuth mAuth;
     User currentUser;
     String message;
@@ -56,10 +59,44 @@ public class ThingToDoForm extends AppCompatActivity {
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        setupActionBar();
+        // If not creating then updating.
+        if(message != "Create")
+        {
+            ttda = new ThingToDoActivity(this);
+            ttda.getThingToEdit(this, message);
+        }
         mAuth = FirebaseAuth.getInstance();
-        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
 
-setupActionBar();
+
+    }
+
+    public void displayThingData(ThingToDo thing) {
+        this.thing = thing;
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        EditText title = (EditText) findViewById(R.id.editTitle);
+        EditText address = (EditText) findViewById(R.id.editAddress);
+        EditText description = (EditText) findViewById(R.id.editDescription);
+        EditText city = (EditText) findViewById(R.id.editCity);
+        EditText zip = (EditText) findViewById(R.id.editZip);
+        Picasso.with(this).load(thing.getUrl()).into(imageView);
+        title.setText(thing.getTitle());
+        address.setText(thing.getAddress());
+        description.setText(thing.getDescription());
+        city.setText(thing.getCity());
+        zip.setText(Long.toString(thing.getZipCode()));
+        Button delete = (Button) findViewById(R.id.thing_delete_btn);
+        delete.setVisibility(View.VISIBLE);
+        Button update = (Button) findViewById(R.id.button2);
+        update.setText("Update");
+    }
+
+    public void deleteThingToDo(View view) {
+        ttda.deleteThing(thing.getReference());
     }
 
     public void addPicture(View view) {
@@ -94,7 +131,11 @@ setupActionBar();
     }
 
     public void submit (View view) {
-
+        Button update = (Button) findViewById(R.id.button2);
+        if(update.getText() == "Update")
+        {
+            ttda.deleteThing(thing.getReference());
+        }
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
@@ -210,6 +251,13 @@ setupActionBar();
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(ThingToDoForm.this, LoginPage.class);
+                            // No real reason for sending UID with it, just because
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -223,7 +271,11 @@ setupActionBar();
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ThingToDoForm.this, HomePage.class);
+                // No real reason for sending UID with it, just because
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Home page");
+                startActivity(intent);
             }
         });
     }

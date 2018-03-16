@@ -45,7 +45,10 @@ public class ViewEvent extends AppCompatActivity {
         Intent intent = getIntent();
         mAuth = FirebaseAuth.getInstance();
         joinButton = (Button) this.findViewById(R.id.attendee_btn);
-        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
         // Message is the event title
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
         ea.displayEvent((edu.byui.whatsupp.ViewEvent)this, message);
@@ -177,6 +180,12 @@ public class ViewEvent extends AppCompatActivity {
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(ViewEvent.this, LoginPage.class);
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "");
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -190,7 +199,10 @@ public class ViewEvent extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ViewEvent.this, HomePage.class);
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "");
+                Log.i("Intent", "Send User to Home Page");
+                startActivity(intent);
             }
         });
     }

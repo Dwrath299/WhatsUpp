@@ -47,9 +47,11 @@ public class LoginPage extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
-
+        if (AccessToken.getCurrentAccessToken() != null)
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        else
+            currentUser = new User("123");
+        setupActionBar();
         LoginButton authButton = (LoginButton)this.findViewById(R.id.login_button);
         authButton.setReadPermissions("email", "public_profile");
         callbackManager = CallbackManager.Factory.create();
@@ -65,15 +67,17 @@ public class LoginPage extends AppCompatActivity {
                     @Override
                     public void onCancel() {
                         // App code
+                        Log.d("fb_login_sdk", "callback cancel");
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
+                        Log.d("fb_login_sdk", exception.toString());
                     }
                 });
 
-setupActionBar();
+
     }
 
     public void updateLogin(){
@@ -177,6 +181,12 @@ setupActionBar();
                             startActivity(intent);
 
                         }
+                        else if(item.getTitle().equals("Logout")) {
+                            Intent intent = new Intent(LoginPage.this, LoginPage.class);
+                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                            Log.i("Intent", "Send User to Login page");
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });
@@ -190,7 +200,10 @@ setupActionBar();
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginPage.this, HomePage.class);
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "");
+                Log.i("Intent", "Send User to Home Page");
+                startActivity(intent);
             }
         });
     }
