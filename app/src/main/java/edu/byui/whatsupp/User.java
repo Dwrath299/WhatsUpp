@@ -15,6 +15,7 @@ public class User {
     String uid;
     String email;
     String gender;
+    String docRef;
     UserActivity userActivity;
     /* You can get the profile pic by
     ProfilePictureView profilePictureView;
@@ -29,6 +30,7 @@ public class User {
     Just have in mind that if your friend didn't filled his relationship data into his profile,
     there will be no "relationship_status" at the returned user info.
      */
+
 
     public User(String first, String last, String e, String gen, String uid) {
         //utilize Facebook API's methods

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,9 +47,11 @@ public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     ThingToDo thing;
+    ThingToDoActivity ttda;
     private FirebaseAuth mAuth;
     User currentUser;
     String message;
+    boolean loggedIn;
 
     private int PICK_IMAGE_REQUEST = 1;
     @Override
@@ -56,10 +60,54 @@ public class ThingToDoForm extends AppCompatActivity {
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        setupActionBar();
+        // If not creating then updating.
+        if(message != "Create")
+        {
+            ttda = new ThingToDoActivity(this);
+            ttda.getThingToEdit(this, message);
+        }
         mAuth = FirebaseAuth.getInstance();
-        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        // Get the logged in Status
+        loggedIn = AccessToken.getCurrentAccessToken() == null;
+        if(!loggedIn){ // For facebook, logged in = false
+            loggedIn = true;
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        } else {
+            loggedIn = false;
+            currentUser = new User("123");
+        }
 
-setupActionBar();
+
+    }
+
+    public void displayThingData(ThingToDo thing) {
+        this.thing = thing;
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        EditText title = (EditText) findViewById(R.id.editTitle);
+        EditText address = (EditText) findViewById(R.id.editAddress);
+        EditText description = (EditText) findViewById(R.id.editDescription);
+        EditText city = (EditText) findViewById(R.id.editCity);
+        EditText zip = (EditText) findViewById(R.id.editZip);
+        Picasso.with(this).load(thing.getUrl()).into(imageView);
+        title.setText(thing.getTitle());
+        address.setText(thing.getAddress());
+        description.setText(thing.getDescription());
+        city.setText(thing.getCity());
+        zip.setText(Long.toString(thing.getZipCode()));
+        Button delete = (Button) findViewById(R.id.thing_delete_btn);
+        delete.setVisibility(View.VISIBLE);
+        Button update = (Button) findViewById(R.id.button2);
+        update.setText("Update");
+    }
+
+    public void deleteThingToDo(View view) {
+        ttda.deleteThing(thing.getReference());
+        Intent intent = new Intent(ThingToDoForm.this, HomePage.class);
+        // No real reason for sending UID with it, just because
+        intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+        Log.i("Intent", "Send User to Home page");
+        startActivity(intent);
     }
 
     public void addPicture(View view) {
@@ -94,7 +142,11 @@ setupActionBar();
     }
 
     public void submit (View view) {
-
+        Button update = (Button) findViewById(R.id.button2);
+        if(update.getText() == "Update")
+        {
+            ttda.deleteThing(thing.getReference());
+        }
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         storageRef = FirebaseStorage.getInstance().getReference();
         EditText editText = findViewById(R.id.editTitle);
@@ -181,49 +233,76 @@ setupActionBar();
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText("WhatsUpp");
+        actionTitle.setText("Create a Place");
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
-        popupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Creating the instance of PopupMenu
-                final PopupMenu popup = new PopupMenu(ThingToDoForm.this, popupButton);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                        .inflate(R.menu.popup_menu, popup.getMenu());
+        Button loginButton = (Button) findViewById(R.id.login_btn);
+        if(loggedIn) {
+            popupButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.INVISIBLE);
+            popupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Creating the instance of PopupMenu
+                    final PopupMenu popup = new PopupMenu(ThingToDoForm.this, popupButton);
+                    //Inflating the Popup using xml file
+                    popup.getMenuInflater()
+                            .inflate(R.menu.popup_menu, popup.getMenu());
 
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals("My Profile")) {
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("My Profile")) {
 
-                            Intent intent = new Intent(ThingToDoForm.this, Profile.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to Profile");
-                            startActivity(intent);
+                                Intent intent = new Intent(ThingToDoForm.this, Profile.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Profile");
+                                startActivity(intent);
+                            }
+                            else if(item.getTitle().equals("View Groups")) {
+                                Intent intent = new Intent(ThingToDoForm.this, GroupsView.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to View Groups");
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(ThingToDoForm.this, LoginPage.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Login page");
+                                startActivity(intent);
+                            }
+                            return true;
                         }
-                        else if(item.getTitle().equals("View Groups")) {
-                            Intent intent = new Intent(ThingToDoForm.this, GroupsView.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to View Groups");
-                            startActivity(intent);
+                    });
 
-                        }
-                        return true;
-                    }
-                });
+                    popup.show(); //showing popup menu
+                }
+            }); //closing the setOnClickListener method
 
-                popup.show(); //showing popup menu
-            }
-        }); //closing the setOnClickListener method
+        } else {
+            popupButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ThingToDoForm.this, LoginPage.class);
+                    intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                    Log.i("Intent", "Send User to Login page");
+                    startActivity(intent);
+                }
+            });
+        }
 
         //Detect the button click event of the home button in the actionbar
         ImageButton btnHome = (ImageButton) findViewById(R.id.btn_home);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ThingToDoForm.this, HomePage.class);
+                // No real reason for sending UID with it, just because
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Home page");
+                startActivity(intent);
             }
         });
     }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,26 +62,26 @@ public class HomePage extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        setupActionBar();
+
 
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
         thingToDoActivity = new ThingToDoActivity(this);
         thingToDoActivity.displayThingsToDo(this);
-        Button loginButton = (Button) findViewById(R.id.button3);
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
-        //loggedIn = false;
-        //loggedIn = sharedPref.getBoolean("LoggedIn", loggedIn);
-        if(!loggedIn){
-            loginButton.setText("Logout");
+        if(!loggedIn){ // For facebook, logged in = false
             loggedIn = true;
             currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
         } else {
-            loginButton.setText("Login");
             loggedIn = false;
+            currentUser = new User("123");
         }
+        //This needs to be done AFTER log in.
+        setupActionBar();
+
+
     }
 
 
@@ -109,7 +110,7 @@ public class HomePage extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, ThingToDoForm.class);
-            intent.putExtra(EXTRA_MESSAGE, "HomePage");
+            intent.putExtra(EXTRA_MESSAGE, "Create");
             Log.i("Intent", "Send User to Form");
             startActivity(intent);
         }
@@ -139,46 +140,69 @@ public class HomePage extends AppCompatActivity {
         actionTitle.setText("WhatsUpp");
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
-        popupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Creating the instance of PopupMenu
-                final PopupMenu popup = new PopupMenu(HomePage.this, popupButton);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                        .inflate(R.menu.popup_menu, popup.getMenu());
+        Button loginButton = (Button) findViewById(R.id.login_btn);
+        if(loggedIn) {
+            popupButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.INVISIBLE);
+            popupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Creating the instance of PopupMenu
+                    final PopupMenu popup = new PopupMenu(HomePage.this, popupButton);
+                    //Inflating the Popup using xml file
+                    popup.getMenuInflater()
+                            .inflate(R.menu.popup_menu, popup.getMenu());
 
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals("My Profile")) {
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("My Profile")) {
 
-                            Intent intent = new Intent(HomePage.this, Profile.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to Profile");
-                            startActivity(intent);
+                                Intent intent = new Intent(HomePage.this, Profile.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Profile");
+                                startActivity(intent);
+                            }
+                            else if(item.getTitle().equals("View Groups")) {
+                                Intent intent = new Intent(HomePage.this, GroupsView.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to View Groups");
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(HomePage.this, LoginPage.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Login page");
+                                startActivity(intent);
+                            }
+                            return true;
                         }
-                        else if(item.getTitle().equals("View Groups")) {
-                            Intent intent = new Intent(HomePage.this, GroupsView.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to View Groups");
-                            startActivity(intent);
+                    });
 
-                        }
-                        return true;
-                    }
-                });
+                    popup.show(); //showing popup menu
+                }
+            }); //closing the setOnClickListener method
 
-                popup.show(); //showing popup menu
-            }
-        }); //closing the setOnClickListener method
+        } else {
+            popupButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomePage.this, LoginPage.class);
+                    intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                    Log.i("Intent", "Send User to Login page");
+                    startActivity(intent);
+                }
+            });
+        }
 
         //Detect the button click event of the home button in the actionbar
         ImageButton btnHome = (ImageButton) findViewById(R.id.btn_home);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sorry to disappoint, you are on the home page!", Toast.LENGTH_SHORT).show();
             }
         });
     }

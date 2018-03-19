@@ -31,6 +31,7 @@ public class ViewThingToDo extends AppCompatActivity {
     private ThingToDoActivity ttda;
     private EventActivity ea;
     User currentUser;
+    boolean loggedIn;
     ListView listView;
     ThingToDo thing;
     @Override
@@ -40,7 +41,15 @@ public class ViewThingToDo extends AppCompatActivity {
         ttda = new ThingToDoActivity(this);
         ea = new EventActivity(this);
         Intent intent = getIntent();
-        currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        // Get the logged in Status
+        loggedIn = AccessToken.getCurrentAccessToken() == null;
+        if(!loggedIn){ // For facebook, logged in = false
+            loggedIn = true;
+            currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
+        } else {
+            loggedIn = false;
+            currentUser = new User("123");
+        }
         message = intent.getStringExtra(EXTRA_MESSAGE);
         ttda.displayThingToDo(this, message);
         ea.displayEventsForThing((edu.byui.whatsupp.ViewThingToDo)this, message);
@@ -73,13 +82,20 @@ public class ViewThingToDo extends AppCompatActivity {
 
     }
 
+    public void updateThing(View view) {
+        Intent intent = new Intent(this, ThingToDoForm.class);
+        intent.putExtra(EXTRA_MESSAGE, thing.getTitle());
+        Log.i("Intent", "Send User to Form");
+        startActivity(intent);
+    }
+
     public void displayEventsForThing(List<Event> events) {
         if (events.size() < 1) {
             // If there are no events, the image is a frowny face.
             Event event = new Event("No events currently for this place.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
             events.add(event);
         }
-        EventAdapter eventAdapter = new EventAdapter(this, events, this);
+        EventAdapter eventAdapter = new EventAdapter(this, events, this, 1);
         listView = (ListView) this.findViewById(R.id.listView1);
         listView.setAdapter(eventAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,49 +138,75 @@ public class ViewThingToDo extends AppCompatActivity {
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText("WhatsUpp");
+        actionTitle.setText(thing.getTitle());
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
-        popupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Creating the instance of PopupMenu
-                final PopupMenu popup = new PopupMenu(ViewThingToDo.this, popupButton);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                        .inflate(R.menu.popup_menu, popup.getMenu());
+        Button loginButton = (Button) findViewById(R.id.login_btn);
+        if(loggedIn) {
+            popupButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.INVISIBLE);
+            popupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Creating the instance of PopupMenu
+                    final PopupMenu popup = new PopupMenu(ViewThingToDo.this, popupButton);
+                    //Inflating the Popup using xml file
+                    popup.getMenuInflater()
+                            .inflate(R.menu.popup_menu, popup.getMenu());
 
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals("My Profile")) {
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("My Profile")) {
 
-                            Intent intent = new Intent(ViewThingToDo.this, Profile.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to Profile");
-                            startActivity(intent);
+                                Intent intent = new Intent(ViewThingToDo.this, Profile.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Profile");
+                                startActivity(intent);
+                            }
+                            else if(item.getTitle().equals("View Groups")) {
+                                Intent intent = new Intent(ViewThingToDo.this, GroupsView.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to View Groups");
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(ViewThingToDo.this, LoginPage.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Login page");
+                                startActivity(intent);
+                            }
+                            return true;
                         }
-                        else if(item.getTitle().equals("View Groups")) {
-                            Intent intent = new Intent(ViewThingToDo.this, GroupsView.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to View Groups");
-                            startActivity(intent);
+                    });
 
-                        }
-                        return true;
-                    }
-                });
+                    popup.show(); //showing popup menu
+                }
+            }); //closing the setOnClickListener method
 
-                popup.show(); //showing popup menu
-            }
-        }); //closing the setOnClickListener method
+        } else {
+            popupButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ViewThingToDo.this, LoginPage.class);
+                    intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                    Log.i("Intent", "Send User to Login page");
+                    startActivity(intent);
+                }
+            });
+        }
 
         //Detect the button click event of the home button in the actionbar
         ImageButton btnHome = (ImageButton) findViewById(R.id.btn_home);
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ViewThingToDo.this, HomePage.class);
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, "");
+                Log.i("Intent", "Send User to Home Page");
+                startActivity(intent);
             }
         });
     }

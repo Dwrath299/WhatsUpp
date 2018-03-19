@@ -22,13 +22,19 @@ import java.util.List;
 public class EventAdapter extends BaseAdapter {
     private Context mContext;
     private List<Event> events;
-    edu.byui.whatsupp.ViewThingToDo activity;
+    edu.byui.whatsupp.ViewThingToDo thingActivity;
+    edu.byui.whatsupp.Profile profileActivity;
+    int page;
 
     private LayoutInflater l_Inflater;
-    public EventAdapter(Context c, List<Event> t, Activity a) {
+    public EventAdapter(Context c, List<Event> t, Activity a, int page) {
         mContext = c;
         events = t;
-        activity = (edu.byui.whatsupp.ViewThingToDo) a;
+        this.page = page;
+        if (page == 1)
+            thingActivity = (edu.byui.whatsupp.ViewThingToDo) a;
+        else if(page == 2)
+            profileActivity = (edu.byui.whatsupp.Profile) a;
         l_Inflater = LayoutInflater.from(c);
     }
 
