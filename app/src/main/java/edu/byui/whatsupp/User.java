@@ -30,6 +30,7 @@ public class User {
     there will be no "relationship_status" at the returned user info.
      */
 
+
     public User(String first, String last, String e, String gen, String uid) {
         //utilize Facebook API's methods
        this.firstName = first;
