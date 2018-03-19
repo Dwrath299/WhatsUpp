@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -22,15 +23,21 @@ public class GroupsView extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     ListView listView;
     User currentUser;
+    boolean loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups_view);
-        if (AccessToken.getCurrentAccessToken() != null)
+        // Get the logged in Status
+        loggedIn = AccessToken.getCurrentAccessToken() == null;
+        if(!loggedIn){ // For facebook, logged in = false
+            loggedIn = true;
             currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
-        else
+        } else {
+            loggedIn = false;
             currentUser = new User("123");
+        }
         setupActionBar();
     }
 
@@ -89,49 +96,65 @@ public class GroupsView extends AppCompatActivity {
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText("WhatsUpp");
+        actionTitle.setText("Your Groups");
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
-        popupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Creating the instance of PopupMenu
-                final PopupMenu popup = new PopupMenu(GroupsView.this, popupButton);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                        .inflate(R.menu.popup_menu, popup.getMenu());
+        Button loginButton = (Button) findViewById(R.id.login_btn);
+        if(loggedIn) {
+            popupButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.INVISIBLE);
+            popupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Creating the instance of PopupMenu
+                    final PopupMenu popup = new PopupMenu(GroupsView.this, popupButton);
+                    //Inflating the Popup using xml file
+                    popup.getMenuInflater()
+                            .inflate(R.menu.popup_menu, popup.getMenu());
 
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals("My Profile")) {
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("My Profile")) {
 
-                            Intent intent = new Intent(GroupsView.this, Profile.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to Profile");
-                            startActivity(intent);
+                                Intent intent = new Intent(GroupsView.this, Profile.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Profile");
+                                startActivity(intent);
+                            }
+                            else if(item.getTitle().equals("View Groups")) {
+                                Intent intent = new Intent(GroupsView.this, GroupsView.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to View Groups");
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(GroupsView.this, LoginPage.class);
+                                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                                Log.i("Intent", "Send User to Login page");
+                                startActivity(intent);
+                            }
+                            return true;
                         }
-                        else if(item.getTitle().equals("View Groups")) {
-                            Intent intent = new Intent(GroupsView.this, GroupsView.class);
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to View Groups");
-                            startActivity(intent);
+                    });
 
-                        }
-                        else if(item.getTitle().equals("Logout")) {
-                            Intent intent = new Intent(GroupsView.this, LoginPage.class);
-                            // No real reason for sending UID with it, just because
-                            intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                            Log.i("Intent", "Send User to Login page");
-                            startActivity(intent);
-                        }
-                        return true;
-                    }
-                });
+                    popup.show(); //showing popup menu
+                }
+            }); //closing the setOnClickListener method
 
-                popup.show(); //showing popup menu
-            }
-        }); //closing the setOnClickListener method
+        } else {
+            popupButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(GroupsView.this, LoginPage.class);
+                    intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                    Log.i("Intent", "Send User to Login page");
+                    startActivity(intent);
+                }
+            });
+        }
 
         //Detect the button click event of the home button in the actionbar
         ImageButton btnHome = (ImageButton) findViewById(R.id.btn_home);
