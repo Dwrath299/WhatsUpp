@@ -158,7 +158,6 @@ public class UserPresenter {
                                     user.setFirstName(document.get("firstName").toString());
                                     user.setEmail(document.get("email").toString());
                                     user.setGender(document.get("gender").toString());
-
                                     profileActivity.displayUserInfo(user);
 
                                 }

@@ -15,6 +15,7 @@ public class User {
     String uid;
     String email;
     String gender;
+    String docRef;
     UserActivity userActivity;
     /* You can get the profile pic by
     ProfilePictureView profilePictureView;

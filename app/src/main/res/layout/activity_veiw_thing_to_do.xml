@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:onClick="updateThing"
         android:text="Edit"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,11 +91,12 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
         android:onClick="addEvent"
         android:text="Add Event"
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/listView1" />
+        app:layout_constraintBottom_toBottomOf="@+id/listView1"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,6 +10,10 @@
             android:id="@+id/two"
             android:title="View Groups"/>
 
+        <item
+            android:id="@+id/three"
+            android:title="Logout"/>
+
 
 
 </menu>

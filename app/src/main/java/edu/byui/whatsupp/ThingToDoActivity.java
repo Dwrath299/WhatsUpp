@@ -32,5 +32,16 @@ public class ThingToDoActivity {
 
     }
 
+    public void getThingToEdit(Activity activity, String title) {
+        thingToDoPresenter.getThingToEdit(activity, title);
+    }
+
+    public void deleteThing(String docRef) {
+        thingToDoPresenter.deleteThingDocument(docRef);
+
+    }
+
+
+
 
 }

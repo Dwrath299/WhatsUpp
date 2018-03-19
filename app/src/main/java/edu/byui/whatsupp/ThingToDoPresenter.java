@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 
@@ -43,6 +45,7 @@ public class ThingToDoPresenter {
 
     edu.byui.whatsupp.HomePage homePageActivity;
     edu.byui.whatsupp.ViewThingToDo viewThingToDoActivity;
+    edu.byui.whatsupp.ThingToDoForm thingToDoForm;
 
     public ThingToDoPresenter() {
 
@@ -129,6 +132,70 @@ public class ThingToDoPresenter {
 
 
     }
+
+    public void getThingToEdit(Activity a, String string){
+        thingToDoForm = (edu.byui.whatsupp.ThingToDoForm) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final String title = string;
+        db.collection("thingsToDo")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<ThingToDo> things = new ArrayList<ThingToDo>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("title").toString().equals(title)) {
+                                    ThingToDo tempThing = new ThingToDo((String) document.get("url"),
+                                            (String)document.get("title"),
+                                            (String)document.get("address"),
+                                            (String)document.get("city"),
+                                            (long) document.get("zipCode"),
+                                            (String)document.get("description"));
+                                    tempThing.setReference(document.getReference().getId());
+                                    if(document.get("creator") != null) {
+                                        tempThing.setCreator((String) document.get("creator"));
+                                    }
+                                    thingToDoForm.displayThingData(tempThing);
+                                }
+
+
+                            }
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
+
+
+
+
+
+    }
+
+    public void deleteThingDocument(String ref) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("thingsToDo").document(ref)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+
 
 
 

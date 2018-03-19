@@ -16,6 +16,7 @@ public class ThingToDo {
     private long zipCode;
     private String description;
     private String creator;
+    private String reference;
     public boolean approved;
 
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
@@ -26,6 +27,14 @@ public class ThingToDo {
         zipCode = z;
         description = d;
         approved = true;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public String getUrl() {

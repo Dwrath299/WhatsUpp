@@ -28,4 +28,8 @@ public class EventActivity {
         eventPresenter.addAttendee(docRef, uids);
 
     }
+
+    public void displayEventsForProfile(Activity activity, String uid) {
+        eventPresenter.getEventsForProfile(activity, uid);
+    }
 }
