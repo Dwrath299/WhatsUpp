@@ -34,6 +34,18 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
+
+/**
+ * <h1>Login Page</h1>
+ * The Login page utilizes Facebook API to
+ * allow users to login using their facebook.
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class LoginPage extends AppCompatActivity {
     CallbackManager callbackManager;
     private FirebaseAuth mAuth;

@@ -5,9 +5,14 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Map;
 
 /**
- * Created by Dallin's PC on 2/16/2018.
+ * <h1>ThingToDo/h1>
+ * The ThingToDo class is stored information from when
+ * a user creates one.
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
-
 public class ThingToDo {
     private String url;
     private String title;

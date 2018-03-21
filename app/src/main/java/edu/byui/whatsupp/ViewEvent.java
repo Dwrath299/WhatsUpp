@@ -27,6 +27,20 @@ import java.util.List;
 
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
+
+/**
+ * <h1>View Event</h1>
+ * Where users can view an individual
+ * event for a ThingToDo. Displays the picture,
+ * title, description and a list of Users that
+ * are attending
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class ViewEvent extends AppCompatActivity {
 
     private String message;
@@ -63,6 +77,13 @@ public class ViewEvent extends AppCompatActivity {
 
     }
 
+    /**
+     * This method is used to display the components of
+     * an individual Event object. It is called from the
+     * Event presenter class when it is done getting it
+     * from firebase
+     * @param item An Event object
+     */
     public void displayEvent(Event item) {
         this.event = item;
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.eventViewProgressBar);
@@ -84,6 +105,13 @@ public class ViewEvent extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * This method is the recieving side of
+     * EventPresenter to display the list of
+     * users that are going to the event.
+     * @param users A list of User Objects
+     */
     public void displayAttendees(List<User> users) {
         //It is possible for the event to have no attendees if the creator leaves the event.
         if(users.size() < 1) {
@@ -130,7 +158,14 @@ public class ViewEvent extends AppCompatActivity {
 
     }
 
-    //The Join and Leave Button
+    /**
+     * This method updates  the list of Attendees
+     * for the current event. Once it either removes
+     * or adds to the event. It will send that updated
+     * list to Event Presenter to  change it on the
+     * server side.
+     * @param view the View object from the activity
+     */
     public void updateAttendees(View view) {
         if(joinButton.getText().equals("Join Event")) {
             attendees.add(currentUser.getUid());
@@ -147,7 +182,12 @@ public class ViewEvent extends AppCompatActivity {
         ea.displayEvent((edu.byui.whatsupp.ViewEvent)this, message);
     }
 
-
+    /**
+     * This method is used to set up
+     * the action bar to have a home button and
+     * a login button if the user is not logged in
+     * or a drop down menu if the user is logged in.
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
@@ -161,7 +201,7 @@ public class ViewEvent extends AppCompatActivity {
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText(event.getTitle());
+        actionTitle.setText(message);
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);
@@ -232,5 +272,20 @@ public class ViewEvent extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    /**
+     * This method sends the user to the EventForm
+     * activity to update the currently viewing event.
+     * @param view the view object from the activity
+     */
+    public void updateEvent(View view) {
+        Intent intent = new Intent(this, EventForm.class);
+        Bundle extras = new Bundle();
+        extras.putString("EXTRA_THINGTITLE",event.getTitle());
+        extras.putString("EXTRA_THINGURL","update");
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 }

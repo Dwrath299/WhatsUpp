@@ -28,6 +28,7 @@ public class EventPresenter {
     edu.byui.whatsupp.ViewThingToDo viewThingToDoActivity;
     edu.byui.whatsupp.ViewEvent viewEventActivity;
     edu.byui.whatsupp.Profile profileActivity;
+    edu.byui.whatsupp.EventForm eventForm;
 
     public EventPresenter() {
 
@@ -91,7 +92,7 @@ public class EventPresenter {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 uids = (List<String>) document.get("attendees");
                                 for(int i = 0; i < uids.size(); i++) {
-                                    if (uids.get(i).equals(uid)) { // To get the events for the Thing
+                                    if (uids.get(i) != null && uids.get(i).equals(uid)) { // To get the events for the Thing
                                         Event tempEvent = new Event((String) document.get("title"), (String) document.get("url"));
                                         tempEvent.setDate((String) document.get("date"));
                                         tempEvent.setTime((String) document.get("time"));
@@ -223,6 +224,69 @@ public class EventPresenter {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    public void getEventToEdit(Activity a, String string){
+        eventForm = (edu.byui.whatsupp.EventForm) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final String title = string;
+        db.collection("events")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<ThingToDo> things = new ArrayList<ThingToDo>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("title").toString().equals(title)) {
+                                    Event tempEvent = new Event((String)document.get("title"), (String) document.get("url"));
+                                    tempEvent.setDate((String) document.get("date"));
+                                    tempEvent.setTime((String) document.get("time"));
+                                    tempEvent.setDescription((String) document.get("description"));
+                                    tempEvent.setPublic((boolean) document.get("isPublic"));
+                                    tempEvent.setThingToDo((String) document.get("thingToDo"));
+                                    tempEvent.setRefrence(document.getReference().getId());
+
+                                    if( document.get("creator") != null) {
+                                        tempEvent.setCreator((String) document.get("creator"));
+                                    }
+                                    eventForm.displayEventData(tempEvent);
+                                }
+
+
+                            }
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
+
+
+
+
+
+    }
+
+    public void deleteEventDocument(String ref) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").document(ref)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
                     }
                 });
     }

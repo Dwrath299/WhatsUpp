@@ -34,9 +34,14 @@ import static android.net.wifi.WifiConfiguration.Status.strings;
 import static java.util.function.Predicate.isEqual;
 
 /**
- * Created by Dallin's PC on 2/26/2018.
+ * <h1>ThingToDo Presenter</h1>
+ * The magic of database retrieval for ThingsToDo
+ * Uses the firebase database
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
-
 public class ThingToDoPresenter {
     ThingToDoActivity thingToDoActivity;
 

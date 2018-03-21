@@ -8,9 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Dallin's PC on 2/26/2018.
+ * <h1>ThingToDo Activity</h1>
+ * The porthole for activites that deal with ThingsToDo
+ * to retrieve information from firebase.
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
-
 public class ThingToDoActivity {
     ThingToDoPresenter thingToDoPresenter;
     List<ThingToDo> things;

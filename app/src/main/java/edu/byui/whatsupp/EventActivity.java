@@ -32,4 +32,12 @@ public class EventActivity {
     public void displayEventsForProfile(Activity activity, String uid) {
         eventPresenter.getEventsForProfile(activity, uid);
     }
+
+    public void getEventForUpdate(Activity activity, String title) {
+        eventPresenter.getEventToEdit(activity, title);
+    }
+
+    public void deleteEvent(String ref) {
+        eventPresenter.deleteEventDocument(ref);
+    }
 }
