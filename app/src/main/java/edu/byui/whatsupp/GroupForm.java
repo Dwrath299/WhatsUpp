@@ -1,25 +1,42 @@
 package edu.byui.whatsupp;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class GroupForm extends AppCompatActivity {
 
     private int PICK_IMAGE_REQUEST = 1;
     User currentUser;
     boolean loggedIn;
+    Spinner spinner2;
+    EditText search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +53,21 @@ public class GroupForm extends AppCompatActivity {
         }
         setupActionBar();
 
+        spinner2 = (Spinner) findViewById(R.id.spinner2);
+        search =(EditText)findViewById(R.id.SearchBar);
+
+        search.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged (Editable s){
+
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchUser(GroupForm.this, search.toString());
+            }
+        });
     }
 
     public void addPicture(View view) {
@@ -44,6 +76,49 @@ public class GroupForm extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Choose Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    public void searchUser(final Activity activity, final String search) {
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean notThere = true;
+
+                            ArrayList<User> userList = new ArrayList<>();
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if ((document.get("firstName").toString() + document.get("lastName")).contains(search)) {
+                                    User user = new User(document.get("uid").toString());
+                                    user.setLastName(document.get("lastName").toString());
+                                    user.setFirstName(document.get("firstName").toString());
+                                    user.setEmail(document.get("email").toString());
+                                    user.setGender(document.get("gender").toString());
+                                    userList.add(user);
+
+
+                                }
+                            }
+
+                            SpinnerAdapter dataAdapter = new SpinnerAdapter(GroupForm.this, userList, GroupForm.this);
+                            //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner2.setAdapter(dataAdapter);
+
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
+
     }
 
     private void setupActionBar() {
