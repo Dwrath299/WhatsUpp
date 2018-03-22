@@ -6,9 +6,16 @@ import com.facebook.AccessToken;
 import com.facebook.login.LoginResult;
 
 /**
- * Created by Dallin's PC on 2/26/2018.
+ * <h1>User Activity</h1>
+ * A porthole to the User Presenter, so each activity that
+ * uses something with users can use this.
+ *
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
-
 public class UserActivity {
     UserPresenter userPresenter;
 
@@ -21,9 +28,12 @@ public class UserActivity {
 
     }
 
-    // Need to know what activity it is coming from, so...
-    // page = 1 = profile
-    // page = 2 = event
+    /**
+     * Retrieves the user info from firebase
+     * @param activity Activity class from the Profile class
+     * @param uid a string of the user ID of the one we need
+     *            to retrieve.
+     */
     public void getUserInfo(Activity activity, String uid) {
         userPresenter.requestUserData(activity, uid);
 

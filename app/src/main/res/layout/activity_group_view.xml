@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="edu.byui.whatsupp.GroupView">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="edu.byui.whatsupp.GroupView">
 
     <Button
         android:id="@+id/button9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_alignBottom="@+id/userSearchSpinner"
+        android:layout_alignStart="@+id/userSearchSpinner"
+        android:layout_marginStart="15dp"
         android:onClick="createEvent"
         android:text="+ Event"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+<<<<<<< HEAD
     <ListView
         android:id="@+id/listView"
         android:layout_width="312dp"
@@ -41,12 +44,46 @@
         app:layout_constraintTop_toBottomOf="@+id/listView">
 
         <LinearLayout
+=======
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:tint="@android:color/white"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/arrow_up_float" />
+
+        <android.support.design.widget.TextInputLayout
+>>>>>>> master
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_toLeftOf="@id/fab"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
 
-    </ScrollView>
+            <EditText
+                android:id="@+id/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Type your message" />
+        </android.support.design.widget.TextInputLayout>
 
+        <ListView
+            android:id="@+id/list_of_messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="16dp" />
+
+</RelativeLayout>
+
+
+<<<<<<< HEAD
     <Button
         android:id="@+id/button10"
         android:layout_width="wrap_content"
@@ -56,5 +93,7 @@
         android:text="+ Users"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+=======
 
-</android.support.constraint.ConstraintLayout>
+>>>>>>> master
+

@@ -3,10 +3,12 @@ package edu.byui.whatsupp;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,8 +21,11 @@ import android.widget.Toast;
 import android.widget.*;
 import android.widget.Spinner;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -38,6 +43,7 @@ public class GroupView extends AppCompatActivity {
     User currentUser;
     boolean loggedIn;
     Group currentGroup;
+    private FirebaseListAdapter<ChatMessage> adapter;
 
     private EditText yourEditText;
 
@@ -60,7 +66,10 @@ public class GroupView extends AppCompatActivity {
         }
         setupActionBar();
 
+        //Show the chat messages from the group
+        displayChatMessages();
 
+<<<<<<< HEAD
         yourEditText = (EditText) findViewById(R.id.yourEditTextId);
 
         yourEditText.addTextChangedListener(new TextWatcher() {
@@ -77,7 +86,59 @@ public class GroupView extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+=======
+        //Setting up onclick listener so user can send a message to the group
+        FloatingActionButton fab =
+                (FloatingActionButton)findViewById(R.id.fab);
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText input = (EditText)findViewById(R.id.input);
+
+                // Read the input field and push a new instance
+                // of ChatMessage to the Firebase database
+                FirebaseDatabase.getInstance()
+                        .getReference()
+                        .push()
+                        .setValue(new ChatMessage(input.getText().toString(),
+                                FirebaseAuth.getInstance()
+                                        .getCurrentUser()
+                                        .getDisplayName())
+                        );
+
+                // Clear the input
+                input.setText("");
+            }
+        });
+
+
+    }
+
+    public void displayChatMessages() {
+        ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
+>>>>>>> master
+
+        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
+                R.layout.message, FirebaseDatabase.getInstance().getReference()) {
+            @Override
+            protected void populateView(View v, ChatMessage model, int position) {
+                // Get references to the views of message.xml
+                TextView messageText = (TextView)v.findViewById(R.id.message_text);
+                TextView messageUser = (TextView)v.findViewById(R.id.message_user);
+                TextView messageTime = (TextView)v.findViewById(R.id.message_time);
+
+                // Set their text
+                messageText.setText(model.getMessageText());
+                messageUser.setText(model.getMessageUser());
+
+                // Format the date before showing it
+                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
+                        model.getMessageTime()));
+            }
+        };
+
+        listOfMessages.setAdapter(adapter);
     }
 
 
@@ -177,50 +238,6 @@ public class GroupView extends AppCompatActivity {
     }
 
 
-    public void searchUser(final Activity activity, final String search) {
 
-        profileActivity = (edu.byui.whatsupp.Profile) activity;
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            boolean notThere = true;
-
-                            ArrayList<User> userList = new ArrayList<>();
-
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                if ((document.get("firstName").toString() + document.get("lastName")).contains(search)) {
-                                    User user = new User(document.get("uid").toString());
-                                    user.setLastName(document.get("lastName").toString());
-                                    user.setFirstName(document.get("firstName").toString());
-                                    user.setEmail(document.get("email").toString());
-                                    user.setGender(document.get("gender").toString());
-                                    userList.add(user);
-
-
-                                    //profileActivity.displayUserInfo(user);
-
-                                }
-                            }
-
-                            SpinnerAdapter dataAdapter = new SpinnerAdapter(GroupView.this, userList, GroupView.this);
-                            //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinner.setAdapter(dataAdapter);
-
-
-
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-
-                });
-
-    }
 
 }

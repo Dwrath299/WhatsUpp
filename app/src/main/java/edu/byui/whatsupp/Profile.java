@@ -22,6 +22,18 @@ import java.util.List;
 
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
+/**
+ * <h1>Profile</h1>
+ * Where users can view other users or
+ * their own profile. If it is their own,
+ * they can edit it.
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class Profile extends AppCompatActivity {
     String message;
     User profileUser;
@@ -60,6 +72,8 @@ public class Profile extends AppCompatActivity {
 
     public void displayUserInfo(User user) {
         profileUser = user;
+        TextView actionTitle = (TextView) findViewById(R.id.title_text);
+        actionTitle.setText(profileUser.getFirstName());
         ProfilePictureView profilePictureView;
         profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
         profilePictureView.setProfileId(message);
@@ -84,8 +98,8 @@ public class Profile extends AppCompatActivity {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
-        TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText(profileUser.getFirstName());
+
+
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);

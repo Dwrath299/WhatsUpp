@@ -29,9 +29,17 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by Dallin's PC on 2/26/2018.
+ * <h1>User Presenter</h1>
+ * Where the database magic happens to
+ * retrieve user information.
+ * Uses the firebase API
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
-
 public class UserPresenter {
     User userData;
     UserActivity userActivity;
@@ -45,6 +53,13 @@ public class UserPresenter {
 
     }
 
+    /**
+     * When a user logs on, this finds out if this is the user's first time
+     * ever logging on. If so, call the SetFacebookData method. Otherwise
+     * do nothing.
+     * @param token an AccessToken that carries the user's UID
+     * @param loginResult the LoginResult object created from facebook API
+     */
     public void isNewUser(AccessToken token, final LoginResult loginResult) {
         final String userID= token.getUserId();
         userToken = token;
@@ -78,6 +93,12 @@ public class UserPresenter {
 
     }
 
+    /**
+     * This method extracts the user information from Facebook.
+     * This is only called if a new user that has never logged on before
+     * logs on.
+     * @param loginResult the LoginResult object created from facebook API
+     */
     private void setFacebookData(final LoginResult loginResult)
     {
         GraphRequest request = GraphRequest.newMeRequest(
@@ -114,6 +135,13 @@ public class UserPresenter {
         request.setParameters(parameters);
         request.executeAsync();
     }
+
+    /**
+     * This method writes the user information to the database.
+     * This is only called if a new user that has never logged on before
+     * logs on, and is called from the SetFaceBookData method.
+     * @param user a User Object that contains all the new user information.
+     */
     public void addNewUser(User user) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -137,6 +165,16 @@ public class UserPresenter {
     }
 
 
+
+    /**
+     * Retrieves the user data from the database so that it can send
+     * it to the profile activity. This can be the current user, or
+     * another user.
+     * @param activity Activty Object so we can call the display
+     *                 method in the activity class.
+     * @param uid A string that is the UID of the user we want to
+     *            retrieve
+     */
     public void requestUserData(final Activity activity, final String uid) {
 
         profileActivity = (edu.byui.whatsupp.Profile) activity;
@@ -174,8 +212,4 @@ public class UserPresenter {
     }
 
 
-
-    public void changeGroupData() {
-
-    }
 }

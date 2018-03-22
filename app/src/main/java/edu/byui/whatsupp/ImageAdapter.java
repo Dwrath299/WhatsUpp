@@ -28,7 +28,16 @@ import java.util.List;
 import static edu.byui.whatsupp.ThingToDoForm.EXTRA_MESSAGE;
 
 /**
- * Created by Dallin's PC on 2/15/2018.
+ * <h1>Image Adapter</h1>
+ * This creates the things that are needed to
+ * be displayed in the gridview on the home
+ * page
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
 
 public class ImageAdapter extends BaseAdapter {
@@ -64,7 +73,7 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageButton = new ImageButton(mContext);
-            imageButton.setLayoutParams(new GridView.LayoutParams(230, 230));
+            imageButton.setLayoutParams(new GridView.LayoutParams(425, 425));
             imageButton.setScaleType(ImageButton.ScaleType.CENTER_CROP);
             imageButton.setPadding(8, 8, 8, 0);
         } else {

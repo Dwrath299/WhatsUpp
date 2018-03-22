@@ -47,6 +47,19 @@ import java.util.List;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
+
+/**
+ * <h1>Home Page</h1>
+ * The Home Page is the beginning screen in the app,
+ * displays the Things To Do in the area. The Users
+ * are also able to create new things on this page.
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     public ThingToDoActivity thingToDoActivity;

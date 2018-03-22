@@ -1,3 +1,4 @@
+
 package edu.byui.whatsupp;
 
 import android.app.DatePickerDialog;
@@ -45,6 +46,19 @@ import java.util.Calendar;
 
 import static java.util.Calendar.*;
 
+/**
+ * <h1>Event Form</h1>
+ * The Event Form is the activity class where Users
+ * will create a new Event. Request input for a
+ * picture, title, description, time and date
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
+
 public class EventForm extends AppCompatActivity {
     private FirebaseAuth mAuth;
     User currentUser;
@@ -68,11 +82,18 @@ public class EventForm extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         thingTitle = extras.getString("EXTRA_THINGTITLE");
         thingUrl = extras.getString("EXTRA_THINGURL");
-        ImageView eventImageView = (ImageView) findViewById(R.id.eventImageView);
-        Picasso.with(this).load(thingUrl).into(eventImageView);
-        EditText eventTitle = (EditText) findViewById(R.id.editEventTitle);
-        eventTitle.setHint(thingTitle + " event");
         ea = new EventActivity(this);
+        //If thing url is "update" not creating a new one.
+        if(thingUrl.equals("update")) {
+            ea.getEventForUpdate(this, thingTitle);
+        } else {
+            ImageView eventImageView = (ImageView) findViewById(R.id.eventImageView);
+            Picasso.with(this).load(thingUrl).into(eventImageView);
+
+            EditText eventTitle = (EditText) findViewById(R.id.editEventTitle);
+            eventTitle.setHint(thingTitle + " event");
+        }
+
         // If the user doesn't select a pic, just use the url of the already exsisting
         needToStoreImage = false;
         // Get the logged in Status
@@ -88,6 +109,26 @@ public class EventForm extends AppCompatActivity {
         setupActionBar();
     }
 
+    public void displayEventData(Event event) {
+        this.event = event;
+        ((TextView) this.findViewById(R.id.tv_time)).setText(event.getTime());
+        ((TextView) this.findViewById(R.id.tv_date)).setText(event.getDate());
+        ((EditText) this.findViewById(R.id.editEventTitle)).setText(event.getTitle());
+        ((EditText) this.findViewById(R.id.editEventDescription)).setText(event.getDescription());
+        ImageView eventImageView = (ImageView) findViewById(R.id.eventImageView);
+        Picasso.with(this).load(event.getUrl()).into(eventImageView);
+        ((Button) this.findViewById(R.id.delete_event)).setVisibility(View.VISIBLE);
+    }
+
+    public void deleteEvent(View view) {
+        ea.deleteEvent(event.getRefrence());
+        Intent intent = new Intent(EventForm.this, HomePage.class);
+        // No real reason for sending UID with it, just because
+        intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+        Log.i("Intent", "Send User to Home page");
+        startActivity(intent);
+    }
+
     public void addPicture(View view) {
         //Get incoming intent
         Intent intent = new Intent();
@@ -101,7 +142,9 @@ public class EventForm extends AppCompatActivity {
     public void submit (View view) {
 
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
-
+        if(thingUrl == "update") {
+            ea.deleteEvent(event.getRefrence());
+        }
         EditText editText = findViewById(R.id.editEventTitle);
         String title = editText.getText().toString();
         editText = findViewById(R.id.editEventDescription);
@@ -331,7 +374,11 @@ public class EventForm extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EventForm.this, HomePage.class);
+                // No real reason for sending UID with it, just because
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Home page");
+                startActivity(intent);
             }
         });
     }
