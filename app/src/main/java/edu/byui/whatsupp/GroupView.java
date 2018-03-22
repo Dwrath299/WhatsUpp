@@ -61,26 +61,22 @@ public class GroupView extends AppCompatActivity {
         setupActionBar();
 
 
-    yourEditText =(EditText)
+        yourEditText = (EditText) findViewById(R.id.yourEditTextId);
 
-    findViewById(R.id.yourEditTextId);
+        yourEditText.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged (Editable s){
 
-        yourEditText.addTextChangedListener(new
-
-    TextWatcher() {
-        public void afterTextChanged (Editable s){
-
-            searchUser(GroupView.this, yourEditText.toString());
+                searchUser(GroupView.this, yourEditText.toString());
 
 
-        }
+            }
 
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
-    });
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
 
     }
 

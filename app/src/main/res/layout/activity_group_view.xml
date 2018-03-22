@@ -13,14 +13,14 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:onClick="createEvent"
-        android:text="+"
+        android:text="+ Event"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="311dp"
-        android:layout_height="139dp"
+        android:layout_width="312dp"
+        android:layout_height="195dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -30,8 +30,8 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="307dp"
-        android:layout_height="144dp"
+        android:layout_width="313dp"
+        android:layout_height="208dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -47,29 +47,14 @@
 
     </ScrollView>
 
-    <Spinner
-        android:id="@+id/userSearchSpinner"
-        android:layout_width="334dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="8dp"
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yourEditTextId" />
-
-    <EditText
-        android:id="@+id/yourEditTextId"
-        android:layout_width="330dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+        android:text="+ Users"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
