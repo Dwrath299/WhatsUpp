@@ -19,13 +19,13 @@ import java.util.List;
 public class SpinnerAdapter extends BaseAdapter {
     private Context mContext;
     private List<User> users;
-    edu.byui.whatsupp.GroupView activity;
+    edu.byui.whatsupp.GroupForm activity;
 
     private LayoutInflater l_Inflater;
     public SpinnerAdapter(Context c, List<User> t, Activity a) {
         mContext = c;
         users = t;
-        activity = (edu.byui.whatsupp.GroupView) a;
+        activity = (edu.byui.whatsupp.GroupForm) a;
         l_Inflater = LayoutInflater.from(c);
     }
 
