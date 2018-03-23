@@ -2,6 +2,7 @@ package edu.byui.whatsupp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,13 @@ import java.util.List;
 public class SpinnerAdapter extends BaseAdapter {
     private Context mContext;
     private List<User> users;
-    edu.byui.whatsupp.GroupView activity;
+    edu.byui.whatsupp.GroupForm activity;
 
     private LayoutInflater l_Inflater;
     public SpinnerAdapter(Context c, List<User> t, Activity a) {
         mContext = c;
         users = t;
-        activity = (edu.byui.whatsupp.GroupView) a;
+        activity = (edu.byui.whatsupp.GroupForm) a;
         l_Inflater = LayoutInflater.from(c);
     }
 
@@ -49,11 +50,11 @@ public class SpinnerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         SpinnerAdapter.ViewHolder holder;
         if (convertView == null) {
-            convertView = l_Inflater.inflate(R.layout.userview, null);
+            convertView = l_Inflater.inflate(R.layout.simple_spinner_dropdown, null);
             holder = new SpinnerAdapter.ViewHolder();
-            holder.Image = (ProfilePictureView) convertView.findViewById(R.id.profilePic1);
-            holder.MsgType = (TextView) convertView.findViewById(R.id.name1);
-            holder.MsgType2 = (TextView) convertView.findViewById(R.id.msg2);
+            holder.Image = (ProfilePictureView) convertView.findViewById(R.id.profilePic2);
+            holder.MsgType = (TextView) convertView.findViewById(R.id.nameView);
+
 
             convertView.setTag(holder);
         } else {
@@ -64,8 +65,32 @@ public class SpinnerAdapter extends BaseAdapter {
         holder.Image.setProfileId(tempUser.getUid());
         holder.Image.setPresetSize(-2);
         holder.MsgType.setText(tempUser.getFirstName());
-        // Don't need a second text for users, maybe for creator?
-        holder.MsgType2.setVisibility(View.INVISIBLE);
+
+
+
+        return convertView;
+    }
+
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+
+        SpinnerAdapter.ViewHolder holder;
+        if (convertView == null) {
+            convertView = l_Inflater.inflate(R.layout.simple_spinner_dropdown, null);
+            holder = new SpinnerAdapter.ViewHolder();
+            holder.Image = (ProfilePictureView) convertView.findViewById(R.id.profilePic2);
+            holder.MsgType = (TextView) convertView.findViewById(R.id.nameView);
+
+
+            convertView.setTag(holder);
+        } else {
+            holder = (SpinnerAdapter.ViewHolder) convertView.getTag();
+        }
+        User tempUser = users.get(position);
+        // Set the image for the profile  pic
+        holder.Image.setProfileId(tempUser.getUid());
+        holder.Image.setPresetSize(-2);
+        holder.MsgType.setText(tempUser.getFirstName());
+
 
 
 
@@ -81,7 +106,7 @@ public class SpinnerAdapter extends BaseAdapter {
     static class ViewHolder {
         ProfilePictureView Image;
         TextView MsgType;
-        TextView MsgType2;
+
     }
 
 

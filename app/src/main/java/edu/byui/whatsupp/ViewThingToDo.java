@@ -51,7 +51,7 @@ public class ViewThingToDo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_veiw_thing_to_do);
-        ttda = new ThingToDoActivity(this);
+        ttda = new ThingToDoActivity();
         ea = new EventActivity(this);
         Intent intent = getIntent();
         // Get the logged in Status

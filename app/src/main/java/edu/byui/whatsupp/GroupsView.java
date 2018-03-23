@@ -19,10 +19,13 @@ import com.facebook.AccessToken;
 
 import java.util.List;
 
+import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
+
 public class GroupsView extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     ListView listView;
     User currentUser;
+    GroupActivity ga;
     boolean loggedIn;
 
     @Override
@@ -38,6 +41,8 @@ public class GroupsView extends AppCompatActivity {
             loggedIn = false;
             currentUser = new User("123");
         }
+        ga = new GroupActivity();
+        ga.getUsersGroups(this, currentUser.getUid());
         setupActionBar();
     }
 
@@ -55,19 +60,15 @@ public class GroupsView extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void searchGroup(String groupName) {
-        //take from whats typed into the textbox, and search the list of groups
 
-    }
-
-    /*public void displayGroups(List<Group> groups) {
+    public void displayGroups(List<Group> groups) {
         if (groups.size() < 1) {
             // If there are no groups, the image is a very large frowny face.
             Group group = new Group("Not currently part of any group. Please make some friends.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
             groups.add(group);
         }
         GroupAdapter groupAdapter = new GroupAdapter(this, groups, this);
-        listView = (ListView) this.findViewById(R.id.listView1);
+        listView = (ListView) this.findViewById(R.id.groups_list);
         listView.setAdapter(groupAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -77,11 +78,14 @@ public class GroupsView extends AppCompatActivity {
 
                 Object o = listView.getItemAtPosition(position);
                 Group group = (Group)o;
-                Toast.makeText(GroupsView.this, "You selected " + group.getTitle() ,
-                        Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(GroupsView.this, GroupView.class);
+                intent.putExtra(EXTRA_MESSAGE, group.getTitle());
+                Log.i("Intent", "Send User to GroupView");
+                startActivity(intent);
 
             }
-        });*/
+        });
+    }
 
     private void setupActionBar() {
         //Get the default actionbar instance

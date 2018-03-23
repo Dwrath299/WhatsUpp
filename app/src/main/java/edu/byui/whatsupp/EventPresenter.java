@@ -29,6 +29,7 @@ public class EventPresenter {
     edu.byui.whatsupp.ViewEvent viewEventActivity;
     edu.byui.whatsupp.Profile profileActivity;
     edu.byui.whatsupp.EventForm eventForm;
+    edu.byui.whatsupp.GroupView viewGroup;
 
     public EventPresenter() {
 
@@ -107,6 +108,50 @@ public class EventPresenter {
                                 }
                             }
                             profileActivity.displayEventsForProfile(events);
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
+
+
+
+
+
+    }
+
+    public void getEventsForGroup(Activity a, String string){
+        viewGroup = (edu.byui.whatsupp.GroupView) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final String grouptitle = string;
+        db.collection("events")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Event> events = new ArrayList<Event>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("group") != null) {
+                                    if (document.get("group").toString().equals(grouptitle)) { // To get the events for the Thing
+                                        Event tempEvent = new Event((String) document.get("title"), (String) document.get("url"));
+                                        tempEvent.setDate((String) document.get("date"));
+                                        tempEvent.setTime((String) document.get("time"));
+                                        tempEvent.setDescription((String) document.get("description"));
+                                        tempEvent.setPublic((boolean) document.get("isPublic"));
+                                        tempEvent.setThingToDo((String) document.get("thingToDo"));
+                                        if (document.get("creator") != null) {
+                                            tempEvent.setCreator((String) document.get("creator"));
+                                        }
+                                        events.add(tempEvent);
+                                    }
+                                }
+                            }
+                            viewGroup.displayEventsForGroup(events);
 
 
                         } else {

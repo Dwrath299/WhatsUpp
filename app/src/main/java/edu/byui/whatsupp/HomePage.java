@@ -79,7 +79,7 @@ public class HomePage extends AppCompatActivity {
 
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
-        thingToDoActivity = new ThingToDoActivity(this);
+        thingToDoActivity = new ThingToDoActivity();
         thingToDoActivity.displayThingsToDo(this);
 
         // Get the logged in Status

@@ -70,11 +70,11 @@ public class ThingToDoForm extends AppCompatActivity {
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
         message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
-        setupActionBar();
+
         // If not creating then updating.
         if(message != "Create")
         {
-            ttda = new ThingToDoActivity(this);
+            ttda = new ThingToDoActivity();
             ttda.getThingToEdit(this, message);
         }
         mAuth = FirebaseAuth.getInstance();
@@ -87,6 +87,7 @@ public class ThingToDoForm extends AppCompatActivity {
             loggedIn = false;
             currentUser = new User("123");
         }
+        setupActionBar();
 
 
     }
