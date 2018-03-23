@@ -43,6 +43,16 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <h1>ThingToDo Form</h1>
+ * The activity class for creating a new ThingToDo
+ * Asks for input of picture, title, description,
+ * and address information.
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class ThingToDoForm extends AppCompatActivity {
     private StorageReference storageRef;
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";

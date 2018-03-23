@@ -5,11 +5,13 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Map;
 
 /**
- * Created by Dallin's PC on 2/16/2018.
- */
-
-/**
- * This class contains all the data needed to be stored inside a thing to do.
+ * <h1>ThingToDo/h1>
+ * The ThingToDo class is stored information from when
+ * a user creates one.
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
 public class ThingToDo {
     private String url;
@@ -22,15 +24,6 @@ public class ThingToDo {
     private String reference;
     public boolean approved;
 
-    /**
-     * Constructor.
-     * @param u
-     * @param t
-     * @param a
-     * @param c
-     * @param z
-     * @param d
-     */
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
         url = u;
         title = t;
@@ -41,10 +34,6 @@ public class ThingToDo {
         approved = true;
     }
 
-    /**
-     * Getters and Setters for ThingToDo class.
-     * @return
-     */
     public String getReference() {
         return reference;
     }

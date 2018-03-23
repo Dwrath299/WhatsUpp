@@ -3,10 +3,14 @@ package edu.byui.whatsupp;
 import com.facebook.AccessToken;
 
 /**
- * Created by MikeyG on 2/26/2018.
+ * <h1>User</h1>
+ * The user class is stored information from the Facebook API
+ * of the user when they log in.
  *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
-
 public class User {
     String firstName;
     String lastName;

@@ -26,6 +26,19 @@ import java.util.List;
 
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
+/**
+ * <h1>View Thing To Do</h1>
+ * The viewing of a single thing to do.
+ * Displays the title, pic, description,
+ * address, and a list of current events
+ * happening at the location
+ * <p>
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class ViewThingToDo extends AppCompatActivity {
     private String message;
     private ThingToDoActivity ttda;
@@ -34,11 +47,6 @@ public class ViewThingToDo extends AppCompatActivity {
     boolean loggedIn;
     ListView listView;
     ThingToDo thing;
-
-    /**
-     * Instantiates the activity.
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +71,12 @@ public class ViewThingToDo extends AppCompatActivity {
     }
 
     /**
-     * Dispays all the information about the thing to do.
-     * @param item
+     * This method is used to display the components of
+     * an individual ThingToDo object. It is called from the
+     * ThingToDo presenter class when it is done getting it
+     * from firebase
+     * @param item a ThingToDo object
      */
-
     public void displayThingToDo(ThingToDo item) {
         thing = item;
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar2);
@@ -92,11 +102,14 @@ public class ViewThingToDo extends AppCompatActivity {
 
     }
 
-    /**
-     * Sends user to the ThingToDoForm to change information about a thing to do.
-     * @param view
-     */
 
+    /**
+     * This method is send the user to the ThingToDoForm
+     * page to edit the current selected ThingToDo
+     * The user is only able to do this if they created
+     * it.
+     * @param view the view from the activity
+     */
     public void updateThing(View view) {
         Intent intent = new Intent(this, ThingToDoForm.class);
         intent.putExtra(EXTRA_MESSAGE, thing.getTitle());
@@ -104,11 +117,14 @@ public class ViewThingToDo extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /**
-     * Displays all events associated with a thing to do.
-     * @param events
-     */
 
+    /**
+     * This method is used to display the list of current events
+     * for the current ThingToDo. It is called from the
+     * ThingToDo presenter class when it is done getting the
+     * data from firebase.
+     * @param events a list of Events
+     */
     public void displayEventsForThing(List<Event> events) {
         if (events.size() < 1) {
             // If there are no events, the image is a frowny face.
@@ -137,10 +153,11 @@ public class ViewThingToDo extends AppCompatActivity {
     }
 
     /**
-     * Sends user to the EventForm activity to create a new event.
-     * @param view
+     * Sends the user to the EventForm to create a
+     * new current event for the currently choosen
+     * ThingToDo
+     * @param view the view of the activity
      */
-
     public void addEvent(View view) {
         Intent intent = new Intent(this, EventForm.class);
         Bundle extras = new Bundle();
@@ -151,9 +168,11 @@ public class ViewThingToDo extends AppCompatActivity {
     }
 
     /**
-     * Sets up the custom action bar.
+     * This method is used to set up
+     * the action bar to have a home button and
+     * a login button if the user is not logged in
+     * or a drop down menu if the user is logged in.
      */
-
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
@@ -167,7 +186,7 @@ public class ViewThingToDo extends AppCompatActivity {
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText(thing.getTitle());
+        actionTitle.setText(message);
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);
