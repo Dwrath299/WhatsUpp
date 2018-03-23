@@ -6,6 +6,9 @@ import java.util.ArrayList;
  * Created by Dallin's PC on 2/26/2018.
  */
 
+/**
+ * This class contains all the data that is stored inside a group.
+ */
 public class Group {
     GroupPresenter groupPresenter;
 
@@ -14,10 +17,17 @@ public class Group {
     String title;
     String url;
 
+    /**
+     * Constructor.
+     */
     public Group() {
 
     }
 
+    /**
+     * Getters and Setters.
+     * @return
+     */
     public String getTitle() {
         return title;
     }

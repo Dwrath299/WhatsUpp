@@ -8,6 +8,9 @@ import java.util.Map;
  * Created by Dallin's PC on 2/16/2018.
  */
 
+/**
+ * This class contains all the data needed to be stored inside a thing to do.
+ */
 public class ThingToDo {
     private String url;
     private String title;
@@ -19,6 +22,15 @@ public class ThingToDo {
     private String reference;
     public boolean approved;
 
+    /**
+     * Constructor.
+     * @param u
+     * @param t
+     * @param a
+     * @param c
+     * @param z
+     * @param d
+     */
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
         url = u;
         title = t;
@@ -29,6 +41,10 @@ public class ThingToDo {
         approved = true;
     }
 
+    /**
+     * Getters and Setters for ThingToDo class.
+     * @return
+     */
     public String getReference() {
         return reference;
     }

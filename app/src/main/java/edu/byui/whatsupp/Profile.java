@@ -58,6 +58,10 @@ public class Profile extends AppCompatActivity {
         setupActionBar();
     }
 
+    /**
+     * Gets user data and displays it.
+     * @param user
+     */
     public void displayUserInfo(User user) {
         profileUser = user;
         ProfilePictureView profilePictureView;
@@ -72,6 +76,9 @@ public class Profile extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets up the custom action bar for the activity.
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
@@ -159,6 +166,10 @@ public class Profile extends AppCompatActivity {
     }
 
 
+    /**
+     * Displays all events that the user has joined.
+     * @param events
+     */
     public void displayEventsForProfile(List<Event> events) {
         if (events.size() < 1) {
             // If there are no events, the image is a frowny face.

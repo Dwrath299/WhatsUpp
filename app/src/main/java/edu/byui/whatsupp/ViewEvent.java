@@ -63,6 +63,10 @@ public class ViewEvent extends AppCompatActivity {
 
     }
 
+    /**
+     * Displays information about an event.
+     * @param item
+     */
     public void displayEvent(Event item) {
         this.event = item;
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.eventViewProgressBar);
@@ -83,6 +87,11 @@ public class ViewEvent extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Displays all of the users who joined and are planning to attend the event.
+     * @param users
+     */
 
     public void displayAttendees(List<User> users) {
         //It is possible for the event to have no attendees if the creator leaves the event.
@@ -130,6 +139,10 @@ public class ViewEvent extends AppCompatActivity {
 
     }
 
+    /**
+     * Updates the list of users who are attending the event when a user joins or leaves.
+     * @param view
+     */
     //The Join and Leave Button
     public void updateAttendees(View view) {
         if(joinButton.getText().equals("Join Event")) {
@@ -147,7 +160,9 @@ public class ViewEvent extends AppCompatActivity {
         ea.displayEvent((edu.byui.whatsupp.ViewEvent)this, message);
     }
 
-
+    /**
+     * Sets up the custom action bar for the activity.
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

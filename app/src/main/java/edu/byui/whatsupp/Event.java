@@ -7,6 +7,9 @@ import java.util.List;
  * Created by MikeyG on 2/26/2018.
  */
 
+/**
+ * Contains all the data needed to store inside each Event.
+ */
 public class    Event {
 
     String creator;
@@ -49,6 +52,10 @@ public class    Event {
         attendees = new ArrayList<String>();
     }
 
+    /**
+     * Getters and Setters.
+     * @return
+     */
     public String getRefrence() {
         return refrence;
     }

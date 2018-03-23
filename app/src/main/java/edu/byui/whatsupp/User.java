@@ -32,6 +32,14 @@ public class User {
      */
 
 
+    /**
+     * Constructor.
+     * @param first
+     * @param last
+     * @param e
+     * @param gen
+     * @param uid
+     */
     public User(String first, String last, String e, String gen, String uid) {
         //utilize Facebook API's methods
        this.firstName = first;
@@ -46,7 +54,9 @@ public class User {
         this.uid = uid;
     }
 
-
+    /**
+     * Getters and Setters for User class.
+     */
 
     public String getFirstName() {
         return firstName;

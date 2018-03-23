@@ -34,6 +34,11 @@ public class ViewThingToDo extends AppCompatActivity {
     boolean loggedIn;
     ListView listView;
     ThingToDo thing;
+
+    /**
+     * Instantiates the activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +61,11 @@ public class ViewThingToDo extends AppCompatActivity {
 
         setupActionBar();
     }
+
+    /**
+     * Dispays all the information about the thing to do.
+     * @param item
+     */
 
     public void displayThingToDo(ThingToDo item) {
         thing = item;
@@ -82,12 +92,22 @@ public class ViewThingToDo extends AppCompatActivity {
 
     }
 
+    /**
+     * Sends user to the ThingToDoForm to change information about a thing to do.
+     * @param view
+     */
+
     public void updateThing(View view) {
         Intent intent = new Intent(this, ThingToDoForm.class);
         intent.putExtra(EXTRA_MESSAGE, thing.getTitle());
         Log.i("Intent", "Send User to Form");
         startActivity(intent);
     }
+
+    /**
+     * Displays all events associated with a thing to do.
+     * @param events
+     */
 
     public void displayEventsForThing(List<Event> events) {
         if (events.size() < 1) {
@@ -116,6 +136,11 @@ public class ViewThingToDo extends AppCompatActivity {
 
     }
 
+    /**
+     * Sends user to the EventForm activity to create a new event.
+     * @param view
+     */
+
     public void addEvent(View view) {
         Intent intent = new Intent(this, EventForm.class);
         Bundle extras = new Bundle();
@@ -124,6 +149,10 @@ public class ViewThingToDo extends AppCompatActivity {
         intent.putExtras(extras);
         startActivity(intent);
     }
+
+    /**
+     * Sets up the custom action bar.
+     */
 
     private void setupActionBar() {
         //Get the default actionbar instance

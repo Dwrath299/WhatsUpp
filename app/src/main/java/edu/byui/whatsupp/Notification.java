@@ -21,6 +21,12 @@ public abstract class Notification extends Context {
 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
+    Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
+snoozeIntent.setAction(ACTION_SNOOZE);
+snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
+    PendingIntent snoozePendingIntent =
+            PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -39,9 +45,9 @@ intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
             .setContentTitle("My notification")
             .setContentText("Hello World!")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
-            .setAutoCancel(true);
+            .addAction(R.drawable.ic_snooze, getString(R.string.snooze),
+                    snoozePendingIntent);
 
     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 

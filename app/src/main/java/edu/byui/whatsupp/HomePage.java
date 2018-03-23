@@ -57,6 +57,10 @@ public class HomePage extends AppCompatActivity {
 
     boolean loggedIn;
 
+    /**
+     * Creates the activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -84,8 +88,10 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-
-
+    /**
+     * Sets up the grid to display the list of things  to do.
+     * @param t
+     */
     public void setGridView(List<ThingToDo> t) {
         things = t;
         spinner.setVisibility(View.GONE);
@@ -95,14 +101,21 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Sends the user to the login page.
+     * @param view
+     */
     public void goToLogin (View view) {
         Intent intent = new Intent(this, LoginPage.class);
         intent.putExtra(EXTRA_MESSAGE, "HomePage");
         Log.i("Intent", "Send User to Login");
         startActivity(intent);
-
     }
+
+    /**
+     * If the user is logged in, the user is sent to the ThingToDoForm to add a new thing to do.
+     * @param view
+     */
     public void addThingToDo (View view) {
         if (!loggedIn) //Make sure they are logged in.
         {
@@ -115,15 +128,21 @@ public class HomePage extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    /**
+     * Allows users to click on a thing to do in the grid and view it in more detail.
+     * @param title
+     */
     public void thingClick(String title) {
-
-
         Intent intent = new Intent(this, ViewThingToDo.class);
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
         Log.i("Intent", "Send User to ThingToDoView");
         startActivity(intent);
     }
 
+    /**
+     * Sets up the custom action bar for the home page.
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
