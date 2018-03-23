@@ -69,13 +69,12 @@ public class GroupView extends AppCompatActivity {
         //Show the chat messages from the group
         displayChatMessages();
 
-<<<<<<< HEAD
+
         yourEditText = (EditText) findViewById(R.id.yourEditTextId);
 
         yourEditText.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged (Editable s){
 
-                searchUser(GroupView.this, yourEditText.toString());
 
 
             }
@@ -86,7 +85,7 @@ public class GroupView extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
-=======
+
         //Setting up onclick listener so user can send a message to the group
         FloatingActionButton fab =
                 (FloatingActionButton)findViewById(R.id.fab);
@@ -117,7 +116,7 @@ public class GroupView extends AppCompatActivity {
 
     public void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
->>>>>>> master
+
 
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
                 R.layout.message, FirebaseDatabase.getInstance().getReference()) {
