@@ -58,14 +58,14 @@ public class GroupForm extends AppCompatActivity {
 
         search.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged (Editable s){
-
+                searchUser(GroupForm.this, search.toString());
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchUser(GroupForm.this, search.toString());
+
             }
         });
     }
@@ -109,6 +109,7 @@ public class GroupForm extends AppCompatActivity {
                             SpinnerAdapter dataAdapter = new SpinnerAdapter(GroupForm.this, userList, GroupForm.this);
                             //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spinner2.setAdapter(dataAdapter);
+                            spinner2.setVisibility(View.VISIBLE);
 
 
 

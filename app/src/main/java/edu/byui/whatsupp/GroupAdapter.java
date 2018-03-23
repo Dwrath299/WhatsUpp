@@ -17,7 +17,7 @@ import java.util.List;
  * Created by MikeyG on 3/9/2018.
  */
 
-public class GroupAdapter {
+public class GroupAdapter extends BaseAdapter {
     private Context mContext;
     private List<Group> groups;
     edu.byui.whatsupp.GroupsView activity;
@@ -55,6 +55,7 @@ public class GroupAdapter {
             holder = new edu.byui.whatsupp.GroupAdapter.ViewHolder();
             holder.Image = (ImageView) convertView.findViewById(R.id.eventpic1);
             holder.MsgType = (TextView) convertView.findViewById(R.id.msgtype1);
+            holder.MsgType2 = (TextView) convertView.findViewById(R.id.msgtype2);
 
             convertView.setTag(holder);
         } else {
@@ -64,6 +65,7 @@ public class GroupAdapter {
         String imageUrl = tempGroup.getUrl();
         Picasso.with(mContext).load(imageUrl).into(holder.Image); // Sets the group image
         holder.MsgType.setText(tempGroup.getTitle());
+        holder.MsgType2.setText(tempGroup.getNumMembers() + " Members");
 
         return convertView;
     }
@@ -76,6 +78,7 @@ public class GroupAdapter {
     static class ViewHolder {
         ImageView Image;
         TextView MsgType;
+        TextView MsgType2;
     }
 
 

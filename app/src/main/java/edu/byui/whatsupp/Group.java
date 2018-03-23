@@ -7,15 +7,32 @@ import java.util.ArrayList;
  */
 
 public class Group {
-    GroupPresenter groupPresenter;
-
-    ArrayList<User> memberList;
+    ArrayList<String> memberList;
     int numMembers;
     String title;
     String url;
+    String creator;
 
-    public Group() {
+    public Group(String title, String url) {
+        this.title = title;
+        this.url = url;
+    }
 
+    public ArrayList<String> getMemberList() {
+        return memberList;
+    }
+
+    public void setMemberList(ArrayList<String> memberList) {
+        numMembers = memberList.size();
+        this.memberList = memberList;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getTitle() {
