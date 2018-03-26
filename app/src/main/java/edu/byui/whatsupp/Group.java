@@ -6,28 +6,35 @@ import java.util.ArrayList;
  * Created by Dallin's PC on 2/26/2018.
  */
 
-/**
- * This class contains all the data that is stored inside a group.
- */
 public class Group {
-    GroupPresenter groupPresenter;
-
-    ArrayList<User> memberList;
+    ArrayList<String> memberList;
     int numMembers;
     String title;
     String url;
+    String creator;
 
-    /**
-     * Constructor.
-     */
-    public Group() {
-
+    public Group(String title, String url) {
+        this.title = title;
+        this.url = url;
     }
 
-    /**
-     * Getters and Setters.
-     * @return
-     */
+    public ArrayList<String> getMemberList() {
+        return memberList;
+    }
+
+    public void setMemberList(ArrayList<String> memberList) {
+        numMembers = memberList.size();
+        this.memberList = memberList;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
     public String getTitle() {
         return title;
     }

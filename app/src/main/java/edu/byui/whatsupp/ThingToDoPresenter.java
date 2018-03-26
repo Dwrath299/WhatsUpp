@@ -51,6 +51,7 @@ public class ThingToDoPresenter {
     edu.byui.whatsupp.HomePage homePageActivity;
     edu.byui.whatsupp.ViewThingToDo viewThingToDoActivity;
     edu.byui.whatsupp.ThingToDoForm thingToDoForm;
+    edu.byui.whatsupp.ThingToDoSelectFragment thingsFragment;
 
     public ThingToDoPresenter() {
 
@@ -81,6 +82,45 @@ public class ThingToDoPresenter {
 
                             }
                             homePageActivity.setGridView(things);
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
+
+
+
+
+
+    }
+
+    public void getFragmentListThings(ThingToDoSelectFragment a){
+        thingsFragment =  a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("thingsToDo")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<ThingToDo> things = new ArrayList<ThingToDo>();
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                ThingToDo tempThing = new ThingToDo((String) document.get("url"),
+                                        (String)document.get("title"),
+                                        (String)document.get("address"),
+                                        (String)document.get("city"),
+                                        (long) document.get("zipCode"),
+                                        (String)document.get("description"));
+                                if(document.get("creator") != null) {
+                                    tempThing.setCreator((String) document.get("creator"));
+                                }
+                                things.add(tempThing);
+
+                            }
+                            thingsFragment.setGridView(things);
 
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());

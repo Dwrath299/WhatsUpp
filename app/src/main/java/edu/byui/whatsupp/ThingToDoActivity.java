@@ -1,6 +1,7 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.view.View;
 import android.widget.GridView;
 
@@ -19,16 +20,18 @@ import java.util.List;
 public class ThingToDoActivity {
     ThingToDoPresenter thingToDoPresenter;
     List<ThingToDo> things;
-    Activity activity;
 
-    public ThingToDoActivity(Activity a) {
+
+    public ThingToDoActivity() {
         thingToDoPresenter = new ThingToDoPresenter();
         things = new ArrayList<ThingToDo>();
-        activity = a;
     }
 
     public void displayThingsToDo(Activity activity) {
         thingToDoPresenter.getListThings(activity);
+
+    }
+    public void getThingsToDo(ThingToDoSelectFragment fragment) {
 
     }
 

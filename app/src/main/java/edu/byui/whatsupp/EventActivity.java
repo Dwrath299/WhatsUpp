@@ -40,4 +40,8 @@ public class EventActivity {
     public void deleteEvent(String ref) {
         eventPresenter.deleteEventDocument(ref);
     }
+
+    public void getEventsForGroup(Activity activity, String title) {
+
+    }
 }

@@ -1,9 +1,11 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
 import com.facebook.AccessToken;
 
@@ -44,17 +47,17 @@ public class GroupView extends AppCompatActivity {
     boolean loggedIn;
     Group currentGroup;
     private FirebaseListAdapter<ChatMessage> adapter;
-
     private EditText yourEditText;
-
-    Spinner spinner = (Spinner) findViewById(R.id.userSearchSpinner);
-    edu.byui.whatsupp.Profile profileActivity;
+    EventActivity ea;
+    String message;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_view);
-
+        Intent intent = getIntent();
+        message = intent.getStringExtra(EXTRA_MESSAGE);
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
         if(!loggedIn){ // For facebook, logged in = false
@@ -65,6 +68,8 @@ public class GroupView extends AppCompatActivity {
             currentUser = new User("123");
         }
         setupActionBar();
+        ea = new EventActivity(this);
+        ea.getEventsForGroup((edu.byui.whatsupp.GroupView)this, message);
 
         //Show the chat messages from the group
         displayChatMessages();
@@ -97,6 +102,40 @@ public class GroupView extends AppCompatActivity {
 
     }
 
+    /**
+     * This method is used to display the list of current events
+     * for the current ThingToDo. It is called from the
+     * ThingToDo presenter class when it is done getting the
+     * data from firebase.
+     * @param events a list of Events
+     */
+    public void displayEventsForGroup(List<Event> events) {
+        if (events.size() < 1) {
+            // If there are no events, the image is a frowny face.
+            Event event = new Event("No events currently for this group.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
+            events.add(event);
+        }
+        EventAdapter eventAdapter = new EventAdapter(this, events, this, 1);
+        listView = (ListView) this.findViewById(R.id.group_event_list);
+        listView.setAdapter(eventAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+
+                Object o = listView.getItemAtPosition(position);
+                Event event = (Event)o;
+                Intent intent = new Intent(GroupView.this, ViewEvent.class);
+                intent.putExtra(EXTRA_MESSAGE, event.getTitle());
+                Log.i("Intent", "Send User to ViewEvent");
+                startActivity(intent);
+
+            }
+        });
+
+    }
+
     public void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
 
@@ -124,11 +163,11 @@ public class GroupView extends AppCompatActivity {
 
 
     public void createEvent(View view) {
-        Intent intent = new Intent(this, EventForm.class);
-        intent.putExtra(EXTRA_MESSAGE, "Create Group");
-        Log.i("Intent", "Send User to Group Creation");
-        startActivity(intent);
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        ThingToDoSelectFragment fragment = new ThingToDoSelectFragment();
+        fragmentTransaction.add(R.id.activity_main, fragment);
+        fragmentTransaction.commit();
     }
 
     private void setupActionBar() {
