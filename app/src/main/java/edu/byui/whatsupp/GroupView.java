@@ -47,7 +47,7 @@ public class GroupView extends AppCompatActivity {
 
     private EditText yourEditText;
 
-    Spinner spinner = (Spinner) findViewById(R.id.userSearchSpinner);
+    //Spinner spinner = (Spinner) findViewById(R.id.userSearchSpinner);
     edu.byui.whatsupp.Profile profileActivity;
 
     @Override
