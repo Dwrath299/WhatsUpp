@@ -1,6 +1,7 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -27,7 +28,9 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,7 +44,7 @@ import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
 import com.facebook.AccessToken;
 
-public class GroupView extends AppCompatActivity {
+public class GroupView extends AppCompatActivity  {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     User currentUser;
     boolean loggedIn;
@@ -91,7 +94,7 @@ public class GroupView extends AppCompatActivity {
                         .setValue(new ChatMessage(input.getText().toString(),
                                 FirebaseAuth.getInstance()
                                         .getCurrentUser()
-                                        .getDisplayName())
+                                        .getDisplayName(), message)
                         );
 
                 // Clear the input
@@ -138,23 +141,25 @@ public class GroupView extends AppCompatActivity {
 
     public void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
-
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
                 R.layout.message, FirebaseDatabase.getInstance().getReference()) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
-                // Get references to the views of message.xml
-                TextView messageText = (TextView)v.findViewById(R.id.message_text);
-                TextView messageUser = (TextView)v.findViewById(R.id.message_user);
-                TextView messageTime = (TextView)v.findViewById(R.id.message_time);
+                if(model.getGroup().equals(message)) {
+                    // Get references to the views of message.xml
+                    TextView messageText = (TextView) v.findViewById(R.id.message_text);
+                    TextView messageUser = (TextView) v.findViewById(R.id.message_user);
+                    TextView messageTime = (TextView) v.findViewById(R.id.message_time);
 
-                // Set their text
-                messageText.setText(model.getMessageText());
-                messageUser.setText(model.getMessageUser());
+                    // Set their text
+                    messageText.setText(model.getMessageText());
+                    messageUser.setText(model.getMessageUser());
 
-                // Format the date before showing it
-                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
-                        model.getMessageTime()));
+                    // Format the date before showing it
+                    messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
+                            model.getMessageTime()));
+                }
             }
         };
 
@@ -163,11 +168,15 @@ public class GroupView extends AppCompatActivity {
 
 
     public void createEvent(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ThingToDoSelectFragment fragment = new ThingToDoSelectFragment();
-        fragmentTransaction.add(R.id.activity_main, fragment);
-        fragmentTransaction.commit();
+        Intent intent = new Intent(GroupView.this, ThingToDoSelect.class);
+        // Send the group title
+        intent.putExtra(GroupView.EXTRA_MESSAGE, message);
+        Log.i("Intent", "Send User to ThingToDoSelect");
+        startActivity(intent);
+    }
+
+    public void thingToDoSelected(String title) {
+        Toast.makeText(getApplicationContext(), "You selected " + title, Toast.LENGTH_SHORT).show();
     }
 
     private void setupActionBar() {

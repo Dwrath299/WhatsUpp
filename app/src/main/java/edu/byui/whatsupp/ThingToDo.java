@@ -22,6 +22,7 @@ public class ThingToDo {
     private String description;
     private String creator;
     private String reference;
+    private String group;
     public boolean approved;
 
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
@@ -32,6 +33,25 @@ public class ThingToDo {
         zipCode = z;
         description = d;
         approved = true;
+    }
+
+    public ThingToDo(String u, String t, String a, String c, long z, String d, String g) {
+        url = u;
+        title = t;
+        address = a;
+        city = c;
+        zipCode = z;
+        description = d;
+        approved = true;
+        group = g;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public String getReference() {

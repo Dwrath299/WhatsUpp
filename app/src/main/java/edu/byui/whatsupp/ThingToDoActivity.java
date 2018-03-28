@@ -31,8 +31,8 @@ public class ThingToDoActivity {
         thingToDoPresenter.getListThings(activity);
 
     }
-    public void getThingsToDo(ThingToDoSelectFragment fragment) {
-
+    public void getThingsToDo(Activity activity, String groupTitle) {
+        thingToDoPresenter.getActivityListThings(activity, groupTitle);
     }
 
     public void displayThingToDo(Activity activity, String title) {

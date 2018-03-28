@@ -3,9 +3,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +45,14 @@ import static edu.byui.whatsupp.ThingToDoForm.EXTRA_MESSAGE;
 public class ThingToDoGridAdapter extends BaseAdapter {
     private Context mContext;
     private List<ThingToDo> things;
-    ThingToDoSelectFragment fragment;
+    edu.byui.whatsupp.ThingToDoSelect activity;
+    List<ThingToDo> selectedThings;
 
-    public ThingToDoGridAdapter(Context c, List<ThingToDo> t, ThingToDoSelectFragment a) {
+    public ThingToDoGridAdapter(Context c, List<ThingToDo> t, Activity a) {
         mContext = c;
         things = t;
-        fragment =  a;
+        activity = (edu.byui.whatsupp.ThingToDoSelect) a;
+        selectedThings = new ArrayList<ThingToDo>();
     }
 
     public int getCount() {
@@ -68,7 +73,7 @@ public class ThingToDoGridAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageButton imageButton;
+        final ImageButton imageButton;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageButton = new ImageButton(mContext);
@@ -83,7 +88,23 @@ public class ThingToDoGridAdapter extends BaseAdapter {
 
         imageButton.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)  {
-                fragment.thingClick(tempThing.getTitle());
+                activity.thingClick(tempThing);
+                // To set the background to a green color
+
+                int backgroundColor = ContextCompat.getColor(mContext, R.color.colorAccent50);
+                if(selectedThings.contains(tempThing)) {
+                    selectedThings.remove(tempThing);
+                    imageButton.setColorFilter(0x00000000);
+                } else {
+                    if(selectedThings.size() < 3) {
+                        selectedThings.add(tempThing);
+                        imageButton.setColorFilter(backgroundColor);
+                    }
+                }
+
+
+
+
             }
 
         });

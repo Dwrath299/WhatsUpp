@@ -11,10 +11,12 @@ public class ChatMessage {
     private String messageText;
     private String messageUser;
     private long messageTime;
+    private String group;
 
-    public ChatMessage(String messageText, String messageUser) {
+    public ChatMessage(String messageText, String messageUser, String group) {
         this.messageText = messageText;
         this.messageUser = messageUser;
+        this.group = group;
 
         // Initialize to current time
         messageTime = new Date().getTime();
@@ -22,6 +24,14 @@ public class ChatMessage {
 
     public ChatMessage(){
 
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public String getMessageText() {

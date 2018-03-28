@@ -65,7 +65,9 @@ public class EventForm extends AppCompatActivity {
     String message;
     EventActivity ea;
     private int PICK_IMAGE_REQUEST = 1;
-    String thingUrl;
+    String formType;
+    String formInfo;
+    String picURL;
     String thingTitle;
     boolean needToStoreImage;
     private StorageReference storageRef;
@@ -80,18 +82,20 @@ public class EventForm extends AppCompatActivity {
         // Bring in the thing to do info
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+        formType = extras.getString("EXTRA_FORMTYPE");
+        formInfo = extras.getString("EXTRA_FORMINFO");
+        picURL = extras.getString("EXTRA_PICURL");
         thingTitle = extras.getString("EXTRA_THINGTITLE");
-        thingUrl = extras.getString("EXTRA_THINGURL");
         ea = new EventActivity(this);
         //If thing url is "update" not creating a new one.
-        if(thingUrl.equals("update")) {
-            ea.getEventForUpdate(this, thingTitle);
+        if(formType.equals("update")) {
+            ea.getEventForUpdate(this, formInfo);
         } else {
             ImageView eventImageView = (ImageView) findViewById(R.id.eventImageView);
-            Picasso.with(this).load(thingUrl).into(eventImageView);
+            Picasso.with(this).load(picURL).into(eventImageView);
 
             EditText eventTitle = (EditText) findViewById(R.id.editEventTitle);
-            eventTitle.setHint(thingTitle + " event");
+            eventTitle.setHint(formInfo + " event");
         }
 
         // If the user doesn't select a pic, just use the url of the already exsisting
@@ -142,7 +146,7 @@ public class EventForm extends AppCompatActivity {
     public void submit (View view) {
 
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
-        if(thingUrl == "update") {
+        if(formType.equals("update")) {
             ea.deleteEvent(event.getRefrence());
         }
         EditText editText = findViewById(R.id.editEventTitle);
@@ -185,7 +189,7 @@ public class EventForm extends AppCompatActivity {
             // Get URL
             url = "Will get replaced";
         } else {
-            url = thingUrl;
+            url = picURL;
         }
 
         event = new Event( title, description, date, time, thingTitle, url);
@@ -201,6 +205,9 @@ public class EventForm extends AppCompatActivity {
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         event.setCreator(currentUser.getUid());
+        if(formType.equals("group")) {
+            event.setGroup(formInfo);
+        }
         event.addAttendee(currentUser.getUid());
         if(needToStoreImage) {
             event.setUrl(url);

@@ -1,87 +1,50 @@
 package edu.byui.whatsupp;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import static edu.byui.whatsupp.GroupView.EXTRA_MESSAGE;
 
+public class ThingToDoSelect extends AppCompatActivity {
 
-/**
- * <h1>Home Page</h1>
- * The Home Page is the beginning screen in the app,
- * displays the Things To Do in the area. The Users
- * are also able to create new things on this page.
- * <p>
- *
- *
- * @author  Dallin Wrathall
- * @version 1.0
- * @since   2018-03-21
- */
-public class HomePage extends AppCompatActivity {
-    public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
-    public ThingToDoActivity thingToDoActivity;
+    ThingToDoActivity thingToDoActivity;
+    List<ThingToDo> allThings;
+    List<ThingToDo> selectedThings;
     private FirebaseAuth mAuth;
-    List<ThingToDo> things;
     User currentUser;
-    ProgressBar spinner;
-
+    String groupTitle;
     boolean loggedIn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
-
-
-        spinner = findViewById(R.id.progressBar);
-        spinner.setVisibility(View.VISIBLE);
+        setContentView(R.layout.activity_thing_to_do_select);
+        Intent intent = getIntent();
+        groupTitle = intent.getStringExtra(EXTRA_MESSAGE);
         thingToDoActivity = new ThingToDoActivity();
-        thingToDoActivity.displayThingsToDo(this);
+        thingToDoActivity.getThingsToDo( this, groupTitle);
+        selectedThings = new ArrayList<ThingToDo>();
 
+        mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
         if(!loggedIn){ // For facebook, logged in = false
@@ -91,52 +54,55 @@ public class HomePage extends AppCompatActivity {
             loggedIn = false;
             currentUser = new User("123");
         }
-        //This needs to be done AFTER log in.
         setupActionBar();
 
-
     }
 
-
-
-    public void setGridView(List<ThingToDo> t) {
-        things = t;
-        spinner.setVisibility(View.GONE);
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        ImageAdapter imageAdapter = new ImageAdapter(this, things, this);
+    public void setGridView(List<ThingToDo> things) {
+        allThings = things;
+        GridView gridview = findViewById(R.id.thingsToDo_grid);
+        ThingToDoGridAdapter imageAdapter = new ThingToDoGridAdapter(this, things, this);
         gridview.setAdapter(imageAdapter);
-
     }
 
-
-    public void goToLogin (View view) {
-        Intent intent = new Intent(this, LoginPage.class);
-        intent.putExtra(EXTRA_MESSAGE, "HomePage");
-        Log.i("Intent", "Send User to Login");
-        startActivity(intent);
-
-    }
-    public void addThingToDo (View view) {
-        if (!loggedIn) //Make sure they are logged in.
-        {
-            Toast.makeText(HomePage.this, "You must log in to add",
-                    Toast.LENGTH_LONG).show();
+    public void thingClick(ThingToDo thing) {
+        if(selectedThings.contains(thing)) {
+            selectedThings.remove(thing);
         } else {
+            if(selectedThings.size() < 3)
+                selectedThings.add(thing);
+            else
+                Toast.makeText(getApplicationContext(), "A maximum of 3 to vote for. Sorry!", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
+
+    public void confirm(View view) {
+        if(selectedThings.size() == 1) {
             Intent intent = new Intent(this, ThingToDoForm.class);
             Bundle extras = new Bundle();
-            extras.putString("EXTRA_FORMTYPE","Create");
-            extras.putString("EXTRA_FORMINFO","");
+            extras.putString("EXTRA_FORMTYPE","Group");
+            extras.putString("EXTRA_FORMINFO", groupTitle);
+            extras.putString("EXTRA_PICURL", selectedThings.get(0).getUrl());
+            extras.putString("EXTRA_THINGTITLE", selectedThings.get(0).getTitle());
             Log.i("Intent", "Send User to Form");
             intent.putExtras(extras);
+
             startActivity(intent);
+        } else if(selectedThings.size() > 1) {
+
         }
     }
-    public void thingClick(String title) {
 
+    public void createGroupThingToDo(View view) {
+        Intent intent = new Intent(this, ThingToDoForm.class);
+        Bundle extras = new Bundle();
+        extras.putString("EXTRA_FORMTYPE","Group");
+        extras.putString("EXTRA_FORMINFO", groupTitle);
+        Log.i("Intent", "Send User to Form");
+        intent.putExtras(extras);
 
-        Intent intent = new Intent(this, ViewThingToDo.class);
-        intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
-        Log.i("Intent", "Send User to ThingToDoView");
         startActivity(intent);
     }
 
@@ -153,7 +119,7 @@ public class HomePage extends AppCompatActivity {
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText("WhatsUpp");
+        actionTitle.setText("Create Group Event");
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);
@@ -164,7 +130,7 @@ public class HomePage extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Creating the instance of PopupMenu
-                    final PopupMenu popup = new PopupMenu(HomePage.this, popupButton);
+                    final PopupMenu popup = new PopupMenu(ThingToDoSelect.this, popupButton);
                     //Inflating the Popup using xml file
                     popup.getMenuInflater()
                             .inflate(R.menu.popup_menu, popup.getMenu());
@@ -174,19 +140,19 @@ public class HomePage extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             if(item.getTitle().equals("My Profile")) {
 
-                                Intent intent = new Intent(HomePage.this, Profile.class);
+                                Intent intent = new Intent(ThingToDoSelect.this, Profile.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Profile");
                                 startActivity(intent);
                             }
                             else if(item.getTitle().equals("View Groups")) {
-                                Intent intent = new Intent(HomePage.this, GroupsView.class);
+                                Intent intent = new Intent(ThingToDoSelect.this, GroupsView.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to View Groups");
                                 startActivity(intent);
 
                             } else {
-                                Intent intent = new Intent(HomePage.this, LoginPage.class);
+                                Intent intent = new Intent(ThingToDoSelect.this, LoginPage.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Login page");
                                 startActivity(intent);
@@ -205,7 +171,7 @@ public class HomePage extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HomePage.this, LoginPage.class);
+                    Intent intent = new Intent(ThingToDoSelect.this, LoginPage.class);
                     intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                     Log.i("Intent", "Send User to Login page");
                     startActivity(intent);
@@ -218,8 +184,13 @@ public class HomePage extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Sorry to disappoint, you are on the home page!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ThingToDoSelect.this, HomePage.class);
+                // No real reason for sending UID with it, just because
+                intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
+                Log.i("Intent", "Send User to Home page");
+                startActivity(intent);
             }
         });
     }
+
 }
