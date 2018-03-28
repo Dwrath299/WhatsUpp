@@ -16,17 +16,6 @@ public abstract class Notification extends Context {
 
     private String CHANNEL_ID = "";
 
-    // Create an explicit intent for an Activity in your app
-    Intent intent = new Intent(this, AlertDetails.class);
-intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-    Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
-snoozeIntent.setAction(ACTION_SNOOZE);
-snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
-    PendingIntent snoozePendingIntent =
-            PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -40,6 +29,17 @@ snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
         notificationManager.createNotificationChannel(channel);
     }
 
+    // Create an explicit intent for an Activity in your app
+    Intent intent = new Intent(this, AlertDetails.class);
+intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+    Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
+snoozeIntent.setAction(ACTION_SNOOZE);
+snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
+    PendingIntent snoozePendingIntent =
+            PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification_icon)
             .setContentTitle("My notification")
@@ -49,9 +49,18 @@ snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
             .addAction(R.drawable.ic_snooze, getString(R.string.snooze),
                     snoozePendingIntent);
 
-    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+    // Build the notification and add the action.
+    Notification newMessageNotification = new Notification.Builder(mContext, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_message)
+            .setContentTitle(getString(R.string.title))
+            .setContentText(getString(R.string.content))
+            .addAction(action)
+            .build();
 
-// notificationId is a unique int for each notification that you must define
-notificationManager.notify(notificationId, mBuilder.build());
+    // Issue the notification.
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+notificationManager.notify(notificationId, newMessageNotification);
 }
+
+
 
