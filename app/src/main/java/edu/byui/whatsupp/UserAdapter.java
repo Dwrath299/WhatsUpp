@@ -32,7 +32,9 @@ import java.util.List;
 public class UserAdapter extends BaseAdapter {
     private Context mContext;
     private List<User> users;
-    edu.byui.whatsupp.ViewEvent activity;
+    edu.byui.whatsupp.ViewEvent eventActivity;
+    edu.byui.whatsupp.GroupForm groupActivity;
+
 
     private LayoutInflater l_Inflater;
 
@@ -42,10 +44,13 @@ public class UserAdapter extends BaseAdapter {
      * @param t A list of Users that are going to be displayed
      * @param a an Activity class
      */
-    public UserAdapter(Context c, List<User> t, Activity a) {
+    public UserAdapter(Context c, List<User> t, Activity a, int choice) {
         mContext = c;
         users = t;
-        activity = (edu.byui.whatsupp.ViewEvent) a;
+        if (choice == 1)
+            eventActivity = (edu.byui.whatsupp.ViewEvent) a;
+        else if (choice == 2)
+            groupActivity = (edu.byui.whatsupp.GroupForm) a;
         l_Inflater = LayoutInflater.from(c);
     }
 

@@ -55,6 +55,9 @@ public class GroupView extends AppCompatActivity  {
     String message;
     ListView listView;
 
+    //Spinner spinner = (Spinner) findViewById(R.id.userSearchSpinner);
+    edu.byui.whatsupp.Profile profileActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +79,23 @@ public class GroupView extends AppCompatActivity  {
 
         //Show the chat messages from the group
         displayChatMessages();
+
+
+        yourEditText = (EditText) findViewById(R.id.yourEditTextId);
+
+        yourEditText.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged (Editable s){
+
+
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
 
         //Setting up onclick listener so user can send a message to the group
         FloatingActionButton fab =
@@ -142,6 +162,8 @@ public class GroupView extends AppCompatActivity  {
     public void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
                 R.layout.message, FirebaseDatabase.getInstance().getReference()) {
             @Override

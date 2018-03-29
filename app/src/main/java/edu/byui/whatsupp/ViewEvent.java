@@ -138,7 +138,7 @@ public class ViewEvent extends AppCompatActivity {
 
 
 
-        UserAdapter userAdapter = new UserAdapter(this, users, this);
+        UserAdapter userAdapter = new UserAdapter(this, users, this, 1);
         listView = (ListView) this.findViewById(R.id.attendees_list);
         listView.setAdapter(userAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
