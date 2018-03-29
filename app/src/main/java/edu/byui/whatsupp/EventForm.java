@@ -74,6 +74,13 @@ public class EventForm extends AppCompatActivity {
     Event event;
     boolean loggedIn;
 
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +120,13 @@ public class EventForm extends AppCompatActivity {
         setupActionBar();
     }
 
+	/**
+     * Display Event Data
+	 * This gets called by the Event Presenter if
+	 * the user is updating an already exsisting event.
+	 * This way the user doesn't need to retype everything.
+	 * @param event The event that is getting updated
+     */
     public void displayEventData(Event event) {
         this.event = event;
         ((TextView) this.findViewById(R.id.tv_time)).setText(event.getTime());
@@ -124,6 +138,13 @@ public class EventForm extends AppCompatActivity {
         ((Button) this.findViewById(R.id.delete_event)).setVisibility(View.VISIBLE);
     }
 
+	/**
+     * Delete Event
+	 * This is called by the delete button onClick
+	 * only available if editing already exisiting event.
+	 * 
+	 * @view 
+     */
     public void deleteEvent(View view) {
         ea.deleteEvent(event.getRefrence());
         Intent intent = new Intent(EventForm.this, HomePage.class);
@@ -133,6 +154,12 @@ public class EventForm extends AppCompatActivity {
         startActivity(intent);
     }
 
+	/**
+     * Add Picture
+	 * This gets called by camera button on the screen.
+	 * allows the user to select one from their phone
+	 * @param view 
+     */
     public void addPicture(View view) {
         //Get incoming intent
         Intent intent = new Intent();
@@ -142,7 +169,13 @@ public class EventForm extends AppCompatActivity {
         needToStoreImage = true;
     }
 
-
+	/**
+     * Submit
+	 * Gets all the data from the form and makes it a
+	 * event. If they selected a new picture, it stores
+	 * it in the database
+	 * @param view
+     */
     public void submit (View view) {
 
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
@@ -201,7 +234,14 @@ public class EventForm extends AppCompatActivity {
         finish();
 
     }
-    //This will get run when the past process is completed
+	
+	/**
+     * Add To Database
+	 * This gets called once the picture has been uploaded 
+	 * or after the event obect is done being created.
+	 * This stores the info in firebase
+	 * @param url the picture for the event url
+     */
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         event.setCreator(currentUser.getUid());
@@ -233,7 +273,12 @@ public class EventForm extends AppCompatActivity {
     }
 
 
-    // For getting the time
+    /**
+     * Show Time Picker Dialog
+	 * Called by the time picker in the activity.
+	 * Allows the user to choose the time.
+	 * @param view
+     */
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         FragmentManager fm = getFragmentManager();
@@ -243,10 +288,20 @@ public class EventForm extends AppCompatActivity {
                 .commit();
         newFragment.show(fm, "timePicker");
     }
-
+	
+	/**
+     * Time Picker Fragment
+	 * The interface of the time picker
+	 * 
+     */
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
-
+		
+		/**
+		* On Create Dialog
+		* Sets the interface to default to the current time
+		* @param savedInstanceState
+		*/
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current time as the default values for the picker
@@ -258,7 +313,14 @@ public class EventForm extends AppCompatActivity {
             return new TimePickerDialog(getActivity(), this, hour, minute,
                     DateFormat.is24HourFormat(getActivity()));
         }
-
+		
+		/**
+		* On Time Set
+		* Returns the time information back to the activity
+		* @param view
+		* @param Hour Of Day
+		* @param Minute
+		*/
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
             ((TextView) getActivity().findViewById(R.id.tv_time)).setVisibility(View.VISIBLE);
@@ -267,7 +329,12 @@ public class EventForm extends AppCompatActivity {
         }
     }
 
-    // For getting the date
+    /**
+     * Show Date Picker Dialog
+	 * Called by the date picker in the activity.
+	 * Allows the user to choose the date.
+	 * @param view
+     */
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
 
@@ -280,9 +347,20 @@ public class EventForm extends AppCompatActivity {
 
     }
 
+	/**
+     * Date Picker Fragment
+	 * The interface of the date picker
+	 * 
+     */
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
+			
+		/**
+		* On Create Dialog
+		* Sets the interface to default to the current date
+		* @param savedInstanceState
+		*/
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
@@ -295,6 +373,13 @@ public class EventForm extends AppCompatActivity {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
+		/**
+		* On Time Date
+		* Returns the date information back to the activity
+		* @param view
+		* @param Month
+		* @param Day
+		*/
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
             ((TextView) getActivity().findViewById(R.id.tv_date)).setVisibility(View.VISIBLE);
@@ -302,6 +387,13 @@ public class EventForm extends AppCompatActivity {
         }
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

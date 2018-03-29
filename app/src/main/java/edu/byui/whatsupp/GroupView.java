@@ -43,6 +43,17 @@ import static android.content.ContentValues.TAG;
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
 import com.facebook.AccessToken;
+/**
+ * <h1>Group View</h1>
+ * The Group View will display the group that the user chose.
+ * Displays the events happening in the group and a message board.
+ * Users can create events for the group by pressing the create 
+ * button.
+ * 
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 
 public class GroupView extends AppCompatActivity  {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
@@ -55,6 +66,13 @@ public class GroupView extends AppCompatActivity  {
     String message;
     ListView listView;
 
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +124,7 @@ public class GroupView extends AppCompatActivity  {
     }
 
     /**
+	 * Display Events For Group
      * This method is used to display the list of current events
      * for the current ThingToDo. It is called from the
      * ThingToDo presenter class when it is done getting the
@@ -139,6 +158,13 @@ public class GroupView extends AppCompatActivity  {
 
     }
 
+	/**
+	 * Display Chat Messages
+     * Will display the messages specific to this group.
+	 * Displays the message, the user who sent it, and the time
+	 * they sent it.
+     * 
+     */
     public void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -167,6 +193,12 @@ public class GroupView extends AppCompatActivity  {
     }
 
 
+	/**
+	 * Create Event
+	 * The user will be directed to the Thing To Do Select
+	 * page to either create an event or vote for the group.
+     * @param view
+     */
     public void createEvent(View view) {
         Intent intent = new Intent(GroupView.this, ThingToDoSelect.class);
         // Send the group title
@@ -175,10 +207,15 @@ public class GroupView extends AppCompatActivity  {
         startActivity(intent);
     }
 
-    public void thingToDoSelected(String title) {
-        Toast.makeText(getApplicationContext(), "You selected " + title, Toast.LENGTH_SHORT).show();
-    }
 
+	
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

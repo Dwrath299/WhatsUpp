@@ -52,6 +52,14 @@ public class ViewEvent extends AppCompatActivity {
     Event event;
     List<String> attendees;
     Button joinButton;
+	
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -20,6 +20,16 @@ import com.facebook.AccessToken;
 import java.util.List;
 
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
+/**
+ * <h1>Groups View</h1>
+ * The Groups View will display the groups that a user is in
+ * so they may select one to go into. They can also choose to 
+ * create one from this page.
+ * 
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 
 public class GroupsView extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
@@ -28,6 +38,13 @@ public class GroupsView extends AppCompatActivity {
     GroupActivity ga;
     boolean loggedIn;
 
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +63,12 @@ public class GroupsView extends AppCompatActivity {
         setupActionBar();
     }
 
+	/**
+     * View Group
+	 * The user selected a group on the list view
+	 * sends them to the group view to see it
+	 * @param view
+     */
     public void viewGroup(View view) {
         Intent intent = new Intent(this, GroupView.class);
         intent.putExtra(EXTRA_MESSAGE, "View Group");
@@ -53,6 +76,12 @@ public class GroupsView extends AppCompatActivity {
         startActivity(intent);
     }
 
+	/**
+     * Create Group
+	 * The user selected the create button
+	 * sent them to the create group form
+	 * @param view
+     */
     public void createGroup(View view) {
         Intent intent = new Intent(this, GroupForm.class);
         intent.putExtra(EXTRA_MESSAGE, "Create Group");
@@ -61,6 +90,13 @@ public class GroupsView extends AppCompatActivity {
     }
 
 
+	/**
+     * Display Groups
+	 * Called by the group presenter, this will display the 
+	 * groups the current user is in. If in no groups, will create
+	 * a filler one telling them to make one.
+	 * @param groups A list including all the groups
+     */
     public void displayGroups(List<Group> groups) {
         if (groups.size() < 1) {
             // If there are no groups, the image is a very large frowny face.
@@ -87,6 +123,13 @@ public class GroupsView extends AppCompatActivity {
         });
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
