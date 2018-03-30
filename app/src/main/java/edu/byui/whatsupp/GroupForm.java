@@ -38,6 +38,19 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
+/**
+ * <h1>Group Form</h1>
+ * The Group Form is the activity class where Users
+ * will create a new Group. Request input for a
+ * picture, title, and users.
+ * 
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
+
 public class GroupForm extends AppCompatActivity {
 
     private int PICK_IMAGE_REQUEST = 1;
@@ -46,12 +59,22 @@ public class GroupForm extends AppCompatActivity {
     Spinner spinner2;
     EditText search;
 
+<<<<<<< HEAD
     ArrayList<User> userList = new ArrayList<User>();
     ArrayList<String> userNameList = new ArrayList<String>();
     final ArrayList<User> list = new ArrayList<>();
     List<User> selectedUsers = new ArrayList<User>();
 
 
+=======
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
+>>>>>>> DallinBranch
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,6 +229,13 @@ public class GroupForm extends AppCompatActivity {
 
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

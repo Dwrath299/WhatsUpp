@@ -16,17 +16,35 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by Dallin's PC on 3/2/2018.
+ * <h1>Event Adapter</h1>
+ * A class to display the events in a list view. This is used by
+ * Viewing Thing To Do page, Profile Page, and Group View Page
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
  */
 
 public class EventAdapter extends BaseAdapter {
     private Context mContext;
     private List<Event> events;
+	// Each activity has specific functions to call
     edu.byui.whatsupp.ViewThingToDo thingActivity;
     edu.byui.whatsupp.Profile profileActivity;
     int page;
 
     private LayoutInflater l_Inflater;
+	
+	/**
+     * Event Adapter Constructor
+	 * Specific to the page that is using it
+	 * @param c The Context of the activity using it.
+	 * @param t A list of events to display in the list View
+	 * @param a The activity using this adapter.
+	 * @param page To let the adapter know what page is using this adapter.
+					1 = View Thing To Do page
+					2 = Profile page
+					3 = View Group page
+     */
     public EventAdapter(Context c, List<Event> t, Activity a, int page) {
         mContext = c;
         events = t;
@@ -38,23 +56,56 @@ public class EventAdapter extends BaseAdapter {
         l_Inflater = LayoutInflater.from(c);
     }
 
+	/**
+     * Get Count
+	 * How many events are there?
+	 * @return events.size() the number of events.
+     */
     public int getCount() {
         return events.size();
     }
 
+	/**
+     * Set List
+	 * The list of the events
+	 * @param t List<Event>
+     */
     public void setList(List<Event> t) {
         events = t;
     }
 
+	
+	/**
+     * Get Item
+	 * Returns the event at the position
+	 * @param position Index of the event
+	 * @return event 
+     */
     public Object getItem(int position) {
         return events.get(position);
     }
 
+	/**
+     * Get Item ID
+	 * This does nothing right now... 
+	 * It was here and I didn't touch it.
+	 * @param position Index of the event
+	 * @return 0
+     */
     public long getItemId(int position) {
         return 0;
     }
 
-    // create a new ImageButton for each item referenced by the Adapter
+	/**
+     * Get View
+	 * When you set list view adapter to this, it will run through
+	 * each of the events and set them up for display
+	 * 
+	 * @param position Index of the event
+	 * @param convertView don't know what this is, but it works!
+	 * @param parent ditto to convertView
+	 * @return convertView  
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
@@ -83,11 +134,14 @@ public class EventAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void displayThingToDo() {
+   
 
-    }
-
-    // holder view for views
+    /**
+     * View Holder
+	 * The holder for each of the things needed to display 
+	 * in the event.
+	 * 
+     */
     static class ViewHolder {
         ImageView Image;
         TextView MsgType;

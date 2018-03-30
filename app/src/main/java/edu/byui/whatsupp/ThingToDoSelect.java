@@ -34,6 +34,14 @@ public class ThingToDoSelect extends AppCompatActivity {
     User currentUser;
     String groupTitle;
     boolean loggedIn;
+	
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +99,19 @@ public class ThingToDoSelect extends AppCompatActivity {
 
             startActivity(intent);
         } else if(selectedThings.size() > 1) {
+            Intent intent = new Intent(this, VoteForm.class);
+            Bundle extras = new Bundle();
+            extras.putSerializable("EXTRA_OPTION1THING", selectedThings.get(0));
+            extras.putSerializable("EXTRA_OPTION2THING", selectedThings.get(1));
+            if (selectedThings.size() > 2 ) {
+                extras.putSerializable("EXTRA_OPTION3THING", selectedThings.get(2));
+            } else {
+                extras.putSerializable("EXTRA_OPTION3THING", new ThingToDo("null"));
+            }
+            Log.i("Intent", "Send User to Form");
+            intent.putExtras(extras);
 
+            startActivity(intent);
         }
     }
 
@@ -106,6 +126,13 @@ public class ThingToDoSelect extends AppCompatActivity {
         startActivity(intent);
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

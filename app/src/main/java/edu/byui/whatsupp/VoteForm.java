@@ -7,58 +7,43 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.login.widget.ProfilePictureView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
+import static edu.byui.whatsupp.GroupView.EXTRA_MESSAGE;
 
-/**
- * <h1>Profile</h1>
- * Where users can view other users or
- * their own profile. If it is their own,
- * they can edit it.
- * <p>
- *
- *
- * @author  Dallin Wrathall
- * @version 1.0
- * @since   2018-03-21
- */
-public class Profile extends AppCompatActivity {
-    String message;
-    User profileUser;
-    UserActivity ua;
-    EventActivity ea;
+public class VoteForm extends AppCompatActivity {
+    private FirebaseAuth mAuth;
     User currentUser;
-    ListView listView;
     boolean loggedIn;
-
-	/**
-     * On Create
-	 * Retrieves the information from the intent
-	 * Gets current user info
-	 * @param savedInstanceState
-	 * 
-     */
+    ThingToDo option1;
+    ThingToDo option2;
+    ThingToDo option3;
+    int numOptions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_vote_form);
         Intent intent = getIntent();
-        message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
-        ua = new UserActivity();
-        ea = new EventActivity(this);
-        ua.getUserInfo(this, message);
+        option1 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION1THING");
+        option2 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION2THING");
+        option3 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION3THING");
+        if(option3.getUrl().equals("null")) {
+            numOptions = 2;
+        } else {
+            numOptions = 3;
+        }
+        mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
         if(!loggedIn){ // For facebook, logged in = false
@@ -68,38 +53,40 @@ public class Profile extends AppCompatActivity {
             loggedIn = false;
             currentUser = new User("123");
         }
-        ea.displayEventsForProfile(this, message);
-        //Check to see if current user, if so, let them edit it.
-        if(currentUser.getUid().equals(message)) {
+        setupActionBar();
+        displayOptions();
+    }
 
+    private void displayOptions() {
+
+        //Set the headers
+        TextView header = findViewById(R.id.vote_form_option1_header);
+        header.setText("Option 1: " + option1.getTitle());
+        header = findViewById(R.id.vote_form_option2_header);
+        header.setText("Option 2: " + option1.getTitle());
+        header = findViewById(R.id.vote_form_option3_header);
+        if(numOptions == 3) {
+            header.setText("Option 3: " + option1.getTitle());
+        } else {
+            header.setVisibility(View.INVISIBLE);
         }
 
-        setupActionBar();
-    }
-
-    public void displayUserInfo(User user) {
-        profileUser = user;
-        TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText(profileUser.getFirstName());
-        ProfilePictureView profilePictureView;
-        profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
-        profilePictureView.setProfileId(message);
-        // -4 in facebook's twisted mind is large, -3 = normal, -2 = small, -1 = custom.
-        profilePictureView.setPresetSize(-4);
-
-    }
-
-    public void groupWith(View view) {
+        // Set the images
+        ImageView image = findViewById(R.id.vote_form_option1_pic);
+        Picasso.with(this).load(option1.getUrl()).into(image);
+        image = findViewById(R.id.vote_form_option2_pic);
+        Picasso.with(this).load(option2.getUrl()).into(image);
+        image = findViewById(R.id.vote_form_option3_pic);
+        if(numOptions == 3) {
+            Picasso.with(this).load(option3.getUrl()).into(image);
+        } else {
+            image.setVisibility(View.INVISIBLE);
+            EditText text = findViewById(R.id.vote_form_option3_desc);
+            text.setVisibility(View.INVISIBLE);
+        }
 
     }
 
-	/**
-     * Setup ActionBar
-	 * Intializes the action bar to have the functionality of
-	 * the home button and drop down list if the user is
-	 * logged in, otherwise, a log in button.
-	 * Called by the On Create method
-     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
@@ -112,8 +99,8 @@ public class Profile extends AppCompatActivity {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
-
-
+        TextView actionTitle = (TextView) findViewById(R.id.title_text);
+        actionTitle.setText("Create Group Event");
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);
@@ -124,7 +111,7 @@ public class Profile extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Creating the instance of PopupMenu
-                    final PopupMenu popup = new PopupMenu(Profile.this, popupButton);
+                    final PopupMenu popup = new PopupMenu(VoteForm.this, popupButton);
                     //Inflating the Popup using xml file
                     popup.getMenuInflater()
                             .inflate(R.menu.popup_menu, popup.getMenu());
@@ -134,19 +121,19 @@ public class Profile extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             if(item.getTitle().equals("My Profile")) {
 
-                                Intent intent = new Intent(Profile.this, Profile.class);
+                                Intent intent = new Intent(VoteForm.this, Profile.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Profile");
                                 startActivity(intent);
                             }
                             else if(item.getTitle().equals("View Groups")) {
-                                Intent intent = new Intent(Profile.this, GroupsView.class);
+                                Intent intent = new Intent(VoteForm.this, GroupsView.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to View Groups");
                                 startActivity(intent);
 
                             } else {
-                                Intent intent = new Intent(Profile.this, LoginPage.class);
+                                Intent intent = new Intent(VoteForm.this, LoginPage.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Login page");
                                 startActivity(intent);
@@ -165,7 +152,7 @@ public class Profile extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Profile.this, LoginPage.class);
+                    Intent intent = new Intent(VoteForm.this, LoginPage.class);
                     intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                     Log.i("Intent", "Send User to Login page");
                     startActivity(intent);
@@ -178,39 +165,12 @@ public class Profile extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Profile.this, HomePage.class);
+                Intent intent = new Intent(VoteForm.this, HomePage.class);
+                // No real reason for sending UID with it, just because
                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                Log.i("Intent", "Send User to Home Page");
+                Log.i("Intent", "Send User to Home page");
                 startActivity(intent);
             }
         });
-    }
-
-
-    public void displayEventsForProfile(List<Event> events) {
-        if (events.size() < 1) {
-            // If there are no events, the image is a frowny face.
-            Event event = new Event(profileUser.getFirstName() + " isn't attending any events", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
-            events.add(event);
-        }
-        EventAdapter eventAdapter = new EventAdapter(this, events, this, 2);
-        listView = (ListView) this.findViewById(R.id.profile_event_list);
-        listView.setAdapter(eventAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-
-                Object o = listView.getItemAtPosition(position);
-                Event event = (Event)o;
-                Intent intent = new Intent(Profile.this, ViewEvent.class);
-                intent.putExtra(EXTRA_MESSAGE, event.getTitle());
-                Log.i("Intent", "Send User to ViewEvent");
-                startActivity(intent);
-
-            }
-        });
-
     }
 }
