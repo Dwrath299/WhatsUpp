@@ -2,6 +2,7 @@ package edu.byui.whatsupp;
 
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Map;
  * @version 1.0
  * @since   2018-03-21
  */
-public class ThingToDo {
+public class ThingToDo implements Serializable {
     private String url;
     private String title;
     private String address;
@@ -44,6 +45,10 @@ public class ThingToDo {
         description = d;
         approved = true;
         group = g;
+    }
+    public ThingToDo(String u) {
+        url = u;
+
     }
 
     public String getGroup() {

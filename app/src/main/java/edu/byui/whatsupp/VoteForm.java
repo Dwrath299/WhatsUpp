@@ -1,49 +1,48 @@
 package edu.byui.whatsupp;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridView;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static edu.byui.whatsupp.GroupView.EXTRA_MESSAGE;
 
-public class ThingToDoSelect extends AppCompatActivity {
-
-    ThingToDoActivity thingToDoActivity;
-    List<ThingToDo> allThings;
-    List<ThingToDo> selectedThings;
+public class VoteForm extends AppCompatActivity {
     private FirebaseAuth mAuth;
     User currentUser;
-    String groupTitle;
     boolean loggedIn;
+    ThingToDo option1;
+    ThingToDo option2;
+    ThingToDo option3;
+    int numOptions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_thing_to_do_select);
+        setContentView(R.layout.activity_vote_form);
         Intent intent = getIntent();
-        groupTitle = intent.getStringExtra(EXTRA_MESSAGE);
-        thingToDoActivity = new ThingToDoActivity();
-        thingToDoActivity.getThingsToDo( this, groupTitle);
-        selectedThings = new ArrayList<ThingToDo>();
-
+        option1 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION1THING");
+        option2 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION2THING");
+        option3 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION3THING");
+        if(option3.getUrl().equals("null")) {
+            numOptions = 2;
+        } else {
+            numOptions = 3;
+        }
         mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
@@ -55,67 +54,37 @@ public class ThingToDoSelect extends AppCompatActivity {
             currentUser = new User("123");
         }
         setupActionBar();
-
+        displayOptions();
     }
 
-    public void setGridView(List<ThingToDo> things) {
-        allThings = things;
-        GridView gridview = findViewById(R.id.thingsToDo_grid);
-        ThingToDoGridAdapter imageAdapter = new ThingToDoGridAdapter(this, things, this);
-        gridview.setAdapter(imageAdapter);
-    }
+    private void displayOptions() {
 
-    public void thingClick(ThingToDo thing) {
-        if(selectedThings.contains(thing)) {
-            selectedThings.remove(thing);
+        //Set the headers
+        TextView header = findViewById(R.id.vote_form_option1_header);
+        header.setText("Option 1: " + option1.getTitle());
+        header = findViewById(R.id.vote_form_option2_header);
+        header.setText("Option 2: " + option1.getTitle());
+        header = findViewById(R.id.vote_form_option3_header);
+        if(numOptions == 3) {
+            header.setText("Option 3: " + option1.getTitle());
         } else {
-            if(selectedThings.size() < 3)
-                selectedThings.add(thing);
-            else
-                Toast.makeText(getApplicationContext(), "A maximum of 3 to vote for. Sorry!", Toast.LENGTH_LONG).show();
+            header.setVisibility(View.INVISIBLE);
         }
 
-
-    }
-
-    public void confirm(View view) {
-        if(selectedThings.size() == 1) {
-            Intent intent = new Intent(this, ThingToDoForm.class);
-            Bundle extras = new Bundle();
-            extras.putString("EXTRA_FORMTYPE","Group");
-            extras.putString("EXTRA_FORMINFO", groupTitle);
-            extras.putString("EXTRA_PICURL", selectedThings.get(0).getUrl());
-            extras.putString("EXTRA_THINGTITLE", selectedThings.get(0).getTitle());
-            Log.i("Intent", "Send User to Form");
-            intent.putExtras(extras);
-
-            startActivity(intent);
-        } else if(selectedThings.size() > 1) {
-            Intent intent = new Intent(this, VoteForm.class);
-            Bundle extras = new Bundle();
-            extras.putSerializable("EXTRA_OPTION1THING", selectedThings.get(0));
-            extras.putSerializable("EXTRA_OPTION2THING", selectedThings.get(1));
-            if (selectedThings.size() > 2 ) {
-                extras.putSerializable("EXTRA_OPTION3THING", selectedThings.get(2));
-            } else {
-                extras.putSerializable("EXTRA_OPTION3THING", new ThingToDo("null"));
-            }
-            Log.i("Intent", "Send User to Form");
-            intent.putExtras(extras);
-
-            startActivity(intent);
+        // Set the images
+        ImageView image = findViewById(R.id.vote_form_option1_pic);
+        Picasso.with(this).load(option1.getUrl()).into(image);
+        image = findViewById(R.id.vote_form_option2_pic);
+        Picasso.with(this).load(option2.getUrl()).into(image);
+        image = findViewById(R.id.vote_form_option3_pic);
+        if(numOptions == 3) {
+            Picasso.with(this).load(option3.getUrl()).into(image);
+        } else {
+            image.setVisibility(View.INVISIBLE);
+            EditText text = findViewById(R.id.vote_form_option3_desc);
+            text.setVisibility(View.INVISIBLE);
         }
-    }
 
-    public void createGroupThingToDo(View view) {
-        Intent intent = new Intent(this, ThingToDoForm.class);
-        Bundle extras = new Bundle();
-        extras.putString("EXTRA_FORMTYPE","Group");
-        extras.putString("EXTRA_FORMINFO", groupTitle);
-        Log.i("Intent", "Send User to Form");
-        intent.putExtras(extras);
-
-        startActivity(intent);
     }
 
     private void setupActionBar() {
@@ -142,7 +111,7 @@ public class ThingToDoSelect extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Creating the instance of PopupMenu
-                    final PopupMenu popup = new PopupMenu(ThingToDoSelect.this, popupButton);
+                    final PopupMenu popup = new PopupMenu(VoteForm.this, popupButton);
                     //Inflating the Popup using xml file
                     popup.getMenuInflater()
                             .inflate(R.menu.popup_menu, popup.getMenu());
@@ -152,19 +121,19 @@ public class ThingToDoSelect extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             if(item.getTitle().equals("My Profile")) {
 
-                                Intent intent = new Intent(ThingToDoSelect.this, Profile.class);
+                                Intent intent = new Intent(VoteForm.this, Profile.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Profile");
                                 startActivity(intent);
                             }
                             else if(item.getTitle().equals("View Groups")) {
-                                Intent intent = new Intent(ThingToDoSelect.this, GroupsView.class);
+                                Intent intent = new Intent(VoteForm.this, GroupsView.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to View Groups");
                                 startActivity(intent);
 
                             } else {
-                                Intent intent = new Intent(ThingToDoSelect.this, LoginPage.class);
+                                Intent intent = new Intent(VoteForm.this, LoginPage.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Login page");
                                 startActivity(intent);
@@ -183,7 +152,7 @@ public class ThingToDoSelect extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ThingToDoSelect.this, LoginPage.class);
+                    Intent intent = new Intent(VoteForm.this, LoginPage.class);
                     intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                     Log.i("Intent", "Send User to Login page");
                     startActivity(intent);
@@ -196,7 +165,7 @@ public class ThingToDoSelect extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ThingToDoSelect.this, HomePage.class);
+                Intent intent = new Intent(VoteForm.this, HomePage.class);
                 // No real reason for sending UID with it, just because
                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                 Log.i("Intent", "Send User to Home page");
@@ -204,5 +173,4 @@ public class ThingToDoSelect extends AppCompatActivity {
             }
         });
     }
-
 }
