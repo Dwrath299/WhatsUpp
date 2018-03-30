@@ -140,6 +140,13 @@ public class HomePage extends AppCompatActivity {
         startActivity(intent);
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

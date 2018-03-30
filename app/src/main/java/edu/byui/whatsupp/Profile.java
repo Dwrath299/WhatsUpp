@@ -43,6 +43,13 @@ public class Profile extends AppCompatActivity {
     ListView listView;
     boolean loggedIn;
 
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +93,13 @@ public class Profile extends AppCompatActivity {
 
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
