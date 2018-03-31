@@ -186,7 +186,7 @@ public class ViewEvent extends AppCompatActivity {
             }
             joinButton.setText("Join Event");
         }
-        ea.addAttendee(event.getRefrence(), attendees);
+        ea.addAttendee(event.getReference(), attendees);
         ea.displayEvent((edu.byui.whatsupp.ViewEvent)this, message);
     }
 

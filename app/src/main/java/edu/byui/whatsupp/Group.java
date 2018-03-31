@@ -12,9 +12,11 @@ public class Group {
     String title;
     String url;
     String creator;
+    ArrayList<User> members;
 
-    public Group(String title, String url) {
+    public Group(String title, ArrayList<User> members, String url) {
         this.title = title;
+        this.members = members;
         this.url = url;
     }
 

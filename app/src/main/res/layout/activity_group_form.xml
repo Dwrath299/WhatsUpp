@@ -7,7 +7,7 @@
     tools:context="edu.byui.whatsupp.GroupForm">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/groupImage"
         android:layout_width="0dp"
         android:layout_height="120dp"
         android:layout_marginBottom="16dp"
@@ -25,37 +25,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="68dp"
         android:onClick="addPicture"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/groupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Group name"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/groupImage" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="59dp"
         android:layout_height="26dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="93dp"
+        android:layout_marginTop="76dp"
         android:text="Search:"
         android:textAlignment="center"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/groupImage" />
 
     <ListView
         android:id="@+id/selUsers"
@@ -67,8 +70,10 @@
         android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.819" />
 
     <AutoCompleteTextView
         android:id="@+id/actv"
@@ -76,11 +81,12 @@
         android:layout_height="44dp"
         android:layout_marginEnd="94dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:completionHint="Name"
+        android:layout_marginTop="10dp"
+        android:completionHint="name"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/groupName" />
 
     <Button
         android:id="@+id/button6"
@@ -88,6 +94,7 @@
         android:layout_height="41dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:onClick="createGroup"
         android:text="Create"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"

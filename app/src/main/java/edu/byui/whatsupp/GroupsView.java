@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
@@ -37,6 +38,8 @@ public class GroupsView extends AppCompatActivity {
     User currentUser;
     GroupActivity ga;
     boolean loggedIn;
+    ArrayList<User> members;
+
 
 	/**
      * On Create
@@ -100,7 +103,7 @@ public class GroupsView extends AppCompatActivity {
     public void displayGroups(List<Group> groups) {
         if (groups.size() < 1) {
             // If there are no groups, the image is a very large frowny face.
-            Group group = new Group("Not currently part of any group. Please make some friends.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
+            Group group = new Group("Not currently part of any group. Please make some friends.", members, "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
             groups.add(group);
         }
         GroupAdapter groupAdapter = new GroupAdapter(this, groups, this);

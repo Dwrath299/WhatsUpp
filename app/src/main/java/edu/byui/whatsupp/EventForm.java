@@ -146,7 +146,7 @@ public class EventForm extends AppCompatActivity {
 	 * @view 
      */
     public void deleteEvent(View view) {
-        ea.deleteEvent(event.getRefrence());
+        ea.deleteEvent(event.getReference());
         Intent intent = new Intent(EventForm.this, HomePage.class);
         // No real reason for sending UID with it, just because
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
@@ -180,7 +180,7 @@ public class EventForm extends AppCompatActivity {
 
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         if(formType.equals("update")) {
-            ea.deleteEvent(event.getRefrence());
+            ea.deleteEvent(event.getReference());
         }
         EditText editText = findViewById(R.id.editEventTitle);
         String title = editText.getText().toString();
@@ -291,7 +291,7 @@ public class EventForm extends AppCompatActivity {
 	
 	/**
      * Time Picker Fragment
-	 * The interface of the time picker
+	 * The interface of the time picker 
 	 * 
      */
     public static class TimePickerFragment extends DialogFragment
