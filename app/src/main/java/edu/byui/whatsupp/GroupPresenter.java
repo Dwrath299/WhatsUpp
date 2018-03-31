@@ -46,6 +46,7 @@ public class GroupPresenter {
                                 for(int i = 0; i < members.size(); i ++) {
                                     if(uid.equals(members.get(i))) {
                                         Group tempGroup = new Group((String) document.get("title"),
+                                                                    (ArrayList<User>) document.get("members"),
                                                                     (String) document.get("url"));
                                         tempGroup.setMemberList(members);
                                         if (document.get("creator") != null) {
