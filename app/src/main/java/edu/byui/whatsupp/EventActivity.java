@@ -102,6 +102,6 @@ public class EventActivity {
 	 * @param title The title of the group to get events details
      */
     public void getEventsForGroup(Activity activity, String title) {
-
+		eventPresenter.getEventsForGroup(activity, title);
     }
 }

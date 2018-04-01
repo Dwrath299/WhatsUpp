@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 
 public class Group implements Serializable {
-    ArrayList<String> memberList;
     int numMembers;
     String title;
     String url;
@@ -21,13 +20,13 @@ public class Group implements Serializable {
         this.url = url;
     }
 
-    public ArrayList<String> getMemberList() {
-        return memberList;
+    public ArrayList<User> getMemberList() {
+        return members;
     }
 
-    public void setMemberList(ArrayList<String> memberList) {
+    public void setMembers(ArrayList<User> memberList) {
         numMembers = memberList.size();
-        this.memberList = memberList;
+        this.members = memberList;
     }
 
     public String getCreator() {

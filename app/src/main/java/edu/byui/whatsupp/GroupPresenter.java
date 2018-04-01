@@ -49,7 +49,7 @@ public class GroupPresenter {
                                         Group tempGroup = new Group((String) document.get("title"),
                                                                     (ArrayList<User>) document.get("members"),
                                                                     (String) document.get("url"));
-                                        tempGroup.setMemberList(members);
+                                        tempGroup.setMembers(members);
                                         if (document.get("creator") != null) {
                                             tempGroup.setCreator((String) document.get("creator"));
                                         }

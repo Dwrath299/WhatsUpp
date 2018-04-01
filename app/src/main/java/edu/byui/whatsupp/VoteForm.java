@@ -105,8 +105,14 @@ public class VoteForm extends AppCompatActivity {
     }
 
     public void submit(View view) {
-        String date = "";
-        String time = "";
+
+        // Get time and date
+        TextView tv = findViewById(R.id.voteForm_tv_date);
+        String date = tv.getText().toString();
+        tv = findViewById(R.id.voteForm_tv_time);
+        String time = tv.getText().toString();
+
+        // Option info
         EditText desc = findViewById(R.id.vote_form_option1_desc);
         option1.setDescription(desc.getText().toString());
         desc = findViewById(R.id.vote_form_option2_desc);
@@ -118,7 +124,7 @@ public class VoteForm extends AppCompatActivity {
             option3.setDescription(desc.getText().toString());
         }
         Vote vote = new Vote(group.getTitle(), group.getMemberList().size(),
-               option1, option2, option3, currentUser.getUid(), date, time )
+               option1, option2, option3, currentUser.getUid(), date, time );
     }
 
     /**
