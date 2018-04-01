@@ -291,7 +291,7 @@ public class EventForm extends AppCompatActivity {
 	
 	/**
      * Time Picker Fragment
-	 * The interface of the time picker
+	 * The interface of the time picker 
 	 * 
      */
     public static class TimePickerFragment extends DialogFragment
