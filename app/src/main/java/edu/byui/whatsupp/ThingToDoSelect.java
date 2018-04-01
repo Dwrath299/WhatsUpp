@@ -32,6 +32,7 @@ public class ThingToDoSelect extends AppCompatActivity {
     List<ThingToDo> selectedThings;
     private FirebaseAuth mAuth;
     User currentUser;
+    Group currentGroup;
     String groupTitle;
     boolean loggedIn;
 	
@@ -47,7 +48,8 @@ public class ThingToDoSelect extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thing_to_do_select);
         Intent intent = getIntent();
-        groupTitle = intent.getStringExtra(EXTRA_MESSAGE);
+        currentGroup = (Group) intent.getSerializableExtra("EXTRA_GROUP");
+        groupTitle = currentGroup.getTitle();
         thingToDoActivity = new ThingToDoActivity();
         thingToDoActivity.getThingsToDo( this, groupTitle);
         selectedThings = new ArrayList<ThingToDo>();
@@ -90,6 +92,7 @@ public class ThingToDoSelect extends AppCompatActivity {
         if(selectedThings.size() == 1) {
             Intent intent = new Intent(this, ThingToDoForm.class);
             Bundle extras = new Bundle();
+            extras.putSerializable("EXTRA_GROUP", currentGroup);
             extras.putString("EXTRA_FORMTYPE","Group");
             extras.putString("EXTRA_FORMINFO", groupTitle);
             extras.putString("EXTRA_PICURL", selectedThings.get(0).getUrl());

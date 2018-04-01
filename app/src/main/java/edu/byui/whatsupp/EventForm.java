@@ -146,7 +146,7 @@ public class EventForm extends AppCompatActivity {
 	 * @view 
      */
     public void deleteEvent(View view) {
-        ea.deleteEvent(event.getRefrence());
+        ea.deleteEvent(event.getReference());
         Intent intent = new Intent(EventForm.this, HomePage.class);
         // No real reason for sending UID with it, just because
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
@@ -180,7 +180,7 @@ public class EventForm extends AppCompatActivity {
 
         // NEED TO MAKE SURE THERE ALREADY ISN'T ONE
         if(formType.equals("update")) {
-            ea.deleteEvent(event.getRefrence());
+            ea.deleteEvent(event.getReference());
         }
         EditText editText = findViewById(R.id.editEventTitle);
         String title = editText.getText().toString();
@@ -277,7 +277,7 @@ public class EventForm extends AppCompatActivity {
      * Show Time Picker Dialog
 	 * Called by the time picker in the activity.
 	 * Allows the user to choose the time.
-	 * @param view
+	 * @param v
      */
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
@@ -318,8 +318,8 @@ public class EventForm extends AppCompatActivity {
 		* On Time Set
 		* Returns the time information back to the activity
 		* @param view
-		* @param Hour Of Day
-		* @param Minute
+		* @param hourOfDay
+		* @param minute
 		*/
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
@@ -333,7 +333,7 @@ public class EventForm extends AppCompatActivity {
      * Show Date Picker Dialog
 	 * Called by the date picker in the activity.
 	 * Allows the user to choose the date.
-	 * @param view
+	 * @param v
      */
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
@@ -377,8 +377,8 @@ public class EventForm extends AppCompatActivity {
 		* On Time Date
 		* Returns the date information back to the activity
 		* @param view
-		* @param Month
-		* @param Day
+		* @param month
+		* @param day
 		*/
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user

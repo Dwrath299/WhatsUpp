@@ -1,31 +1,47 @@
 package edu.byui.whatsupp;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.facebook.AccessToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static edu.byui.whatsupp.GroupView.EXTRA_MESSAGE;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+import static java.util.Calendar.getInstance;
 
 public class VoteForm extends AppCompatActivity {
     private FirebaseAuth mAuth;
     User currentUser;
     boolean loggedIn;
+    Group group;
     ThingToDo option1;
     ThingToDo option2;
     ThingToDo option3;
@@ -35,6 +51,7 @@ public class VoteForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote_form);
         Intent intent = getIntent();
+        group = (Group) intent.getSerializableExtra("EXTRA_GROUP");
         option1 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION1THING");
         option2 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION2THING");
         option3 = (ThingToDo) intent.getSerializableExtra("EXTRA_OPTION3THING");
@@ -85,6 +102,137 @@ public class VoteForm extends AppCompatActivity {
             text.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    public void submit(View view) {
+        String date = "";
+        String time = "";
+        EditText desc = findViewById(R.id.vote_form_option1_desc);
+        option1.setDescription(desc.getText().toString());
+        desc = findViewById(R.id.vote_form_option2_desc);
+        option2.setDescription(desc.getText().toString());
+        if(option3.getUrl().equals("null")) {
+            numOptions = 2;
+        } else {
+            desc = findViewById(R.id.vote_form_option3_desc);
+            option3.setDescription(desc.getText().toString());
+        }
+        Vote vote = new Vote(group.getTitle(), group.getMemberList().size(),
+               option1, option2, option3, currentUser.getUid(), date, time )
+    }
+
+    /**
+     * Show Time Picker Dialog
+     * Called by the time picker in the activity.
+     * Allows the user to choose the time.
+     * @param v
+     */
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new EventForm.TimePickerFragment();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .show(newFragment)
+                .commit();
+        newFragment.show(fm, "timePicker");
+    }
+
+    /**
+     * Time Picker Fragment
+     * The interface of the time picker
+     *
+     */
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        /**
+         * On Create Dialog
+         * Sets the interface to default to the current time
+         * @param savedInstanceState
+         */
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = getInstance();
+            int hour = c.get(HOUR_OF_DAY);
+            int minute = c.get(MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        /**
+         * On Time Set
+         * Returns the time information back to the activity
+         * @param view
+         * @param hourOfDay
+         * @param minute
+         */
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Do something with the time chosen by the user
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_time)).setVisibility(View.VISIBLE);
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_time)).setText(hourOfDay + ":" + minute);
+
+        }
+    }
+
+    /**
+     * Show Date Picker Dialog
+     * Called by the date picker in the activity.
+     * Allows the user to choose the date.
+     * @param v
+     */
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new EventForm.DatePickerFragment();
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .show(newFragment)
+                .commit();
+        newFragment.show(fm, "datePicker");
+
+    }
+
+    /**
+     * Date Picker Fragment
+     * The interface of the date picker
+     *
+     */
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+
+        /**
+         * On Create Dialog
+         * Sets the interface to default to the current date
+         * @param savedInstanceState
+         */
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = getInstance();
+            int year = c.get(YEAR);
+            int month = c.get(MONTH);
+            int day = c.get(DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        /**
+         * On Time Date
+         * Returns the date information back to the activity
+         * @param view
+         * @param month
+         * @param day
+         */
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_date)).setVisibility(View.VISIBLE);
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_date)).setText(month + "/" + day + "/" + year);
+        }
     }
 
     private void setupActionBar() {

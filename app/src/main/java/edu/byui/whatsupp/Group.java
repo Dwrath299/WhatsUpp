@@ -1,12 +1,13 @@
 package edu.byui.whatsupp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Dallin's PC on 2/26/2018.
  */
 
-public class Group {
+public class Group implements Serializable {
     ArrayList<String> memberList;
     int numMembers;
     String title;

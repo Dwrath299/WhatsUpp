@@ -42,9 +42,10 @@ public class GroupPresenter {
                             List<Group> groups = new ArrayList<Group>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                ArrayList<String> members = (ArrayList<String>) document.get("members");
+                                ArrayList<User> members = (ArrayList<User>) document.get("members");
                                 for(int i = 0; i < members.size(); i ++) {
-                                    if(uid.equals(members.get(i))) {
+                                    User tempUser = members.get(i);
+                                    if(uid.equals(tempUser.getUid())) {
                                         Group tempGroup = new Group((String) document.get("title"),
                                                                     (String) document.get("url"));
                                         tempGroup.setMemberList(members);

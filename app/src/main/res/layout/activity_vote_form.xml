@@ -88,6 +88,43 @@
                 android:ems="10"
                 android:hint="Option 3 Description"
                 android:inputType="textMultiLine" />
+
+            <TextView
+                android:id="@+id/voteForm_tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <Button
+                android:id="@+id/voteForm_addTime"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:onClick="showTimePickerDialog"
+                android:text="Add Time"
+                 />
+
+            <TextView
+                android:id="@+id/voteForm_tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+
+            <Button
+                android:id="@+id/voteForm_addDate"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:onClick="showDatePickerDialog"
+                android:text="Add Date"
+                 />
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

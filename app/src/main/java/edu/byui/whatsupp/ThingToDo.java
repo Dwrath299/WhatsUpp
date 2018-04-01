@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * <h1>ThingToDo/h1>
+ * <h1>ThingToDo</h1>
  * The ThingToDo class is stored information from when
  * a user creates one.
  *
@@ -87,6 +87,10 @@ public class ThingToDo implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String desc) {
+        description = desc;
     }
 
     public long getZipCode() {return zipCode;}

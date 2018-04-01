@@ -224,7 +224,11 @@ public class GroupView extends AppCompatActivity  {
     public void createEvent(View view) {
         Intent intent = new Intent(GroupView.this, ThingToDoSelect.class);
         // Send the group title
-        intent.putExtra(GroupView.EXTRA_MESSAGE, message);
+        Bundle extras = new Bundle();
+        extras.putSerializable("EXTRA_GROUP",currentGroup);
+
+        intent.putExtras(extras);
+
         Log.i("Intent", "Send User to ThingToDoSelect");
         startActivity(intent);
     }
