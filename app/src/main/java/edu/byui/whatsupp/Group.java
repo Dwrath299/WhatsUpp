@@ -1,30 +1,37 @@
 package edu.byui.whatsupp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Dallin's PC on 2/26/2018.
  */
 
-public class Group {
-    ArrayList<String> memberList;
+public class Group implements Serializable {
     int numMembers;
     String title;
     String url;
     String creator;
+    ArrayList<String> members;
 
-    public Group(String title, String url) {
+    public Group(String title, ArrayList<String> members, String url) {
         this.title = title;
+        this.members = members;
+        this.url = url;
+    }
+    public Group(String title,  String url) {
+        this.title = title;
+        this.members = members;
         this.url = url;
     }
 
     public ArrayList<String> getMemberList() {
-        return memberList;
+        return members;
     }
 
-    public void setMemberList(ArrayList<String> memberList) {
+    public void setMembers(ArrayList<String> memberList) {
         numMembers = memberList.size();
-        this.memberList = memberList;
+        this.members = memberList;
     }
 
     public String getCreator() {

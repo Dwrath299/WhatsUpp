@@ -1,6 +1,7 @@
 package edu.byui.whatsupp;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -27,7 +28,9 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,8 +43,19 @@ import static android.content.ContentValues.TAG;
 import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
 
 import com.facebook.AccessToken;
+/**
+ * <h1>Group View</h1>
+ * The Group View will display the group that the user chose.
+ * Displays the events happening in the group and a message board.
+ * Users can create events for the group by pressing the create 
+ * button.
+ * 
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 
-public class GroupView extends AppCompatActivity {
+public class GroupView extends AppCompatActivity  {
     public static final String EXTRA_MESSAGE = "edu.byui.whatsapp.Message";
     User currentUser;
     boolean loggedIn;
@@ -49,9 +63,20 @@ public class GroupView extends AppCompatActivity {
     private FirebaseListAdapter<ChatMessage> adapter;
     private EditText yourEditText;
     EventActivity ea;
+    GroupActivity ga;
     String message;
     ListView listView;
+    //Spinner spinner = (Spinner) findViewById(R.id.userSearchSpinner);
+    edu.byui.whatsupp.Profile profileActivity;
 
+
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,10 +94,14 @@ public class GroupView extends AppCompatActivity {
         }
         setupActionBar();
         ea = new EventActivity(this);
+        ga = new GroupActivity();
         ea.getEventsForGroup((edu.byui.whatsupp.GroupView)this, message);
-
+        ga.getGroup(this, message);
         //Show the chat messages from the group
         displayChatMessages();
+
+
+
 
         //Setting up onclick listener so user can send a message to the group
         FloatingActionButton fab =
@@ -91,7 +120,7 @@ public class GroupView extends AppCompatActivity {
                         .setValue(new ChatMessage(input.getText().toString(),
                                 FirebaseAuth.getInstance()
                                         .getCurrentUser()
-                                        .getDisplayName())
+                                        .getDisplayName(), message)
                         );
 
                 // Clear the input
@@ -102,7 +131,12 @@ public class GroupView extends AppCompatActivity {
 
     }
 
+    public void setCurrentGroup(Group group) {
+        currentGroup = group;
+    }
+
     /**
+	 * Display Events For Group
      * This method is used to display the list of current events
      * for the current ThingToDo. It is called from the
      * ThingToDo presenter class when it is done getting the
@@ -115,7 +149,7 @@ public class GroupView extends AppCompatActivity {
             Event event = new Event("No events currently for this group.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
             events.add(event);
         }
-        EventAdapter eventAdapter = new EventAdapter(this, events, this, 1);
+        EventAdapter eventAdapter = new EventAdapter(this, events, this, 3);
         listView = (ListView) this.findViewById(R.id.group_event_list);
         listView.setAdapter(eventAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,25 +170,36 @@ public class GroupView extends AppCompatActivity {
 
     }
 
+	/**
+	 * Display Chat Messages
+     * Will display the messages specific to this group.
+	 * Displays the message, the user who sent it, and the time
+	 * they sent it.
+     * 
+     */
     public void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
 
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
                 R.layout.message, FirebaseDatabase.getInstance().getReference()) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
-                // Get references to the views of message.xml
-                TextView messageText = (TextView)v.findViewById(R.id.message_text);
-                TextView messageUser = (TextView)v.findViewById(R.id.message_user);
-                TextView messageTime = (TextView)v.findViewById(R.id.message_time);
+                if(model.getGroup().equals(message)) {
+                    // Get references to the views of message.xml
+                    TextView messageText = (TextView) v.findViewById(R.id.message_text);
+                    TextView messageUser = (TextView) v.findViewById(R.id.message_user);
+                    TextView messageTime = (TextView) v.findViewById(R.id.message_time);
 
-                // Set their text
-                messageText.setText(model.getMessageText());
-                messageUser.setText(model.getMessageUser());
+                    // Set their text
+                    messageText.setText(model.getMessageText());
+                    messageUser.setText(model.getMessageUser());
 
-                // Format the date before showing it
-                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
-                        model.getMessageTime()));
+                    // Format the date before showing it
+                    messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
+                            model.getMessageTime()));
+                }
             }
         };
 
@@ -162,14 +207,33 @@ public class GroupView extends AppCompatActivity {
     }
 
 
+	/**
+	 * Create Event
+	 * The user will be directed to the Thing To Do Select
+	 * page to either create an event or vote for the group.
+     * @param view
+     */
     public void createEvent(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ThingToDoSelectFragment fragment = new ThingToDoSelectFragment();
-        fragmentTransaction.add(R.id.activity_main, fragment);
-        fragmentTransaction.commit();
+        Intent intent = new Intent(GroupView.this, ThingToDoSelect.class);
+        // Send the group title
+        Bundle extras = new Bundle();
+        extras.putSerializable("EXTRA_GROUP",currentGroup);
+
+        intent.putExtras(extras);
+
+        Log.i("Intent", "Send User to ThingToDoSelect");
+        startActivity(intent);
     }
 
+
+	
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();

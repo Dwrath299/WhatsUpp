@@ -52,6 +52,14 @@ public class ViewEvent extends AppCompatActivity {
     Event event;
     List<String> attendees;
     Button joinButton;
+	
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +146,7 @@ public class ViewEvent extends AppCompatActivity {
 
 
 
-        UserAdapter userAdapter = new UserAdapter(this, users, this);
+        UserAdapter userAdapter = new UserAdapter(this, users, this, 1);
         listView = (ListView) this.findViewById(R.id.attendees_list);
         listView.setAdapter(userAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -178,7 +186,7 @@ public class ViewEvent extends AppCompatActivity {
             }
             joinButton.setText("Join Event");
         }
-        ea.addAttendee(event.getRefrence(), attendees);
+        ea.addAttendee(event.getReference(), attendees);
         ea.displayEvent((edu.byui.whatsupp.ViewEvent)this, message);
     }
 
@@ -283,8 +291,10 @@ public class ViewEvent extends AppCompatActivity {
     public void updateEvent(View view) {
         Intent intent = new Intent(this, EventForm.class);
         Bundle extras = new Bundle();
-        extras.putString("EXTRA_THINGTITLE",event.getTitle());
-        extras.putString("EXTRA_THINGURL","update");
+        extras.putString("EXTRA_FORMTYPE","create");
+        extras.putString("EXTRA_FORMINFO", event.getTitle() );
+        extras.putString("EXTRA_THINGTITLE",event.getThingToDo());
+        extras.putString("EXTRA_PICURL",event.getUrl());
         intent.putExtras(extras);
         startActivity(intent);
     }

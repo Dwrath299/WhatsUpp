@@ -112,8 +112,12 @@ public class ViewThingToDo extends AppCompatActivity {
      */
     public void updateThing(View view) {
         Intent intent = new Intent(this, ThingToDoForm.class);
-        intent.putExtra(EXTRA_MESSAGE, thing.getTitle());
+        Bundle extras = new Bundle();
+        extras.putString("EXTRA_FORMTYPE","Update");
+        extras.putString("EXTRA_FORMINFO",thing.getTitle());
         Log.i("Intent", "Send User to Form");
+        intent.putExtras(extras);
+
         startActivity(intent);
     }
 
@@ -161,8 +165,10 @@ public class ViewThingToDo extends AppCompatActivity {
     public void addEvent(View view) {
         Intent intent = new Intent(this, EventForm.class);
         Bundle extras = new Bundle();
+        extras.putString("EXTRA_FORMTYPE","create");
+        extras.putString("EXTRA_FORMINFO", thing.getTitle() );
         extras.putString("EXTRA_THINGTITLE",thing.getTitle());
-        extras.putString("EXTRA_THINGURL",thing.getUrl());
+        extras.putString("EXTRA_PICURL",thing.getUrl());
         intent.putExtras(extras);
         startActivity(intent);
     }

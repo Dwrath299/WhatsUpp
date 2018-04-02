@@ -2,6 +2,8 @@ package edu.byui.whatsupp;
 
 import com.facebook.AccessToken;
 
+import java.util.ArrayList;
+
 /**
  * <h1>User</h1>
  * The user class is stored information from the Facebook API
@@ -21,6 +23,8 @@ public class User {
     String gender;
     String docRef;
     UserActivity userActivity;
+    ArrayList<Group> userGroups;
+
     /* You can get the profile pic by
     ProfilePictureView profilePictureView;
 
@@ -36,14 +40,6 @@ public class User {
      */
 
 
-    /**
-     * Constructor.
-     * @param first
-     * @param last
-     * @param e
-     * @param gen
-     * @param uid
-     */
     public User(String first, String last, String e, String gen, String uid) {
         //utilize Facebook API's methods
        this.firstName = first;
@@ -51,16 +47,15 @@ public class User {
        email = e;
        gender = gen;
        this.uid = uid;
-
+       userGroups = new ArrayList<>();
     }
 
     public User(String uid) {
         this.uid = uid;
     }
 
-    /**
-     * Getters and Setters for User class.
-     */
+    @Override
+    public String toString() { return firstName; }
 
     public String getFirstName() {
         return firstName;

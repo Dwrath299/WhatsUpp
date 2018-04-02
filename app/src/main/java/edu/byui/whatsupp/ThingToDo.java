@@ -2,10 +2,11 @@ package edu.byui.whatsupp;
 
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
- * <h1>ThingToDo/h1>
+ * <h1>ThingToDo</h1>
  * The ThingToDo class is stored information from when
  * a user creates one.
  *
@@ -13,7 +14,7 @@ import java.util.Map;
  * @version 1.0
  * @since   2018-03-21
  */
-public class ThingToDo {
+public class ThingToDo implements Serializable {
     private String url;
     private String title;
     private String address;
@@ -22,6 +23,7 @@ public class ThingToDo {
     private String description;
     private String creator;
     private String reference;
+    private String group;
     public boolean approved;
 
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
@@ -32,6 +34,29 @@ public class ThingToDo {
         zipCode = z;
         description = d;
         approved = true;
+    }
+
+    public ThingToDo(String u, String t, String a, String c, long z, String d, String g) {
+        url = u;
+        title = t;
+        address = a;
+        city = c;
+        zipCode = z;
+        description = d;
+        approved = true;
+        group = g;
+    }
+    public ThingToDo(String u) {
+        url = u;
+
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public String getReference() {
@@ -62,6 +87,10 @@ public class ThingToDo {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String desc) {
+        description = desc;
     }
 
     public long getZipCode() {return zipCode;}

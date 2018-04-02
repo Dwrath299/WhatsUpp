@@ -51,7 +51,7 @@ public class ThingToDoPresenter {
     edu.byui.whatsupp.HomePage homePageActivity;
     edu.byui.whatsupp.ViewThingToDo viewThingToDoActivity;
     edu.byui.whatsupp.ThingToDoForm thingToDoForm;
-    edu.byui.whatsupp.ThingToDoSelectFragment thingsFragment;
+    edu.byui.whatsupp.ThingToDoSelect thingsActivity;
 
     public ThingToDoPresenter() {
 
@@ -68,17 +68,19 @@ public class ThingToDoPresenter {
                         if (task.isSuccessful()) {
                             List<ThingToDo> things = new ArrayList<ThingToDo>();
                             for (DocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                ThingToDo tempThing = new ThingToDo((String) document.get("url"),
-                                        (String)document.get("title"),
-                                        (String)document.get("address"),
-                                        (String)document.get("city"),
-                                        (long) document.get("zipCode"),
-                                        (String)document.get("description"));
-                                if(document.get("creator") != null) {
-                                    tempThing.setCreator((String) document.get("creator"));
+                                if (document.get("group") == null) { // Don't get the private group things
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    ThingToDo tempThing = new ThingToDo((String) document.get("url"),
+                                            (String) document.get("title"),
+                                            (String) document.get("address"),
+                                            (String) document.get("city"),
+                                            (long) document.get("zipCode"),
+                                            (String) document.get("description"));
+                                    if (document.get("creator") != null) {
+                                        tempThing.setCreator((String) document.get("creator"));
+                                    }
+                                    things.add(tempThing);
                                 }
-                                things.add(tempThing);
 
                             }
                             homePageActivity.setGridView(things);
@@ -96,8 +98,8 @@ public class ThingToDoPresenter {
 
     }
 
-    public void getFragmentListThings(ThingToDoSelectFragment a){
-        thingsFragment =  a;
+    public void getActivityListThings(Activity a, final String groupTitle){
+        thingsActivity = (edu.byui.whatsupp.ThingToDoSelect) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("thingsToDo")
                 .get()
@@ -107,20 +109,21 @@ public class ThingToDoPresenter {
                         if (task.isSuccessful()) {
                             List<ThingToDo> things = new ArrayList<ThingToDo>();
                             for (DocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                ThingToDo tempThing = new ThingToDo((String) document.get("url"),
-                                        (String)document.get("title"),
-                                        (String)document.get("address"),
-                                        (String)document.get("city"),
-                                        (long) document.get("zipCode"),
-                                        (String)document.get("description"));
-                                if(document.get("creator") != null) {
-                                    tempThing.setCreator((String) document.get("creator"));
+                                if ((document.get("group") == null) || document.get("group").toString().equals(groupTitle)) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    ThingToDo tempThing = new ThingToDo((String) document.get("url"),
+                                            (String) document.get("title"),
+                                            (String) document.get("address"),
+                                            (String) document.get("city"),
+                                            (long) document.get("zipCode"),
+                                            (String) document.get("description"));
+                                    if (document.get("creator") != null) {
+                                        tempThing.setCreator((String) document.get("creator"));
+                                    }
+                                    things.add(tempThing);
                                 }
-                                things.add(tempThing);
-
                             }
-                            thingsFragment.setGridView(things);
+                            thingsActivity.setGridView(things);
 
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -201,6 +204,9 @@ public class ThingToDoPresenter {
                                     tempThing.setReference(document.getReference().getId());
                                     if(document.get("creator") != null) {
                                         tempThing.setCreator((String) document.get("creator"));
+                                    }
+                                    if(document.get("group") != null) {
+                                        tempThing.setGroup((String) document.get("group"));
                                     }
                                     thingToDoForm.displayThingData(tempThing);
                                 }

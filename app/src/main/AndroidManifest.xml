@@ -3,6 +3,7 @@
     package="edu.byui.whatsupp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,16 +16,10 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ThingToDoForm">
-        </activity>
-
-        <activity
-            android:name=".LoginPage">
-        </activity>
+        <activity android:name=".ThingToDoForm" />
+        <activity android:name=".LoginPage" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -37,14 +32,18 @@
         <activity android:name=".GroupsView" />
         <activity android:name=".GroupView" />
         <activity android:name=".Profile" />
-        <activity android:name=".ViewThingToDo">
-        </activity>
+        <activity android:name=".ViewThingToDo" />
         <activity android:name=".EventForm" />
-
-        <activity android:name=".GroupForm"></activity>
-        <activity android:name=".ViewEvent">
-        </activity>
-
+        <activity android:name=".GroupForm" />
+        <activity android:name=".ViewEvent" />
+        <activity
+            android:name=".ThingToDoSelect"
+            android:label="@string/title_activity_thing_to_do_select"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".AddUsers" />
+        android:theme="@style/AppTheme" />
+        <activity android:name=".VoteForm" />
+        <activity android:name=".ViewVote"></activity>
     </application>
 
 </manifest>

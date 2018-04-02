@@ -1,48 +1,41 @@
 package edu.byui.whatsupp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.login.widget.ProfilePictureView;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static edu.byui.whatsupp.HomePage.EXTRA_MESSAGE;
+import static edu.byui.whatsupp.GroupView.EXTRA_MESSAGE;
 
-/**
- * <h1>Profile</h1>
- * Where users can view other users or
- * their own profile. If it is their own,
- * they can edit it.
- * <p>
- *
- *
- * @author  Dallin Wrathall
- * @version 1.0
- * @since   2018-03-21
- */
-public class Profile extends AppCompatActivity {
-    String message;
-    User profileUser;
-    UserActivity ua;
-    EventActivity ea;
+public class ThingToDoSelect extends AppCompatActivity {
+
+    ThingToDoActivity thingToDoActivity;
+    List<ThingToDo> allThings;
+    List<ThingToDo> selectedThings;
+    private FirebaseAuth mAuth;
     User currentUser;
-    ListView listView;
+    Group currentGroup;
+    String groupTitle;
     boolean loggedIn;
-
+	
 	/**
      * On Create
 	 * Retrieves the information from the intent
@@ -53,12 +46,15 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_thing_to_do_select);
         Intent intent = getIntent();
-        message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
-        ua = new UserActivity();
-        ea = new EventActivity(this);
-        ua.getUserInfo(this, message);
+        currentGroup = (Group) intent.getSerializableExtra("EXTRA_GROUP");
+        groupTitle = currentGroup.getTitle();
+        thingToDoActivity = new ThingToDoActivity();
+        thingToDoActivity.getThingsToDo( this, groupTitle);
+        selectedThings = new ArrayList<ThingToDo>();
+
+        mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
         if(!loggedIn){ // For facebook, logged in = false
@@ -68,29 +64,69 @@ public class Profile extends AppCompatActivity {
             loggedIn = false;
             currentUser = new User("123");
         }
-        ea.displayEventsForProfile(this, message);
-        //Check to see if current user, if so, let them edit it.
-        if(currentUser.getUid().equals(message)) {
+        setupActionBar();
 
+    }
+
+    public void setGridView(List<ThingToDo> things) {
+        allThings = things;
+        GridView gridview = findViewById(R.id.thingsToDo_grid);
+        ThingToDoGridAdapter imageAdapter = new ThingToDoGridAdapter(this, things, this);
+        gridview.setAdapter(imageAdapter);
+    }
+
+    public void thingClick(ThingToDo thing) {
+        if(selectedThings.contains(thing)) {
+            selectedThings.remove(thing);
+        } else {
+            if(selectedThings.size() < 3)
+                selectedThings.add(thing);
+            else
+                Toast.makeText(getApplicationContext(), "A maximum of 3 to vote for. Sorry!", Toast.LENGTH_LONG).show();
         }
 
-        setupActionBar();
-    }
-
-    public void displayUserInfo(User user) {
-        profileUser = user;
-        TextView actionTitle = (TextView) findViewById(R.id.title_text);
-        actionTitle.setText(profileUser.getFirstName());
-        ProfilePictureView profilePictureView;
-        profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
-        profilePictureView.setProfileId(message);
-        // -4 in facebook's twisted mind is large, -3 = normal, -2 = small, -1 = custom.
-        profilePictureView.setPresetSize(-4);
 
     }
 
-    public void groupWith(View view) {
+    public void confirm(View view) {
+        if(selectedThings.size() == 1) {
+            Intent intent = new Intent(this, EventForm.class);
+            Bundle extras = new Bundle();
+            extras.putSerializable("EXTRA_GROUP", currentGroup);
+            extras.putString("EXTRA_FORMTYPE","Group");
+            extras.putString("EXTRA_FORMINFO", groupTitle);
+            extras.putString("EXTRA_PICURL", selectedThings.get(0).getUrl());
+            extras.putString("EXTRA_THINGTITLE", selectedThings.get(0).getTitle());
+            Log.i("Intent", "Send User to Form");
+            intent.putExtras(extras);
 
+            startActivity(intent);
+        } else if(selectedThings.size() > 1) {
+            Intent intent = new Intent(this, VoteForm.class);
+            Bundle extras = new Bundle();
+            extras.putSerializable("EXTRA_OPTION1THING", selectedThings.get(0));
+            extras.putSerializable("EXTRA_OPTION2THING", selectedThings.get(1));
+            if (selectedThings.size() > 2 ) {
+                extras.putSerializable("EXTRA_OPTION3THING", selectedThings.get(2));
+            } else {
+                extras.putSerializable("EXTRA_OPTION3THING", new ThingToDo("null"));
+            }
+            Log.i("Intent", "Send User to Form");
+            intent.putExtras(extras);
+
+            startActivity(intent);
+        }
+    }
+
+    public void createGroupThingToDo(View view) {
+        Intent intent = new Intent(this, ThingToDoForm.class);
+        Bundle extras = new Bundle();
+        extras.putString("EXTRA_FORMTYPE","Group");
+        extras.putString("EXTRA_FORMINFO", groupTitle);
+        Log.i("Intent", "Send User to Form");
+        intent.putExtras(extras);
+
+        startActivity(intent);
     }
 
 	/**
@@ -112,8 +148,8 @@ public class Profile extends AppCompatActivity {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
         //Set the actionbar title
-
-
+        TextView actionTitle = (TextView) findViewById(R.id.title_text);
+        actionTitle.setText("Create Group Event");
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);
@@ -124,7 +160,7 @@ public class Profile extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Creating the instance of PopupMenu
-                    final PopupMenu popup = new PopupMenu(Profile.this, popupButton);
+                    final PopupMenu popup = new PopupMenu(ThingToDoSelect.this, popupButton);
                     //Inflating the Popup using xml file
                     popup.getMenuInflater()
                             .inflate(R.menu.popup_menu, popup.getMenu());
@@ -134,19 +170,19 @@ public class Profile extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             if(item.getTitle().equals("My Profile")) {
 
-                                Intent intent = new Intent(Profile.this, Profile.class);
+                                Intent intent = new Intent(ThingToDoSelect.this, Profile.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Profile");
                                 startActivity(intent);
                             }
                             else if(item.getTitle().equals("View Groups")) {
-                                Intent intent = new Intent(Profile.this, GroupsView.class);
+                                Intent intent = new Intent(ThingToDoSelect.this, GroupsView.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to View Groups");
                                 startActivity(intent);
 
                             } else {
-                                Intent intent = new Intent(Profile.this, LoginPage.class);
+                                Intent intent = new Intent(ThingToDoSelect.this, LoginPage.class);
                                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                                 Log.i("Intent", "Send User to Login page");
                                 startActivity(intent);
@@ -165,7 +201,7 @@ public class Profile extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Profile.this, LoginPage.class);
+                    Intent intent = new Intent(ThingToDoSelect.this, LoginPage.class);
                     intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
                     Log.i("Intent", "Send User to Login page");
                     startActivity(intent);
@@ -178,39 +214,13 @@ public class Profile extends AppCompatActivity {
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Profile.this, HomePage.class);
+                Intent intent = new Intent(ThingToDoSelect.this, HomePage.class);
+                // No real reason for sending UID with it, just because
                 intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, currentUser.getUid());
-                Log.i("Intent", "Send User to Home Page");
+                Log.i("Intent", "Send User to Home page");
                 startActivity(intent);
             }
         });
     }
 
-
-    public void displayEventsForProfile(List<Event> events) {
-        if (events.size() < 1) {
-            // If there are no events, the image is a frowny face.
-            Event event = new Event(profileUser.getFirstName() + " isn't attending any events", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
-            events.add(event);
-        }
-        EventAdapter eventAdapter = new EventAdapter(this, events, this, 2);
-        listView = (ListView) this.findViewById(R.id.profile_event_list);
-        listView.setAdapter(eventAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
-
-                Object o = listView.getItemAtPosition(position);
-                Event event = (Event)o;
-                Intent intent = new Intent(Profile.this, ViewEvent.class);
-                intent.putExtra(EXTRA_MESSAGE, event.getTitle());
-                Log.i("Intent", "Send User to ViewEvent");
-                startActivity(intent);
-
-            }
-        });
-
-    }
 }

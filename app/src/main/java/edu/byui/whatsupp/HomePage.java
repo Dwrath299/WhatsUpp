@@ -125,11 +125,7 @@ public class HomePage extends AppCompatActivity {
         //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-//        Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
-//        snoozeIntent.setAction(ACTION_SNOOZE);
-//        snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
-//        PendingIntent snoozePendingIntent =
-//                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+    }
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -140,15 +136,6 @@ public class HomePage extends AppCompatActivity {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        // Build the notification and add the action.
-//        Notification newMessageNotification = new Notification.Builder(mContext, CHANNEL_ID)
-//                .setSmallIcon(R.drawable.ic_message)
-//                .setContentTitle(getString(R.string.title))
-//                .setContentText(getString(R.string.content))
-//                .addAction(action)
-//                .build();
-//
-//        // Issue the notification.
 
 
         notificationManager.notify(notificationId,mBuilder.build());
@@ -189,8 +176,11 @@ public class HomePage extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, ThingToDoForm.class);
-            intent.putExtra(EXTRA_MESSAGE, "Create");
+            Bundle extras = new Bundle();
+            extras.putString("EXTRA_FORMTYPE","Create");
+            extras.putString("EXTRA_FORMINFO","");
             Log.i("Intent", "Send User to Form");
+            intent.putExtras(extras);
             startActivity(intent);
         }
     }
@@ -200,14 +190,20 @@ public class HomePage extends AppCompatActivity {
      * @param title
      */
     public void thingClick(String title) {
+
+
         Intent intent = new Intent(this, ViewThingToDo.class);
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
         Log.i("Intent", "Send User to ThingToDoView");
         startActivity(intent);
     }
 
-    /**
-     * Sets up the custom action bar for the home page.
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
      */
     private void setupActionBar() {
         //Get the default actionbar instance

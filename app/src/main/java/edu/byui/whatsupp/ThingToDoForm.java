@@ -60,23 +60,34 @@ public class ThingToDoForm extends AppCompatActivity {
     ThingToDoActivity ttda;
     private FirebaseAuth mAuth;
     User currentUser;
-    String message;
+    String formType;
+    String formInfo;
     boolean loggedIn;
 
     private int PICK_IMAGE_REQUEST = 1;
+	/**
+     * On Create
+	 * Retrieves the information from the intent
+	 * Gets current user info
+	 * @param savedInstanceState
+	 * 
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thing_to_do_form);
         Intent intent = getIntent();
-        message = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        Bundle extras = intent.getExtras();
+        formType = extras.getString("EXTRA_FORMTYPE");
+        formInfo = extras.getString("EXTRA_FORMINFO");
 
         // If not creating then updating.
-        if(message != "Create")
+        if(formType == "Update")
         {
             ttda = new ThingToDoActivity();
-            ttda.getThingToEdit(this, message);
+            ttda.getThingToEdit(this, formInfo);
         }
+
         mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
@@ -210,6 +221,9 @@ public class ThingToDoForm extends AppCompatActivity {
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         thing.setCreator(currentUser.getUid());
+        if(formType.equals("Group")) {
+            thing.setGroup(formInfo);
+        }
         thing.setUrl(url);
         db.collection("thingsToDo")
                 .add(thing)
@@ -231,6 +245,13 @@ public class ThingToDoForm extends AppCompatActivity {
                 });
     }
 
+	/**
+     * Setup ActionBar
+	 * Intializes the action bar to have the functionality of
+	 * the home button and drop down list if the user is
+	 * logged in, otherwise, a log in button.
+	 * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
@@ -245,6 +266,9 @@ public class ThingToDoForm extends AppCompatActivity {
         //Set the actionbar title
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
         actionTitle.setText("Create a Place");
+        if(formType.equals("Group")) {
+            actionTitle.setText("Create for " + formInfo);
+        }
 
         final ImageButton popupButton = (ImageButton) findViewById(R.id.btn_menu);
         Button loginButton = (Button) findViewById(R.id.login_btn);

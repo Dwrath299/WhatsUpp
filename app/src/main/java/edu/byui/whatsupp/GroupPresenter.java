@@ -25,9 +25,39 @@ public class GroupPresenter {
     GroupActivity groupActivity;
     Group group;
     edu.byui.whatsupp.GroupsView groupsView;
+    edu.byui.whatsupp.GroupView groupView;
 
     public GroupPresenter() {
 
+    }
+
+    public void getGroup(Activity a, final String groupTitle) {
+        groupView = (edu.byui.whatsupp.GroupView) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("groups")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("title").equals(groupTitle)) {
+                                    Group group = new Group(groupTitle, (ArrayList<String>) document.get("members"), (String) document.get("url"));
+                                    groupView.setCurrentGroup(group);
+                                }
+
+
+                            }
+
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
     }
 
     public void getListThings(Activity a, final String uid){
@@ -44,10 +74,12 @@ public class GroupPresenter {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 ArrayList<String> members = (ArrayList<String>) document.get("members");
                                 for(int i = 0; i < members.size(); i ++) {
-                                    if(uid.equals(members.get(i))) {
+                                    String tempUser = members.get(i);
+                                    if(uid.equals(tempUser)) {
                                         Group tempGroup = new Group((String) document.get("title"),
+                                                                    (ArrayList<String>) document.get("members"),
                                                                     (String) document.get("url"));
-                                        tempGroup.setMemberList(members);
+                                        tempGroup.setMembers(members);
                                         if (document.get("creator") != null) {
                                             tempGroup.setCreator((String) document.get("creator"));
                                         }
