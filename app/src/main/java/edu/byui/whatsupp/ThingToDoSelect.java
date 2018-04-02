@@ -90,7 +90,7 @@ public class ThingToDoSelect extends AppCompatActivity {
 
     public void confirm(View view) {
         if(selectedThings.size() == 1) {
-            Intent intent = new Intent(this, ThingToDoForm.class);
+            Intent intent = new Intent(this, EventForm.class);
             Bundle extras = new Bundle();
             extras.putSerializable("EXTRA_GROUP", currentGroup);
             extras.putString("EXTRA_FORMTYPE","Group");

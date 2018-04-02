@@ -177,8 +177,12 @@ public class GroupForm extends AppCompatActivity {
             } else {
                 url = picURL;
             }
+            ArrayList<String> uidList = new ArrayList<String>();
+            for(int i = 0; i < selectedUsers.size(); i ++) {
+                uidList.add(selectedUsers.get(i).getUid());
+            }
 
-            group = new Group(title, list, url);
+            group = new Group(title, uidList, url);
             group.setNumMembers(numMembers);
 
             if (!needToStoreImage) {

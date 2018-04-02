@@ -12,19 +12,24 @@ public class Group implements Serializable {
     String title;
     String url;
     String creator;
-    ArrayList<User> members;
+    ArrayList<String> members;
 
-    public Group(String title, ArrayList<User> members, String url) {
+    public Group(String title, ArrayList<String> members, String url) {
+        this.title = title;
+        this.members = members;
+        this.url = url;
+    }
+    public Group(String title,  String url) {
         this.title = title;
         this.members = members;
         this.url = url;
     }
 
-    public ArrayList<User> getMemberList() {
+    public ArrayList<String> getMemberList() {
         return members;
     }
 
-    public void setMembers(ArrayList<User> memberList) {
+    public void setMembers(ArrayList<String> memberList) {
         numMembers = memberList.size();
         this.members = memberList;
     }

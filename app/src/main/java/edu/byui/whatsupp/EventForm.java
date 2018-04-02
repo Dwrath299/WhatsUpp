@@ -323,8 +323,8 @@ public class EventForm extends AppCompatActivity {
 		*/
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            ((TextView) getActivity().findViewById(R.id.tv_time)).setVisibility(View.VISIBLE);
-            ((TextView) getActivity().findViewById(R.id.tv_time)).setText(hourOfDay + ":" + minute);
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_time)).setVisibility(View.VISIBLE);
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_time)).setText(hourOfDay + ":" + minute);
 
         }
     }
@@ -382,8 +382,8 @@ public class EventForm extends AppCompatActivity {
 		*/
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            ((TextView) getActivity().findViewById(R.id.tv_date)).setVisibility(View.VISIBLE);
-            ((TextView) getActivity().findViewById(R.id.tv_date)).setText(month + "/" + day + "/" + year);
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_date)).setVisibility(View.VISIBLE);
+            ((TextView) getActivity().findViewById(R.id.voteForm_tv_date)).setText(month + "/" + day + "/" + year);
         }
     }
 

@@ -30,6 +30,7 @@ public class EventAdapter extends BaseAdapter {
 	// Each activity has specific functions to call
     edu.byui.whatsupp.ViewThingToDo thingActivity;
     edu.byui.whatsupp.Profile profileActivity;
+    edu.byui.whatsupp.GroupView groupActivity;
     int page;
 
     private LayoutInflater l_Inflater;
@@ -53,6 +54,9 @@ public class EventAdapter extends BaseAdapter {
             thingActivity = (edu.byui.whatsupp.ViewThingToDo) a;
         else if(page == 2)
             profileActivity = (edu.byui.whatsupp.Profile) a;
+        else if (page == 3)
+            groupActivity = (edu.byui.whatsupp.GroupView) a;
+
         l_Inflater = LayoutInflater.from(c);
     }
 

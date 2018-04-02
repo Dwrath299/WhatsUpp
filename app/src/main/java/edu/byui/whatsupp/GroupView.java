@@ -63,6 +63,7 @@ public class GroupView extends AppCompatActivity  {
     private FirebaseListAdapter<ChatMessage> adapter;
     private EditText yourEditText;
     EventActivity ea;
+    GroupActivity ga;
     String message;
     ListView listView;
     //Spinner spinner = (Spinner) findViewById(R.id.userSearchSpinner);
@@ -93,27 +94,14 @@ public class GroupView extends AppCompatActivity  {
         }
         setupActionBar();
         ea = new EventActivity(this);
+        ga = new GroupActivity();
         ea.getEventsForGroup((edu.byui.whatsupp.GroupView)this, message);
-
+        ga.getGroup(this, message);
         //Show the chat messages from the group
         displayChatMessages();
 
 
-        yourEditText = (EditText) findViewById(R.id.yourEditTextId);
 
-        yourEditText.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged (Editable s){
-
-
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
 
         //Setting up onclick listener so user can send a message to the group
         FloatingActionButton fab =
@@ -143,6 +131,10 @@ public class GroupView extends AppCompatActivity  {
 
     }
 
+    public void setCurrentGroup(Group group) {
+        currentGroup = group;
+    }
+
     /**
 	 * Display Events For Group
      * This method is used to display the list of current events
@@ -157,7 +149,7 @@ public class GroupView extends AppCompatActivity  {
             Event event = new Event("No events currently for this group.", "http://moziru.com/images/emotions-clipart-frowny-face-12.jpg");
             events.add(event);
         }
-        EventAdapter eventAdapter = new EventAdapter(this, events, this, 1);
+        EventAdapter eventAdapter = new EventAdapter(this, events, this, 3);
         listView = (ListView) this.findViewById(R.id.group_event_list);
         listView.setAdapter(eventAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

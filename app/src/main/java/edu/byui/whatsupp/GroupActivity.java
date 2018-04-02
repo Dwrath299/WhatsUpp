@@ -16,4 +16,8 @@ public class GroupActivity {
     public void getUsersGroups(Activity activity, String uid) {
         groupPresenter.getListThings(activity, uid);
     }
+
+    public void getGroup(Activity activity, String groupTitle) {
+        groupPresenter.getGroup(activity, groupTitle);
+    }
 }

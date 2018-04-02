@@ -73,7 +73,7 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageButton = new ImageButton(mContext);
-            imageButton.setLayoutParams(new GridView.LayoutParams(425, 425));
+            imageButton.setLayoutParams(new GridView.LayoutParams(225, 225));
             imageButton.setScaleType(ImageButton.ScaleType.CENTER_CROP);
             imageButton.setPadding(8, 8, 8, 0);
         } else {
