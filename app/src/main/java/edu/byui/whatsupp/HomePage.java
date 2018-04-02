@@ -2,12 +2,18 @@ package edu.byui.whatsupp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +51,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
@@ -67,11 +74,14 @@ public class HomePage extends AppCompatActivity {
     List<ThingToDo> things;
     User currentUser;
     ProgressBar spinner;
+    private String CHANNEL_ID = "";
+    public int notificationId = 0;
 
     boolean loggedIn;
 
     /**
      * Creates the activity.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -88,7 +98,7 @@ public class HomePage extends AppCompatActivity {
 
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
-        if(!loggedIn){ // For facebook, logged in = false
+        if (!loggedIn) { // For facebook, logged in = false
             loggedIn = true;
             currentUser = new User(AccessToken.getCurrentAccessToken().getUserId());
         } else {
@@ -97,8 +107,51 @@ public class HomePage extends AppCompatActivity {
         }
         //This needs to be done AFTER log in.
         setupActionBar();
+        NotificationManager notificationManager = NotificationManager.from(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Create an explicit intent for an Activity in your app
+        Intent intent = new Intent(this, GroupView.class);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+//        Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
+//        snoozeIntent.setAction(ACTION_SNOOZE);
+//        snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
+//        PendingIntent snoozePendingIntent =
+//                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        // Build the notification and add the action.
+//        Notification newMessageNotification = new Notification.Builder(mContext, CHANNEL_ID)
+//                .setSmallIcon(R.drawable.ic_message)
+//                .setContentTitle(getString(R.string.title))
+//                .setContentText(getString(R.string.content))
+//                .addAction(action)
+//                .build();
+//
+//        // Issue the notification.
 
 
+        notificationManager.notify(notificationId,mBuilder.build());
     }
 
     /**
