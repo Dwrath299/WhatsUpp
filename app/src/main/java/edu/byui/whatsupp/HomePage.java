@@ -54,7 +54,6 @@ import java.util.List;
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-
 /**
  * <h1>Home Page</h1>
  * The Home Page is the beginning screen in the app,
@@ -125,8 +124,6 @@ public class HomePage extends AppCompatActivity {
         //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-    }
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle("My notification")
@@ -135,8 +132,6 @@ public class HomePage extends AppCompatActivity {
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-
-
 
         notificationManager.notify(notificationId,mBuilder.build());
     }
