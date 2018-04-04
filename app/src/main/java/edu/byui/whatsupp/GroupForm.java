@@ -130,9 +130,11 @@ public class GroupForm extends AppCompatActivity {
         */
     }
 
+    /*
+        Adds user id's to an arraylist group of users that is stored in firebase
+     */
+
     public void createGroup (View view) {
-
-
 
             //.... we don't need this, right?
         /*if(formType.equals("update")) {
@@ -224,11 +226,20 @@ public class GroupForm extends AppCompatActivity {
                 });
     }
 
+    /*
+        Updates the real-time listview of users who are currently selected
+     */
+
     public void updateList() {
         ListView LV = (ListView) findViewById(R.id.selUsers);
         UserAdapter dataAdapter = new UserAdapter(this, selectedUsers, GroupForm.this, 2);
         LV.setAdapter(dataAdapter);
     }
+
+    /*
+        Fills a list with potential users that is used as the pool of users in the
+        autocompletetextview
+     */
 
     public void populateUserList() {
 
@@ -293,6 +304,9 @@ public class GroupForm extends AppCompatActivity {
 
     }
 
+    /*
+
+     */
 
     public void addPicture(View view) {
         //Get incoming intent

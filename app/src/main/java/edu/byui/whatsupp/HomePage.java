@@ -97,7 +97,9 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-
+    /*
+        Takes the list of things to do and applies it as a grid view
+     */
 
     public void setGridView(List<ThingToDo> t) {
         things = t;
@@ -108,7 +110,9 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-
+    /*
+        User navigates to login page
+     */
     public void goToLogin (View view) {
         Intent intent = new Intent(this, LoginPage.class);
         intent.putExtra(EXTRA_MESSAGE, "HomePage");
@@ -116,6 +120,10 @@ public class HomePage extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    /*
+        User navigates to the page where they can add a thing to do
+     */
     public void addThingToDo (View view) {
         if (!loggedIn) //Make sure they are logged in.
         {
@@ -131,9 +139,12 @@ public class HomePage extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    /*
+        User clicks the thing to do, and they navigate to that thing to do's page
+     */
+
     public void thingClick(String title) {
-
-
         Intent intent = new Intent(this, ViewThingToDo.class);
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
         Log.i("Intent", "Send User to ThingToDoView");

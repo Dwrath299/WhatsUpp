@@ -77,6 +77,10 @@ public class Profile extends AppCompatActivity {
         setupActionBar();
     }
 
+    /*
+        Puts the user's info in a user-friendly viewing format
+     */
+
     public void displayUserInfo(User user) {
         profileUser = user;
         TextView actionTitle = (TextView) findViewById(R.id.title_text);
@@ -89,6 +93,9 @@ public class Profile extends AppCompatActivity {
 
     }
 
+    /*
+        Creates group with that user
+     */
     public void groupWith(View view) {
 
     }
