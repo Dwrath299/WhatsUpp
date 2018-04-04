@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -26,6 +27,7 @@ public class GroupPresenter {
     Group group;
     edu.byui.whatsupp.GroupsView groupsView;
     edu.byui.whatsupp.GroupView groupView;
+    edu.byui.whatsupp.ViewVote voteView;
 
     public GroupPresenter() {
 
@@ -45,7 +47,11 @@ public class GroupPresenter {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 if(document.get("title").equals(groupTitle)) {
                                     Group group = new Group(groupTitle, (ArrayList<String>) document.get("members"), (String) document.get("url"));
+                                    group.setReference(document.getReference().toString());
                                     groupView.setCurrentGroup(group);
+                                    if (document.get("creator") != null) {
+                                        group.setCreator((String) document.get("creator"));
+                                    }
                                 }
 
 
@@ -80,6 +86,7 @@ public class GroupPresenter {
                                                                     (ArrayList<String>) document.get("members"),
                                                                     (String) document.get("url"));
                                         tempGroup.setMembers(members);
+                                        tempGroup.setReference(document.getReference().toString());
                                         if (document.get("creator") != null) {
                                             tempGroup.setCreator((String) document.get("creator"));
                                         }
@@ -101,5 +108,26 @@ public class GroupPresenter {
 
 
 
+    }
+
+    public void getVote(Activity a, String voteRef) {
+        voteView = (edu.byui.whatsupp.ViewVote) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("votes").document(voteRef);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }

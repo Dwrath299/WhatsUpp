@@ -7,7 +7,7 @@
     tools:context="edu.byui.whatsupp.ViewVote">
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/vote_option2_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="36dp"
@@ -17,26 +17,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="115"
-        android:layout_height="115"
+        android:id="@+id/vote_option2_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option2_head"
         app:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/vote_option2_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option2_pic"
         tools:layout_editor_absoluteX="266dp" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/vote_option1_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -45,53 +45,99 @@
         tools:layout_editor_absoluteY="16dp" />
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="115"
-        android:layout_height="115"
+        android:id="@+id/vote_option1_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option1_head"
         app:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/vote_option1_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/vote_option1_pic" />
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="115"
-        android:layout_height="115"
+        android:id="@+id/vote_option3_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option3_head"
         app:srcCompat="@android:drawable/screen_background_dark_transparent" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/vote_option3_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option1_desc"
         tools:layout_editor_absoluteX="151dp" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/vote_option3_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option3_pic"
         tools:layout_editor_absoluteX="151dp" />
+
+    <TextView
+        android:id="@+id/vote_option1_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/vote_option1_pic"
+        app:layout_constraintTop_toTopOf="@+id/vote_option1_pic"
+        tools:layout_editor_absoluteX="44dp" />
+
+    <TextView
+        android:id="@+id/vote_option2_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/vote_option2_pic"
+        app:layout_constraintTop_toTopOf="@+id/vote_option2_pic"
+        tools:layout_editor_absoluteX="266dp" />
+
+    <TextView
+        android:id="@+id/vote_option3_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/vote_option3_pic"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option3_head"
+        tools:layout_editor_absoluteX="151dp" />
+
+    <Button
+        android:id="@+id/vote_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -21,9 +22,14 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -80,10 +86,10 @@ public class VoteForm extends AppCompatActivity {
         TextView header = findViewById(R.id.vote_form_option1_header);
         header.setText("Option 1: " + option1.getTitle());
         header = findViewById(R.id.vote_form_option2_header);
-        header.setText("Option 2: " + option1.getTitle());
+        header.setText("Option 2: " + option2.getTitle());
         header = findViewById(R.id.vote_form_option3_header);
         if(numOptions == 3) {
-            header.setText("Option 3: " + option1.getTitle());
+            header.setText("Option 3: " + option3.getTitle());
         } else {
             header.setVisibility(View.INVISIBLE);
         }
@@ -125,6 +131,26 @@ public class VoteForm extends AppCompatActivity {
         }
         Vote vote = new Vote(group.getTitle(), group.getMemberList().size(),
                option1, option2, option3, currentUser.getUid(), date, time );
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("votes")
+                .add(vote)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        //Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        Toast.makeText(VoteForm.this, "Successfully Created Vote for " + group.getTitle(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                        Toast.makeText(VoteForm.this, "Failure",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        finish();
     }
 
     /**
@@ -134,7 +160,7 @@ public class VoteForm extends AppCompatActivity {
      * @param v
      */
     public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new EventForm.TimePickerFragment();
+        DialogFragment newFragment = new VoteForm.TimePickerFragment();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction()
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
@@ -190,7 +216,7 @@ public class VoteForm extends AppCompatActivity {
      * @param v
      */
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new EventForm.DatePickerFragment();
+        DialogFragment newFragment = new VoteForm.DatePickerFragment();
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction()

@@ -13,10 +13,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static java.lang.StrictMath.toIntExact;
 
 /**
  * Created by Dallin's PC on 2/26/2018.
@@ -30,6 +32,7 @@ public class EventPresenter {
     edu.byui.whatsupp.Profile profileActivity;
     edu.byui.whatsupp.EventForm eventForm;
     edu.byui.whatsupp.GroupView viewGroup;
+    edu.byui.whatsupp.ViewVote viewVote;
 
     public EventPresenter() {
 
@@ -48,7 +51,7 @@ public class EventPresenter {
                             List<Event> events = new ArrayList<Event>();
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                if(document.get("thingToDo").toString().equals(thingToDo)) { // To get the events for the Thing
+                                if(document.get("thingToDo").toString().equals(thingToDo) && document.get("group") == null) { // To get the events for the Thing
                                     Event tempEvent = new Event((String)document.get("title"), (String) document.get("url"));
                                     tempEvent.setDate((String) document.get("date"));
                                     tempEvent.setTime((String) document.get("time"));
@@ -123,7 +126,7 @@ public class EventPresenter {
 
     }
 
-    public void getEventsForGroup(Activity a, String string){
+    public void getEventsForGroup(Activity a, final String string){
         viewGroup = (edu.byui.whatsupp.GroupView) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final String grouptitle = string;
@@ -152,6 +155,7 @@ public class EventPresenter {
                                 }
                             }
                             viewGroup.displayEventsForGroup(events);
+                            checkForVotes(string);
 
 
                         } else {
@@ -165,6 +169,39 @@ public class EventPresenter {
 
 
 
+    }
+
+
+
+    /**
+     * Checks to see if a group has any votes currently, if so send to the
+     * group view to have button so users can go vote.
+      * @param groupTitle
+     */
+    private void checkForVotes(final String groupTitle) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("votes")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            String documentRef;
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                if ( document.get("groupTitle").toString().equals(groupTitle)) { // To get the vote for the group
+
+                                    viewGroup.displayVote(document.getId());
+                                }
+
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
+                });
     }
 
     public void getEvent(Activity a, String string){
@@ -333,6 +370,69 @@ public class EventPresenter {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error deleting document", e);
                     }
+                });
+    }
+
+    public void getVoteInfo(Activity a, String voteRef) {
+        viewVote = (edu.byui.whatsupp.ViewVote) a;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("votes").document(voteRef);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Vote vote = new Vote((String) document.get("groupTitle"),new BigDecimal((long) document.get("numOfGroupMembers")).intValueExact(),
+                                (String) document.get("option1"), (String) document.get("option1Desc"), (String) document.get("option2")
+                                ,(String) document.get("option2Desc"),  (String) document.get("creator"),
+                                (String) document.get("closeDate"), (String) document.get("closeTime"));
+                        if(document.get("option3") != null) {
+                            vote.setOption3(document.get("option3").toString());
+                            vote.setOption3Desc(document.get("option3Desc").toString());
+                        }
+                        getVotePics(vote);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void getVotePics(final Vote vote) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("thingsToDo")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            String option1Pic = "";
+                            String option2Pic = "";
+                            String option3Pic = "";
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                if(document.get("title").toString().equals(vote.getOption1())) {
+                                    option1Pic = (String) document.get("url");
+                                } else if (document.get("title").toString().equals(vote.getOption2())) {
+                                    option2Pic = (String) document.get("url");
+                                } else if (document.get("title").toString().equals(vote.getOption3())) {
+                                    option3Pic = (String) document.get("url");
+                                }
+
+
+                            }
+
+                        viewVote.displayVote(vote, option1Pic, option2Pic, option3Pic);
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+
                 });
     }
 }

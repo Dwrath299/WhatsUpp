@@ -12,6 +12,7 @@ public class Group implements Serializable {
     String title;
     String url;
     String creator;
+    String reference;
     ArrayList<String> members;
 
     public Group(String title, ArrayList<String> members, String url) {
@@ -32,6 +33,14 @@ public class Group implements Serializable {
     public void setMembers(ArrayList<String> memberList) {
         numMembers = memberList.size();
         this.members = memberList;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public String getCreator() {

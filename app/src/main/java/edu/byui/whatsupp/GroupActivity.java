@@ -20,4 +20,8 @@ public class GroupActivity {
     public void getGroup(Activity activity, String groupTitle) {
         groupPresenter.getGroup(activity, groupTitle);
     }
+
+    public void getVote(Activity a, String voteRef) {
+
+    }
 }
