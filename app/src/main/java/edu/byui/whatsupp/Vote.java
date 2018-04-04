@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 public class Vote {
-    private String group;
+    private String groupTitle;
     private int numOfGroupMembers;
     private String option1;
     private String option2;
@@ -32,7 +32,7 @@ public class Vote {
     private String closeTime;
 
     public Vote(String g, int num, ThingToDo o1, ThingToDo o2, ThingToDo o3, String uid, String d, String t) {
-        group = g;
+        groupTitle = g;
         numOfGroupMembers = num;
         option1 = o1.getTitle();
         option1Desc = o1.getDescription();
@@ -42,6 +42,23 @@ public class Vote {
             option3 = o3.getTitle();
             option3Desc = o3.getDescription();
         }
+        creator = uid;
+        votesFor1 = 0;
+        votesFor2 = 0;
+        votesFor3 = 0;
+
+        closeDate = d;
+        closeTime = t;
+
+    }
+    public Vote(String g, int num, String o1, String o1D, String o2,String o2D, String uid, String d, String t) {
+        groupTitle = g;
+        numOfGroupMembers = num;
+        option1 = o1;
+        option1Desc = o1D;
+        option2 = o2;
+        option2Desc = o2D;
+
         creator = uid;
         votesFor1 = 0;
         votesFor2 = 0;
@@ -61,12 +78,12 @@ public class Vote {
         return false;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupRef() {
+        return groupTitle;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupRef(String group) {
+        this.groupTitle = group;
     }
 
     public int getNumOfGroupMembers() {

@@ -62,6 +62,7 @@ public class GroupView extends AppCompatActivity  {
     Group currentGroup;
     private FirebaseListAdapter<ChatMessage> adapter;
     private EditText yourEditText;
+    private String voteRef;
     EventActivity ea;
     GroupActivity ga;
     String message;
@@ -168,6 +169,30 @@ public class GroupView extends AppCompatActivity  {
             }
         });
 
+    }
+
+    /**
+     * Called from the event presenter, it means there is a vote happening
+     * in the group. Shows the button that will take them to the vote.
+     * @param voteRef
+     */
+    public void displayVote(String voteRef) {
+        this.voteRef = voteRef;
+        Button btn = findViewById(R.id.go_to_vote_btn);
+        btn.setText("Vote Currently in Process");
+        btn.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Only available if there is a vote happening in the group.
+     *
+     * @param view from the button
+     */
+    public void goToVote(View view) {
+        Intent intent = new Intent(this, ViewVote.class);
+        intent.putExtra(EXTRA_MESSAGE, voteRef);
+        Log.i("Intent", "Send User to Vote");
+        startActivity(intent);
     }
 
 	/**

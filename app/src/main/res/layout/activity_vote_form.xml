@@ -125,6 +125,13 @@
                 android:onClick="showDatePickerDialog"
                 android:text="Add Date"
                  />
+
+            <Button
+                android:id="@+id/voteForm_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="submit"
+                android:text="Button" />
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

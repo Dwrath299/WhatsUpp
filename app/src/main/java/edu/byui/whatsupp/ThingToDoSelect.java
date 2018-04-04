@@ -104,6 +104,7 @@ public class ThingToDoSelect extends AppCompatActivity {
         } else if(selectedThings.size() > 1) {
             Intent intent = new Intent(this, VoteForm.class);
             Bundle extras = new Bundle();
+            extras.putSerializable("EXTRA_GROUP", currentGroup);
             extras.putSerializable("EXTRA_OPTION1THING", selectedThings.get(0));
             extras.putSerializable("EXTRA_OPTION2THING", selectedThings.get(1));
             if (selectedThings.size() > 2 ) {

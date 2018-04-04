@@ -104,4 +104,8 @@ public class EventActivity {
     public void getEventsForGroup(Activity activity, String title) {
 		eventPresenter.getEventsForGroup(activity, title);
     }
+
+    public void getVoteInfo(Activity a, String vote) {
+		eventPresenter.getVoteInfo(a, vote);
+	}
 }

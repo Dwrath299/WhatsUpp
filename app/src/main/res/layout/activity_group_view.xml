@@ -64,4 +64,12 @@
         android:layout_alignBottom="@+id/group_add_event"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:id="@+id/go_to_vote_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goToVote"
+        android:text="Button"
+        android:visibility="invisible" />
+
 </RelativeLayout>
