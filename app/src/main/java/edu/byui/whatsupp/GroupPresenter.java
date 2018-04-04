@@ -17,7 +17,11 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by Dallin's PC on 2/26/2018.
+ * GROUP PRESENTER
+ * This is the database queries that gather the information for
+ * groups.
+ * @author Dallin Wrathall
+ * @version 1.0.0
  */
 
 
@@ -29,10 +33,23 @@ public class GroupPresenter {
     edu.byui.whatsupp.GroupView groupView;
     edu.byui.whatsupp.ViewVote voteView;
 
+
+    // TODO: Remove FirebaseFirestore db = FirebaseFirestore.getInstance(); from each one and intialize it in the constructor
+    // TODO: Have the activities intialized in the presenter constructor.
+    /**
+     * Does nothing
+     */
     public GroupPresenter() {
 
     }
 
+    /**
+     * Get an individual group's information for the group
+     *  view page. Gets the title, methods, picture. Then calls
+     *  the Set Current Group Method in the group view activity.
+     * @param a Group View Activity
+     * @param groupTitle
+     */
     public void getGroup(Activity a, final String groupTitle) {
         groupView = (edu.byui.whatsupp.GroupView) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -66,7 +83,12 @@ public class GroupPresenter {
                 });
     }
 
-    public void getListThings(Activity a, final String uid){
+    /**
+     * To get all the groups that a user is involved in.
+     * @param a Groups View Activity
+     * @param uid
+     */
+    public void getListGroups(Activity a, final String uid){
         groupsView = (edu.byui.whatsupp.GroupsView) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("groups")
@@ -110,24 +132,6 @@ public class GroupPresenter {
 
     }
 
-    public void getVote(Activity a, String voteRef) {
-        voteView = (edu.byui.whatsupp.ViewVote) a;
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("votes").document(voteRef);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-    }
+
+
 }

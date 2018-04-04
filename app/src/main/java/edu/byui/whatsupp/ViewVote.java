@@ -29,6 +29,13 @@ public class ViewVote extends AppCompatActivity {
     EventActivity ea;
     Vote vote;
 
+    /**
+     * Gets the current user info, and log in status.
+     * Call the Event Activity to get the vote info
+     * Call to set up action bar.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,35 @@ public class ViewVote extends AppCompatActivity {
         ea.getVoteInfo(this, voteRef);
     }
 
+    /**
+     * Once the user has selected an option,
+     * they click the submit button, this updates
+     * the vote in firebase. Refreshes, then displays
+     * percents affiliated with choices.
+     * @param view
+     */
+    public void submitVote(View view) {
+        if(selectedThing == "") {
+            Toast.makeText(this, "Please select an option", Toast.LENGTH_LONG);
+        } else {
+            if(selectedThing == vote.getOption1()) {
+                vote.addVoteFor1();
+            } else if (selectedThing == vote.getOption2()) {
+                vote.addVoteFor2();
+            } else if (selectedThing == vote.getOption3()) {
+                vote.addVoteFor3();
+            }
+        }
+    }
+
+    /**
+     * This is called from the Event Presenter to set up the displaying the vote.
+     * Sets up pictures, headers, descritpions, and handles pic clicking.
+     * @param v The vote, initialized with all the info
+     * @param option1Pic String of the URL
+     * @param option2Pic
+     * @param option3Pic
+     */
     public void displayVote(Vote v, String option1Pic, String option2Pic, String option3Pic) {
         vote = v;
 
@@ -160,6 +196,14 @@ public class ViewVote extends AppCompatActivity {
         tv.setText(vote.getOption3Desc());
     }
 
+
+    /**
+     * Setup ActionBar
+     * Intializes the action bar to have the functionality of
+     * the home button and drop down list if the user is
+     * logged in, otherwise, a log in button.
+     * Called by the On Create method
+     */
     private void setupActionBar() {
         //Get the default actionbar instance
         android.support.v7.app.ActionBar mActionBar = getSupportActionBar();
