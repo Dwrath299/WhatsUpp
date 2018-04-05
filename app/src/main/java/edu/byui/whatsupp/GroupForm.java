@@ -98,7 +98,6 @@ public class GroupForm extends AppCompatActivity {
 	 * @param savedInstanceState
 	 * 
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,10 +129,10 @@ public class GroupForm extends AppCompatActivity {
         */
     }
 
-    /*
-        Adds user id's to an arraylist group of users that is stored in firebase
+    /**
+     * Adds user id's to an arraylist group of users that is stored in firebase
+     * @param view
      */
-
     public void createGroup (View view) {
 
             //.... we don't need this, right?
@@ -226,21 +225,18 @@ public class GroupForm extends AppCompatActivity {
                 });
     }
 
-    /*
-        Updates the real-time listview of users who are currently selected
+    /**
+     * Updates the real-time listview of users who are currently selected
      */
-
     public void updateList() {
         ListView LV = (ListView) findViewById(R.id.selUsers);
         UserAdapter dataAdapter = new UserAdapter(this, selectedUsers, GroupForm.this, 2);
         LV.setAdapter(dataAdapter);
     }
 
-    /*
-        Fills a list with potential users that is used as the pool of users in the
-        autocompletetextview
+    /**
+     * Fills a list with potential users that is used as the pool of users in the autocompletetextview
      */
-
     public void populateUserList() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
