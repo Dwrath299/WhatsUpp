@@ -73,8 +73,7 @@ public class HomePage extends AppCompatActivity {
     List<ThingToDo> things;
     User currentUser;
     ProgressBar spinner;
-    private String CHANNEL_ID = "";
-    public int notificationId = 0;
+
 
     boolean loggedIn;
 
@@ -107,34 +106,7 @@ public class HomePage extends AppCompatActivity {
         //This needs to be done AFTER log in.
         setupActionBar();
 
-        /*NotificationManager notificationManager =  getSystemService(NotificationManager.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system
-            notificationManager.createNotificationChannel(channel);
-        }
 
-        // Create an explicit intent for an Activity in your app
-        Intent intent = new Intent(this, GroupView.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("My notification")
-                .setContentText("Hello World!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                // Set the intent that will fire when the user taps the notification
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        notificationManager.notify(notificationId,mBuilder.build());*/
     }
 
 

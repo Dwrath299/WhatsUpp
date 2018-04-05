@@ -26,6 +26,7 @@ public class Vote {
     private int votesFor1;
     private int votesFor2;
     private int votesFor3;
+    private String voteID;
     private ArrayList<String> usersVoted;
     private String creator;
     private String closeDate;
@@ -76,6 +77,22 @@ public class Vote {
         // If the date + time has been reached
         // return true
         return false;
+    }
+
+    public String getGroupTitle() {
+        return groupTitle;
+    }
+
+    public void setGroupTitle(String groupTitle) {
+        this.groupTitle = groupTitle;
+    }
+
+    public String getVoteID() {
+        return voteID;
+    }
+
+    public void setVoteID(String voteID) {
+        this.voteID = voteID;
     }
 
     public String getGroupRef() {

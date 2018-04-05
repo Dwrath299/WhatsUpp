@@ -458,6 +458,11 @@ public class EventPresenter {
                                 (String) document.get("option1"), (String) document.get("option1Desc"), (String) document.get("option2")
                                 ,(String) document.get("option2Desc"),  (String) document.get("creator"),
                                 (String) document.get("closeDate"), (String) document.get("closeTime"));
+                        vote.setUsersVoted((ArrayList<String>) document.get("usersVoted"));
+                        vote.setVoteID(document.getId());
+                        vote.setVotesFor1(new BigDecimal((long) document.get("votesFor1")).intValueExact());
+                        vote.setVotesFor2(new BigDecimal((long) document.get("votesFor2")).intValueExact());
+                        vote.setVotesFor3(new BigDecimal((long) document.get("votesFor3")).intValueExact());
                         if(document.get("option3") != null) {
                             vote.setOption3(document.get("option3").toString());
                             vote.setOption3Desc(document.get("option3Desc").toString());
