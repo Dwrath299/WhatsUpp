@@ -107,7 +107,7 @@ public class HomePage extends AppCompatActivity {
         //This needs to be done AFTER log in.
         setupActionBar();
 
-        NotificationManager notificationManager =  getSystemService(NotificationManager.class);
+        /*NotificationManager notificationManager =  getSystemService(NotificationManager.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
@@ -134,7 +134,7 @@ public class HomePage extends AppCompatActivity {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        notificationManager.notify(notificationId,mBuilder.build());
+        notificationManager.notify(notificationId,mBuilder.build());*/
     }
 
 
