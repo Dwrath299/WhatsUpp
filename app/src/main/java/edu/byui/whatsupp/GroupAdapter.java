@@ -47,7 +47,13 @@ public class GroupAdapter extends BaseAdapter {
         return 0;
     }
 
-    // create a new ImageButton for each item referenced by the Adapter
+    /**
+     * create a new ImageButton for each item referenced by the Adapter
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         edu.byui.whatsupp.GroupAdapter.ViewHolder holder;
         if (convertView == null) {
