@@ -94,6 +94,7 @@ public class GroupView extends AppCompatActivity  {
             currentUser = new User("123");
         }
         setupActionBar();
+
         ea = new EventActivity(this);
         ga = new GroupActivity();
         ea.getEventsForGroup((edu.byui.whatsupp.GroupView)this, message);

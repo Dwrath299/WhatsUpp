@@ -21,7 +21,11 @@ import static android.content.ContentValues.TAG;
 import static java.lang.StrictMath.toIntExact;
 
 /**
- * Created by Dallin's PC on 2/26/2018.
+ * EVENT PRESENTER
+ * This is the database queries that gather the information for
+ * events and votes.
+ * @author Dallin Wrathall
+ * @version 1.0.0
  */
 
 public class EventPresenter {
@@ -34,10 +38,20 @@ public class EventPresenter {
     edu.byui.whatsupp.GroupView viewGroup;
     edu.byui.whatsupp.ViewVote viewVote;
 
+    /**
+     * Does nothing
+     */
     public EventPresenter() {
 
     }
 
+
+    // TODO: Input the user so if they have a group with a event display that.
+    /**
+     * Displays the public events for the corresponding thingToDo
+     * @param a
+     * @param string
+     */
     public void getEventsForThing(Activity a, String string){
         viewThingToDoActivity = (edu.byui.whatsupp.ViewThingToDo) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,6 +94,13 @@ public class EventPresenter {
 
     }
 
+
+    //TODO: Should we display the private events here? Probably not.
+    /**
+     * Displays the events that a user is going to on their profile page.
+     * @param a
+     * @param string
+     */
     public void getEventsForProfile(Activity a, String string){
         profileActivity = (edu.byui.whatsupp.Profile) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -126,6 +147,13 @@ public class EventPresenter {
 
     }
 
+
+
+    /**
+     * Gets the events that are happening for the associated group.
+     * @param a The groupView Activity
+     * @param string The group title
+     */
     public void getEventsForGroup(Activity a, final String string){
         viewGroup = (edu.byui.whatsupp.GroupView) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -173,6 +201,7 @@ public class EventPresenter {
 
 
 
+
     /**
      * Checks to see if a group has any votes currently, if so send to the
      * group view to have button so users can go vote.
@@ -204,6 +233,14 @@ public class EventPresenter {
                 });
     }
 
+    /**
+
+     * Gets the specific event details for displaying in
+     * the View Event page. Including, pic,  creator, title,
+     * then calls the get Attendees method.
+     * @param a The view Event activity.
+     * @param string The event title
+     */
     public void getEvent(Activity a, String string){
         viewEventActivity = (edu.byui.whatsupp.ViewEvent) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -247,6 +284,13 @@ public class EventPresenter {
 
     }
 
+
+    /**
+     * Gets the user information for each of uids provided in the
+     * String list. Called by  the Get Event method.
+     * @param attendees list of UIDs
+     */
+
     public void getEventAttendees (final ArrayList<String> attendees) {
 
 
@@ -288,6 +332,13 @@ public class EventPresenter {
 
     }
 
+
+    // TODO: Currently not working. Duplicates the members that stay.
+    /**
+     * Adds or subtracts attendees from the list.
+     * @param docRef
+     * @param attendees
+     */
     public void addAttendee(String docRef, List<String> attendees) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference eventRef = db.collection("events").document(docRef);
@@ -310,6 +361,13 @@ public class EventPresenter {
                 });
     }
 
+
+    /**
+     *  Gets the information for the event to
+     *  allow the user to edit the event they created.
+     * @param a Event Form Activity
+     * @param string Event Title
+     */
     public void getEventToEdit(Activity a, String string){
         eventForm = (edu.byui.whatsupp.EventForm) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -355,6 +413,12 @@ public class EventPresenter {
 
     }
 
+    /**
+     * Deletes the event from the database.
+     * This could mean the user changed their mind, or
+     * the date was surpassed.
+     * @param ref
+     */
     public void deleteEventDocument(String ref) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("events").document(ref)
@@ -373,10 +437,16 @@ public class EventPresenter {
                 });
     }
 
-    public void getVoteInfo(Activity a, String voteRef) {
+    // TODO: Create a vote activity and Vote Presenter.
+    /**
+     * Get the vote information from FireStore to pass to the Vote View
+     * @param a View Vote page
+     * @param voteid The id of the document in the database.
+     */
+    public void getVoteInfo(Activity a, String voteid) {
         viewVote = (edu.byui.whatsupp.ViewVote) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("votes").document(voteRef);
+        DocumentReference docRef = db.collection("votes").document(voteid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -403,6 +473,12 @@ public class EventPresenter {
         });
     }
 
+    /**
+     * Get the URL of the pictures used for the things to do,
+     * called by the getVoteInfo method. This calls back to the
+     * display vote method in the View Vote.
+     * @param vote Vote object from GetVoteInfo
+     */
     public void getVotePics(final Vote vote) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("thingsToDo")

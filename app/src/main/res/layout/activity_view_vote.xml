@@ -10,7 +10,7 @@
         android:id="@+id/vote_option2_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
+        android:layout_marginEnd="44dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
         android:id="@+id/vote_option2_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="44dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vote_option2_head"
@@ -32,23 +32,25 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/vote_option2_pic"
-        tools:layout_editor_absoluteX="266dp" />
+        app:layout_constraintEnd_toEndOf="@+id/vote_option2_percent"
+        app:layout_constraintStart_toStartOf="@+id/vote_option2_percent"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option2_pic" />
 
     <TextView
         android:id="@+id/vote_option1_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/vote_option1_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vote_option1_head"
@@ -58,13 +60,14 @@
         android:id="@+id/vote_option1_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
         android:layout_marginTop="12dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/vote_option1_percent"
+        app:layout_constraintStart_toStartOf="@+id/vote_option1_percent"
         app:layout_constraintTop_toBottomOf="@+id/vote_option1_pic" />
 
     <ImageView
+
         android:id="@+id/vote_option3_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,19 +84,23 @@
         android:id="@+id/vote_option3_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/vote_option1_desc"
-        tools:layout_editor_absoluteX="151dp" />
+        app:layout_constraintEnd_toEndOf="@+id/vote_option3_pic"
+        app:layout_constraintStart_toStartOf="@+id/vote_option3_pic"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option1_desc" />
 
     <TextView
         android:id="@+id/vote_option3_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/vote_option3_pic"
-        tools:layout_editor_absoluteX="151dp" />
+        app:layout_constraintEnd_toEndOf="@+id/vote_option3_pic"
+        app:layout_constraintStart_toStartOf="@+id/vote_option3_pic"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option3_pic" />
 
     <TextView
         android:id="@+id/vote_option1_percent"
