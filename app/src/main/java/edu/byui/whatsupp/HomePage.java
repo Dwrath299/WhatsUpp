@@ -137,6 +137,7 @@ public class HomePage extends AppCompatActivity {
         notificationManager.notify(notificationId,mBuilder.build());
     }
 
+
     /**
      * Sets up the grid to display the list of things  to do.
      * @param t
@@ -150,16 +151,18 @@ public class HomePage extends AppCompatActivity {
 
     }
 
+
     /**
      * Sends the user to the login page.
      * @param view
-     */
+     * */
     public void goToLogin (View view) {
         Intent intent = new Intent(this, LoginPage.class);
         intent.putExtra(EXTRA_MESSAGE, "HomePage");
         Log.i("Intent", "Send User to Login");
         startActivity(intent);
     }
+
 
     /**
      * If the user is logged in, the user is sent to the ThingToDoForm to add a new thing to do.
@@ -181,13 +184,12 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
+
     /**
      * Allows users to click on a thing to do in the grid and view it in more detail.
      * @param title
      */
     public void thingClick(String title) {
-
-
         Intent intent = new Intent(this, ViewThingToDo.class);
         intent.putExtra(ThingToDoForm.EXTRA_MESSAGE, title);
         Log.i("Intent", "Send User to ThingToDoView");

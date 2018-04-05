@@ -67,6 +67,7 @@
         app:layout_constraintTop_toBottomOf="@+id/vote_option1_pic" />
 
     <ImageView
+
         android:id="@+id/vote_option3_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

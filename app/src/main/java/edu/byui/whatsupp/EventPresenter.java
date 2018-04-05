@@ -38,6 +38,9 @@ public class EventPresenter {
 
     }
 
+    /**
+     *  Retrieves the currently-scheduled events for that thing to do
+     */
     public void getEventsForThing(Activity a, String string){
         viewThingToDoActivity = (edu.byui.whatsupp.ViewThingToDo) a;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -79,6 +82,10 @@ public class EventPresenter {
 
 
     }
+
+    /**
+       Retrieves the events that the selected user is scheduled to attend
+     */
 
     public void getEventsForProfile(Activity a, String string){
         profileActivity = (edu.byui.whatsupp.Profile) a;
@@ -125,6 +132,7 @@ public class EventPresenter {
 
 
     }
+
 
     public void getEventsForGroup(Activity a, final String string){
         viewGroup = (edu.byui.whatsupp.GroupView) a;
@@ -173,6 +181,7 @@ public class EventPresenter {
 
 
 
+
     /**
      * Checks to see if a group has any votes currently, if so send to the
      * group view to have button so users can go vote.
@@ -203,6 +212,10 @@ public class EventPresenter {
 
                 });
     }
+
+    /**
+        Retrieves the event info
+     */
 
     public void getEvent(Activity a, String string){
         viewEventActivity = (edu.byui.whatsupp.ViewEvent) a;
@@ -247,6 +260,10 @@ public class EventPresenter {
 
     }
 
+    /*
+         Retrieves the list of users who are currently scheduled to attend event
+     */
+
     public void getEventAttendees (final ArrayList<String> attendees) {
 
 
@@ -288,6 +305,10 @@ public class EventPresenter {
 
     }
 
+    /*
+         Adds a user to the list of users scheduled to attend event
+     */
+
     public void addAttendee(String docRef, List<String> attendees) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference eventRef = db.collection("events").document(docRef);
@@ -309,6 +330,10 @@ public class EventPresenter {
                     }
                 });
     }
+
+    /*
+         Retrieves the event that a user will be able to edit
+     */
 
     public void getEventToEdit(Activity a, String string){
         eventForm = (edu.byui.whatsupp.EventForm) a;
@@ -354,6 +379,10 @@ public class EventPresenter {
 
 
     }
+
+    /*
+         Removes the event
+     */
 
     public void deleteEventDocument(String ref) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
