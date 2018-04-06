@@ -24,7 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.byui.whatsupp.GroupView.EXTRA_MESSAGE;
-
+/**
+ * <h1>ThingToDoSelect</h1>
+ * The activity class for creating an event for a group
+ * They just have to choose a ThingToDo
+ * if they select multiple it create a group vote.
+ *
+ *
+ * @author  Dallin Wrathall
+ * @version 1.0
+ * @since   2018-03-21
+ */
 public class ThingToDoSelect extends AppCompatActivity {
 
     ThingToDoActivity thingToDoActivity;
@@ -68,6 +78,11 @@ public class ThingToDoSelect extends AppCompatActivity {
 
     }
 
+    /**
+     * This is called by the ThingToDO presenter. Sets up the
+     * gridview to display all pubic thingsToDo + private.
+     * @param things
+     */
     public void setGridView(List<ThingToDo> things) {
         allThings = things;
         GridView gridview = findViewById(R.id.thingsToDo_grid);
@@ -75,6 +90,12 @@ public class ThingToDoSelect extends AppCompatActivity {
         gridview.setAdapter(imageAdapter);
     }
 
+    /**
+     * When the user clicks on a THingToDo in the gridview.
+     * Changes it to green and adds it to the
+     * selected list, if clicked again, it turns back to normal.
+     * @param thing
+     */
     public void thingClick(ThingToDo thing) {
         if(selectedThings.contains(thing)) {
             selectedThings.remove(thing);
@@ -88,6 +109,12 @@ public class ThingToDoSelect extends AppCompatActivity {
 
     }
 
+    /**
+     * When the user taps the confirm button.
+     * Sends it to a vote if they selected more than one
+     * otherwise, it creates an event for the selected THINGTODO
+     * @param view
+     */
     public void confirm(View view) {
         if(selectedThings.size() == 1) {
             Intent intent = new Intent(this, EventForm.class);
@@ -119,6 +146,11 @@ public class ThingToDoSelect extends AppCompatActivity {
         }
     }
 
+    /**
+     * To create a private ThingToDO for the group.
+     * This could be a friends house, or idk
+     * @param view
+     */
     public void createGroupThingToDo(View view) {
         Intent intent = new Intent(this, ThingToDoForm.class);
         Bundle extras = new Bundle();

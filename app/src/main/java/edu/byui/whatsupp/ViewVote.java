@@ -95,6 +95,9 @@ public class ViewVote extends AppCompatActivity {
                 newNum = vote.getVotesFor3();
 
             }
+            if(usersVoted == null) {
+                usersVoted = new ArrayList<String>();
+            }
             usersVoted.add(currentUser.getUid());
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             String ref = vote.getVoteID();
@@ -144,7 +147,7 @@ public class ViewVote extends AppCompatActivity {
         usersVoted = vote.getUsersVoted();
 
         // Don't need to display pics if user already voted.
-        if(!(usersVoted.contains(currentUser.getUid()))) {
+        if((usersVoted == null)  || !(usersVoted.contains(currentUser.getUid()))) {
             // Set up the pictures
             ImageView optionPic = findViewById(R.id.vote_option1_pic);
             Picasso.with(this).load(option1Pic).into(optionPic);
@@ -236,6 +239,20 @@ public class ViewVote extends AppCompatActivity {
         } else { //If users already voted, then display percents.
             int totalVotes = vote.getVotesFor1() + vote.getVotesFor2() + vote.getVotesFor3();
             TextView percent = findViewById(R.id.vote_option1_percent);
+            int optionPercent = vote.getVotesFor1() / totalVotes * 100;
+            percent.setText(optionPercent + "%");
+            percent.setVisibility(View.VISIBLE);
+            percent = findViewById(R.id.vote_option2_percent);
+            optionPercent = vote.getVotesFor2() / totalVotes * 100;
+            percent.setText(optionPercent + "%");
+            percent.setVisibility(View.VISIBLE);
+            //TODO: make it so it checks if there are 3 options
+            percent = findViewById(R.id.vote_option3_percent);
+            optionPercent = vote.getVotesFor3() / totalVotes * 100;
+            percent.setText(optionPercent + "%");
+            percent.setVisibility(View.VISIBLE);
+            Button voteSubmit = findViewById(R.id.vote_submit);
+            voteSubmit.setVisibility(View.INVISIBLE);
 
         }
         // Set headers

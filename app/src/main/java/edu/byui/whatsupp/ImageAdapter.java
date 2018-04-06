@@ -39,7 +39,6 @@ import static edu.byui.whatsupp.ThingToDoForm.EXTRA_MESSAGE;
  * @version 1.0
  * @since   2018-03-21
  */
-
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<ThingToDo> things;
@@ -51,18 +50,36 @@ public class ImageAdapter extends BaseAdapter {
         activity = (edu.byui.whatsupp.HomePage) a;
     }
 
+    /**
+     * Get the amount of ThingsToDo that are going into the gridView
+     * @return things.size();
+     */
     public int getCount() {
         return things.size();
     }
 
+    /**
+     * The list of ThingsToDo that want to be displayed
+     * @param t
+     */
     public void setList(List<ThingToDo> t) {
         things = t;
     }
 
+    /**
+     * Does nothing
+     * @param position
+     * @return null
+     */
     public Object getItem(int position) {
         return null;
     }
 
+    /**
+     * Does nothing
+     * @param position
+     * @return 0
+     */
     public long getItemId(int position) {
         return 0;
     }
@@ -100,9 +117,6 @@ public class ImageAdapter extends BaseAdapter {
         return imageButton;
     }
 
-    public void displayThingToDo() {
-
-    }
 
 
 }
