@@ -103,6 +103,11 @@ public class ThingToDoForm extends AppCompatActivity {
 
     }
 
+    /**
+     * Displays all the information that is currently inside the ThingToDo
+     * that the user is editing.
+     * @param thing
+     */
     public void displayThingData(ThingToDo thing) {
         this.thing = thing;
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -123,6 +128,10 @@ public class ThingToDoForm extends AppCompatActivity {
         update.setText("Update");
     }
 
+    /**
+     * Deletes a ThingToDo from the list.
+     * @param view
+     */
     public void deleteThingToDo(View view) {
         ttda.deleteThing(thing.getReference());
         Intent intent = new Intent(ThingToDoForm.this, HomePage.class);
@@ -132,6 +141,10 @@ public class ThingToDoForm extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Adds an image to the ThingToDo.
+     * @param view
+     */
     public void addPicture(View view) {
         //Get incoming intent
         Intent intent = new Intent();
@@ -167,6 +180,10 @@ public class ThingToDoForm extends AppCompatActivity {
         }
     }
 
+    /**
+     * Takes all the input fields and updates any values that were changed or added.
+     * @param view
+     */
     public void submit (View view) {
         Button update = (Button) findViewById(R.id.button2);
         if(update.getText() == "Update")
@@ -222,6 +239,11 @@ public class ThingToDoForm extends AppCompatActivity {
 
     }
     //This will get run when the past process is completed
+
+    /**
+     * Adds and updates ThingsToDo that are stored inside the Firebase database.
+     * @param url
+     */
     public void addToDB(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         thing.setCreator(currentUser.getUid());

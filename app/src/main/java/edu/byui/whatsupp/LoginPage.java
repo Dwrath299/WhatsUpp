@@ -78,6 +78,10 @@ public class LoginPage extends AppCompatActivity {
             loggedIn = false;
             currentUser = new User("123");
         }
+
+        /**
+         * Sets up the action bar.
+         */
         setupActionBar();
         LoginButton authButton = (LoginButton)this.findViewById(R.id.login_button);
         authButton.setReadPermissions("email", "public_profile");
@@ -107,6 +111,10 @@ public class LoginPage extends AppCompatActivity {
 
     }
 
+    /**
+     * Checks whether a user is logged in or not using a boolean.
+     * If the user logs in or out, the boolean is updated.
+     */
     public void updateLogin(){
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
@@ -131,6 +139,10 @@ public class LoginPage extends AppCompatActivity {
     }
 
 
+    /**
+     * Handles logging in with a Facebook account.
+     * @param loginResult
+     */
     private void handleFacebookAccessToken(final LoginResult loginResult) {
         //Log.d(TAG, "handleFacebookAccessToken:" + token);
         final AccessToken token = loginResult.getAccessToken();
@@ -161,6 +173,10 @@ public class LoginPage extends AppCompatActivity {
 
     }
 
+    /**
+     * Returns whether the access token is null or not.
+     * @return
+     */
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;

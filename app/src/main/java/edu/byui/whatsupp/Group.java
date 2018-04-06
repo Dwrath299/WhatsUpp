@@ -7,6 +7,9 @@ import java.util.ArrayList;
  * Created by Dallin's PC on 2/26/2018.
  */
 
+/**
+ * This class contains all the data that is to be stored inside a Group object.
+ */
 public class Group implements Serializable {
     int numMembers;
     String title;
@@ -15,17 +18,33 @@ public class Group implements Serializable {
     String reference;
     ArrayList<String> members;
 
+    /**
+     * Constructor.
+     * @param title
+     * @param members
+     * @param url
+     */
     public Group(String title, ArrayList<String> members, String url) {
         this.title = title;
         this.members = members;
         this.url = url;
     }
+
+    /**
+     * Constructor.
+     * @param title
+     * @param url
+     */
     public Group(String title,  String url) {
         this.title = title;
         this.members = members;
         this.url = url;
     }
 
+    /**
+     * Getters and Setters.
+     * @return
+     */
     public ArrayList<String> getMemberList() {
         return members;
     }

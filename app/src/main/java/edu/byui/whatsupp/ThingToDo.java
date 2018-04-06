@@ -26,6 +26,15 @@ public class ThingToDo implements Serializable {
     private String group;
     public boolean approved;
 
+    /**
+     * Constructor
+     * @param u
+     * @param t
+     * @param a
+     * @param c
+     * @param z
+     * @param d
+     */
     public ThingToDo(String u, String t, String a, String c, long z, String d) {
         url = u;
         title = t;
@@ -36,6 +45,16 @@ public class ThingToDo implements Serializable {
         approved = true;
     }
 
+    /**
+     * Constructor
+     * @param u
+     * @param t
+     * @param a
+     * @param c
+     * @param z
+     * @param d
+     * @param g
+     */
     public ThingToDo(String u, String t, String a, String c, long z, String d, String g) {
         url = u;
         title = t;
@@ -46,9 +65,13 @@ public class ThingToDo implements Serializable {
         approved = true;
         group = g;
     }
+
+    /**
+     * Getters and setters.
+     * @param u
+     */
     public ThingToDo(String u) {
         url = u;
-
     }
 
     public String getGroup() {
