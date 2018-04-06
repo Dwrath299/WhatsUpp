@@ -52,6 +52,9 @@ public class ViewVote extends AppCompatActivity {
         setContentView(R.layout.activity_view_vote);
         Intent intent = getIntent();
         voteRef = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        ea = new EventActivity(this);
+        selectedThing = "";
+        ea.getVoteInfo(this, voteRef);
         mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
@@ -63,9 +66,7 @@ public class ViewVote extends AppCompatActivity {
             currentUser = new User("123");
         }
         setupActionBar();
-        ea = new EventActivity(this);
-        selectedThing = "";
-        ea.getVoteInfo(this, voteRef);
+
     }
 
     /**
