@@ -30,9 +30,10 @@ import java.util.List;
 import static edu.byui.whatsupp.ThingToDoForm.EXTRA_MESSAGE;
 
 /**
- * <h1>Image Adapter</h1>
+ * <h1>ThingToDo Adapter</h1>
  * This creates the things that are needed to
- * be displayed in the gridview on the home
+ * be displayed in the gridview on the ThingToDoSelect page
+ * for a group creating a private event or vote.
  * page
  * <p>
  *
@@ -48,6 +49,12 @@ public class ThingToDoGridAdapter extends BaseAdapter {
     edu.byui.whatsupp.ThingToDoSelect activity;
     List<ThingToDo> selectedThings;
 
+    /**
+     * Constructor,
+     * @param c Context
+     * @param t List of ThingsToDo
+     * @param a ThingToDoSelect activity
+     */
     public ThingToDoGridAdapter(Context c, List<ThingToDo> t, Activity a) {
         mContext = c;
         things = t;
@@ -55,23 +62,48 @@ public class ThingToDoGridAdapter extends BaseAdapter {
         selectedThings = new ArrayList<ThingToDo>();
     }
 
+    /**
+     * Get the amount of ThingsToDo that are in the gridview
+     * @return
+     */
     public int getCount() {
         return things.size();
     }
 
+    /**
+     * Set the list of ThingsToDo to be displayed on the
+     * gridview
+     * @param t
+     */
     public void setList(List<ThingToDo> t) {
         things = t;
     }
 
+    /**
+     * Does nothing
+     * @param position
+     * @return 0
+     */
     public Object getItem(int position) {
         return null;
     }
 
+    /**
+     * Does nothing
+     * @param position
+     * @return 0
+     */
     public long getItemId(int position) {
         return 0;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
+    /**
+     * create a new image button for each thing to do.
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return imageButton
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         final ImageButton imageButton;
         if (convertView == null) {
@@ -114,9 +146,6 @@ public class ThingToDoGridAdapter extends BaseAdapter {
         return imageButton;
     }
 
-    public void displayThingToDo() {
-
-    }
 
 
 }

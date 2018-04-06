@@ -2,6 +2,7 @@ package edu.byui.whatsupp;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,14 +19,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class ViewVote extends AppCompatActivity {
     private User currentUser;
     private FirebaseAuth mAuth;
     private boolean loggedIn;
     private String selectedThing;
+    private ArrayList<String> usersVoted;
+    private String voteRef;
     EventActivity ea;
     Vote vote;
 
@@ -41,7 +51,10 @@ public class ViewVote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_vote);
         Intent intent = getIntent();
-        String voteRef = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        voteRef = intent.getStringExtra(HomePage.EXTRA_MESSAGE);
+        ea = new EventActivity(this);
+        selectedThing = "";
+        ea.getVoteInfo(this, voteRef);
         mAuth = FirebaseAuth.getInstance();
         // Get the logged in Status
         loggedIn = AccessToken.getCurrentAccessToken() == null;
@@ -53,9 +66,7 @@ public class ViewVote extends AppCompatActivity {
             currentUser = new User("123");
         }
         setupActionBar();
-        ea = new EventActivity(this);
-        selectedThing = "";
-        ea.getVoteInfo(this, voteRef);
+
     }
 
     /**
@@ -69,14 +80,59 @@ public class ViewVote extends AppCompatActivity {
         if(selectedThing == "") {
             Toast.makeText(this, "Please select an option", Toast.LENGTH_LONG);
         } else {
+            String optionChanged = "";
+            long  newNum = 0;
             if(selectedThing == vote.getOption1()) {
                 vote.addVoteFor1();
+                optionChanged = "votesFor1";
+                newNum = vote.getVotesFor1();
             } else if (selectedThing == vote.getOption2()) {
                 vote.addVoteFor2();
+                optionChanged = "votesFor2";
+                newNum = vote.getVotesFor2();
             } else if (selectedThing == vote.getOption3()) {
                 vote.addVoteFor3();
+                optionChanged = "votesFor3";
+                newNum = vote.getVotesFor3();
+
             }
+            if(usersVoted == null) {
+                usersVoted = new ArrayList<String>();
+            }
+            usersVoted.add(currentUser.getUid());
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            String ref = vote.getVoteID();
+            db.collection("votes").document(ref)
+                    .update(optionChanged, newNum)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
+            db.collection("votes").document(ref)
+                    .update("usersVoted", usersVoted)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
         }
+        // This will refresh it.
+        ea.getVoteInfo(this, voteRef);
     }
 
     /**
@@ -89,96 +145,117 @@ public class ViewVote extends AppCompatActivity {
      */
     public void displayVote(Vote v, String option1Pic, String option2Pic, String option3Pic) {
         vote = v;
+        usersVoted = vote.getUsersVoted();
 
-        // Set up the pictures
-        ImageView optionPic = findViewById(R.id.vote_option1_pic);
-        Picasso.with(this).load(option1Pic).into(optionPic);
-        optionPic.getLayoutParams().height = 225;
-        optionPic.getLayoutParams().width = 225;
-        optionPic.setOnClickListener(new View.OnClickListener() {
+        // Don't need to display pics if user already voted.
+        if((usersVoted == null)  || !(usersVoted.contains(currentUser.getUid()))) {
+            // Set up the pictures
+            ImageView optionPic = findViewById(R.id.vote_option1_pic);
+            Picasso.with(this).load(option1Pic).into(optionPic);
+            optionPic.getLayoutParams().height = 225;
+            optionPic.getLayoutParams().width = 225;
+            optionPic.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                int backgroundColor = ContextCompat.getColor(ViewVote.this, R.color.colorAccent50);
-                if(selectedThing.equals(vote.getOption1())) {
-                    selectedThing = "";
-                    ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
-                } else {
-                    if(selectedThing.equals(vote.getOption2())) {
+                    int backgroundColor = ContextCompat.getColor(ViewVote.this, R.color.colorAccent50);
+                    if (selectedThing.equals(vote.getOption1())) {
+                        selectedThing = "";
+                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+                    } else {
+                        if (selectedThing.equals(vote.getOption2())) {
+                            ((ImageView) ViewVote.this.findViewById(R.id.vote_option2_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+
+                        } else if (selectedThing.equals(vote.getOption3())) {
+                            ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+
+                        }
+                        selectedThing = vote.getOption1();
+                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.LIGHTEN);
+
+
+                    }
+
+                }
+            });
+            optionPic = findViewById(R.id.vote_option2_pic);
+            Picasso.with(this).load(option2Pic).into(optionPic);
+            optionPic.getLayoutParams().height = 225;
+            optionPic.getLayoutParams().width = 225;
+            optionPic.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    int backgroundColor = ContextCompat.getColor(ViewVote.this, R.color.colorAccent50);
+                    if (selectedThing.equals(vote.getOption2())) {
+                        selectedThing = "";
                         ((ImageView) ViewVote.this.findViewById(R.id.vote_option2_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+                    } else {
+                        if (selectedThing.equals(vote.getOption1())) {
+                            ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
 
-                    } else if (selectedThing.equals(vote.getOption3())) {
-                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+                        } else if (selectedThing.equals(vote.getOption3())) {
+                            ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+
+                        }
+                        selectedThing = vote.getOption2();
+                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option2_pic)).getDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.LIGHTEN);
+
 
                     }
-                    selectedThing = vote.getOption1();
-                    ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.LIGHTEN);
-
 
                 }
+            });
+            optionPic = findViewById(R.id.vote_option3_pic);
+            Picasso.with(this).load(option3Pic).into(optionPic);
+            optionPic.getLayoutParams().height = 225;
+            optionPic.getLayoutParams().width = 225;
+            optionPic.setOnClickListener(new View.OnClickListener() {
 
-            }
-        });
-        optionPic = findViewById(R.id.vote_option2_pic);
-        Picasso.with(this).load(option2Pic).into(optionPic);
-        optionPic.getLayoutParams().height = 225;
-        optionPic.getLayoutParams().width = 225;
-        optionPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            @Override
-            public void onClick(View v) {
-
-                int backgroundColor = ContextCompat.getColor(ViewVote.this, R.color.colorAccent50);
-                if(selectedThing.equals(vote.getOption2())) {
-                    selectedThing = "";
-                    ((ImageView) ViewVote.this.findViewById(R.id.vote_option2_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
-                } else {
-                    if(selectedThing.equals(vote.getOption1())) {
-                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
-
-                    } else if (selectedThing.equals(vote.getOption3())) {
+                    int backgroundColor = ContextCompat.getColor(ViewVote.this, R.color.colorAccent50);
+                    if (selectedThing.equals(vote.getOption3())) {
+                        selectedThing = "";
                         ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+                    } else {
+                        if (selectedThing.equals(vote.getOption1())) {
+                            ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+
+                        } else if (selectedThing.equals(vote.getOption3())) {
+                            ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
+
+                        }
+                        selectedThing = vote.getOption3();
+                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.LIGHTEN);
+
 
                     }
-                    selectedThing = vote.getOption2();
-                    ((ImageView) ViewVote.this.findViewById(R.id.vote_option2_pic)).getDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.LIGHTEN);
-
 
                 }
+            });
+        } else { //If users already voted, then display percents.
+            int totalVotes = vote.getVotesFor1() + vote.getVotesFor2() + vote.getVotesFor3();
+            TextView percent = findViewById(R.id.vote_option1_percent);
+            int optionPercent = vote.getVotesFor1() / totalVotes * 100;
+            percent.setText(optionPercent + "%");
+            percent.setVisibility(View.VISIBLE);
+            percent = findViewById(R.id.vote_option2_percent);
+            optionPercent = vote.getVotesFor2() / totalVotes * 100;
+            percent.setText(optionPercent + "%");
+            percent.setVisibility(View.VISIBLE);
+            //TODO: make it so it checks if there are 3 options
+            percent = findViewById(R.id.vote_option3_percent);
+            optionPercent = vote.getVotesFor3() / totalVotes * 100;
+            percent.setText(optionPercent + "%");
+            percent.setVisibility(View.VISIBLE);
+            Button voteSubmit = findViewById(R.id.vote_submit);
+            voteSubmit.setVisibility(View.INVISIBLE);
 
-            }
-        });
-        optionPic = findViewById(R.id.vote_option3_pic);
-        Picasso.with(this).load(option3Pic).into(optionPic);
-        optionPic.getLayoutParams().height = 225;
-        optionPic.getLayoutParams().width = 225;
-        optionPic.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                int backgroundColor = ContextCompat.getColor(ViewVote.this, R.color.colorAccent50);
-                if(selectedThing.equals(vote.getOption3())) {
-                    selectedThing = "";
-                    ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
-                } else {
-                    if(selectedThing.equals(vote.getOption1())) {
-                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option1_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
-
-                    } else if (selectedThing.equals(vote.getOption3())) {
-                        ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(0x00000000, PorterDuff.Mode.LIGHTEN);
-
-                    }
-                    selectedThing = vote.getOption3();
-                    ((ImageView) ViewVote.this.findViewById(R.id.vote_option3_pic)).getDrawable().setColorFilter(backgroundColor, PorterDuff.Mode.LIGHTEN);
-
-
-                }
-
-            }
-        });
-
+        }
         // Set headers
         TextView tv = findViewById(R.id.vote_option1_head);
         tv.setText(vote.getOption1());

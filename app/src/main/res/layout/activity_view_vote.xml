@@ -30,6 +30,7 @@
         android:id="@+id/vote_option2_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/vote_option2_percent"
@@ -107,24 +108,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/vote_option1_pic"
-        app:layout_constraintTop_toTopOf="@+id/vote_option1_pic"
-        tools:layout_editor_absoluteX="44dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vote_option1_pic" />
 
     <TextView
         android:id="@+id/vote_option2_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/vote_option2_pic"
-        app:layout_constraintTop_toTopOf="@+id/vote_option2_pic"
-        tools:layout_editor_absoluteX="266dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vote_option2_pic" />
 
     <TextView
         android:id="@+id/vote_option3_percent"
@@ -135,8 +138,9 @@
         android:text="TextView"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/vote_option3_pic"
-        app:layout_constraintTop_toBottomOf="@+id/vote_option3_head"
-        tools:layout_editor_absoluteX="151dp" />
+        app:layout_constraintEnd_toEndOf="@+id/vote_option3_head"
+        app:layout_constraintStart_toStartOf="@+id/vote_option3_head"
+        app:layout_constraintTop_toBottomOf="@+id/vote_option3_head" />
 
     <Button
         android:id="@+id/vote_submit"
@@ -144,6 +148,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:onClick="submitVote"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
