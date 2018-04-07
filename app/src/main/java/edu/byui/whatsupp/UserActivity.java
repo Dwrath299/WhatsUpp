@@ -10,8 +10,6 @@ import com.facebook.login.LoginResult;
  * A porthole to the User Presenter, so each activity that
  * uses something with users can use this.
  *
- *
- *
  * @author  Dallin Wrathall
  * @version 1.0
  * @since   2018-03-21
@@ -23,9 +21,14 @@ public class UserActivity {
         userPresenter = new UserPresenter();
     }
 
+    /**
+     * Presents different app view based on whether the user is new or
+     * is a logged-in return user
+     * @param token
+     * @param loginResult
+     */
     public void detectNewUser(AccessToken token, LoginResult loginResult) {
         userPresenter.isNewUser(token, loginResult);
-
     }
 
     /**
@@ -38,6 +41,5 @@ public class UserActivity {
         userPresenter.requestUserData(activity, uid);
 
     }
-
 
 }
