@@ -18,12 +18,13 @@ import java.util.List;
  */
 
 public class GroupAdapter extends BaseAdapter {
+
     private Context mContext;
     private List<Group> groups;
     edu.byui.whatsupp.GroupsView activity;
-
     private LayoutInflater l_Inflater;
 
+    //Constructor
     public GroupAdapter(Context c, List<Group> t, Activity a) {
         mContext = c;
         groups = t;
@@ -31,24 +32,22 @@ public class GroupAdapter extends BaseAdapter {
         l_Inflater = LayoutInflater.from(c);
     }
 
+    //Getters and setters
     public int getCount() {
         return groups.size();
     }
-
     public void setList(List<Group> t) {
         groups = t;
     }
-
     public Object getItem(int position) {
         return groups.get(position);
     }
-
     public long getItemId(int position) {
         return 0;
     }
 
     /**
-     * create a new ImageButton for each item referenced by the Adapter
+     * Create a new ImageButton for each item referenced by the Adapter
      * @param position
      * @param convertView
      * @param parent
@@ -76,11 +75,15 @@ public class GroupAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * Displays group
+     */
     public void displayGroup() {
-
     }
 
-    // holder view for views
+    /**
+     * Holder view for views
+     */
     static class ViewHolder {
         ImageView Image;
         TextView MsgType;
