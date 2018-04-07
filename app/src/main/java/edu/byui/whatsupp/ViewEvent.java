@@ -291,7 +291,7 @@ public class ViewEvent extends AppCompatActivity {
     public void updateEvent(View view) {
         Intent intent = new Intent(this, EventForm.class);
         Bundle extras = new Bundle();
-        extras.putString("EXTRA_FORMTYPE","create");
+        extras.putString("EXTRA_FORMTYPE","update");
         extras.putString("EXTRA_FORMINFO", event.getTitle() );
         extras.putString("EXTRA_THINGTITLE",event.getThingToDo());
         extras.putString("EXTRA_PICURL",event.getUrl());
