@@ -39,9 +39,9 @@
         <activity
             android:name=".ThingToDoSelect"
             android:label="@string/title_activity_thing_to_do_select"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".AddUsers" />
+            android:theme="@style/AppTheme" /><![CDATA[
         android:theme="@style/AppTheme" />
+        ]]>
         <activity android:name=".VoteForm" />
         <activity android:name=".ViewVote"></activity>
     </application>
